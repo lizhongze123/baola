@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TitleBar">
+        <!-- 标题栏背景色 color，默认为white -->
+        <attr name="title_background" format="color"/>
+        <!-- 左边图片按钮背景 reference ，不设置则不显示 -->
+        <attr name="left_button_image" format="reference"/>
+        <!-- 左边文字按钮内容 reference ，string -->
+        <attr name="left_button_text" format="string"/>
+        <!-- 左边文字按钮文字颜色 color，默认为Color.GRAY -->
+        <attr name="left_button_textColor" format="color"/>
+        <!-- 左边文字按钮文字大小 dimension，默认为14sp -->
+        <attr name="left_button_textSize" format="dimension"/>
+        <!-- 标题文字内容 string -->
+        <attr name="title_text" format="string"/>
+        <!-- 标题文字颜色 color，默认为Color.GRAY -->
+        <attr name="title_textColor" format="color"/>
+        <!-- 标题文字大小 dimension，默认为14sp -->
+        <attr name="title_textSize" format="dimension"/>
+        <!-- 右边图片按钮背景 reference ，不设置则不显示 -->
+        <attr name="right_button_image" format="reference"/>
+        <!-- 右边文字按钮内容 string -->
+        <attr name="right_button_text" format="string"/>
+        <!-- 右边文字颜色 color，默认为Color.GRAY -->
+        <attr name="right_button_textColor" format="color"/>
+        <!-- 右边文字大小 dimension，默认为14sp -->
+        <attr name="right_button_textSize" format="dimension"/>
+        <!-- 是否显示顶部分割线 boolean类型，默认显示 -->
+        <attr name="show_line" format="boolean"/>
+    </declare-styleable>
+</resources>

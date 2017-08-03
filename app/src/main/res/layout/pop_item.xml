@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+    <TimePicker
+        android:id="@+id/tp0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        style="@style/SpecialDatePicker"/>
+
+    <TimePicker
+        android:id="@+id/tp1"
+        android:layout_below="@+id/tp0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        style="@style/SpecialDatePicker"
+        android:layout_centerHorizontal="true">
+    </TimePicker>
+
+    <Button
+        android:id="@+id/confirmBtn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="确定"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/tp1"
+        android:background="#16BC5C"
+        android:onClick="doClick"/>
+
+</RelativeLayout>

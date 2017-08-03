@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="LineView">
+        <!-- 文字大小 -->
+        <attr name="temperTextSize" format="dimension"/>
+        <!-- 文字的颜色 -->
+        <attr name="weatextColor" format="color"/>
+        <!-- 绘制的线的宽度 -->
+        <attr name="lineWidth2" format="dimension"/>
+        <!-- 绘制表格的线的宽度 -->
+        <attr name="gridLineWidth" format="dimension"/>
+        <!-- 文字离圆点的距离 -->
+        <attr name="textDotDistance" format="dimension"/>
+    </declare-styleable>
+
+</resources>

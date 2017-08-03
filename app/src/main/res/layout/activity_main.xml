@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.XMBT.bluetooth.le.ui.MainActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#d1d1d1"
+        android:layout_above="@+id/radioGroup"
+        android:layout_alignParentStart="true"
+        android:id="@+id/view2" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:id="@+id/radioGroup">
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:text="设备"
+            android:paddingTop="5dp"
+            android:drawableTop="@drawable/index_radio_selector"
+            android:gravity="bottom|center_horizontal"
+            android:textSize="13sp"
+            android:textColor="@drawable/index_textcolor_selector"
+            android:checked="true" />
+
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/radio2"
+            android:button="@null"
+            android:text="配件"
+            android:drawableTop="@drawable/parts_radio_selector"
+            android:textSize="13sp"
+            android:paddingTop="5dp"
+            android:gravity="bottom|center_horizontal"
+            android:textColor="@drawable/index_textcolor_selector"/>
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/radio3"
+            android:layout_weight="1"
+            android:button="@null"
+            android:text="咨询"
+            android:textSize="13sp"
+            android:paddingTop="5dp"
+            android:drawableTop="@drawable/advice_radio_selector"
+            android:gravity="bottom|center_horizontal"
+            android:textColor="@drawable/index_textcolor_selector"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/fragment_container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/view2"
+        android:fitsSystemWindows="true"></LinearLayout>
+</RelativeLayout>

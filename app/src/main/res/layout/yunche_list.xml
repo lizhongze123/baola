@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <ImageView
+            android:id="@+id/picIv"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:src="@drawable/battery_automobile"
+            android:paddingLeft="16dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/picIv"
+            android:layout_centerVertical="true">
+        <TextView
+            android:id="@+id/titleTv"
+            android:text="sd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:textSize="17sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/statusTv"
+            android:text="在线"
+            android:layout_below="@+id/titleTv"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/darker_gray"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

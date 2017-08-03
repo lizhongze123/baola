@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="radio_textcolor_false">#818181</color>
+    <color name="radio_textcolor_true">#20a2aa</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="black">#000000</color>
+    <color name="title_color">#ff5151</color>
+
+    <color name="title_bg">#ff5151</color>
+    <color name="bg_gray">#cdc7c7</color>
+    <color name="white">#ffffff</color>
+    <color name="gray_dd">#dddddd</color>
+    <color name="gray_bb">#bbbbbb</color>
+    <color name="dark_blue">#0B76B1</color>
+    <color name="btn_green">#ff99cc00</color>
+    <color name="origin">#F45D11</color>
+    <color name="dark_gray">#2F2F2F</color>
+
+</resources>

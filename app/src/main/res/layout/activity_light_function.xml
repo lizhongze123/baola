@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.XMBT.bluetooth.le.ui.device.lighting.LightFunctionActivity">
+
+    <com.XMBT.bluetooth.le.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_text="智能氙气灯"
+        app:left_button_image="@drawable/common_ic_left_arrow"
+        app:title_textColor="#fff"
+        app:title_background="@color/title_bg"
+        app:right_button_text="未连接"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.stx.xhb.xbanner.XBanner
+                android:id="@+id/xbanner"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                app:pointsPosition="CENTER"
+                app:AutoPlayTime="3000"
+                app:pointsContainerBackground="#44aaaaaa"
+                app:pointNormal="@drawable/shape_noraml"
+                app:pointSelect="@drawable/shape_selected"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/cb_auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="@null"
+                        android:layout_marginRight="3dp"
+                        android:background="@drawable/light_auto_selector"
+                        android:onClick="doClick" />
+
+                    <TextView
+                        android:id="@+id/tv_autoInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="9sp"
+                        android:text="17:00开启 23:00关闭 长按设置时间"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="#d1d1d1"/>
+
+                </RelativeLayout>
+
+                <CheckBox
+                    android:id="@+id/cb_manual"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:background="@drawable/light_hand_selector"
+                    android:onClick="doClick"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_marginTop="3dp">
+
+                <CheckBox
+                    android:id="@+id/cb_city"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/citymode_selector"
+                    android:layout_marginRight="3dp"
+                    android:button="@null"
+                    android:background="#ffffff"
+                    android:text="   城市模式\n        35W"
+                    android:paddingLeft="16dp"
+                    android:onClick="doClick"
+                    android:textColor="@drawable/citymode_textcolor_selector"/>
+                <CheckBox
+                    android:id="@+id/cb_highway"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/highspeed_mode_selector"
+                    android:paddingLeft="16dp"
+                    android:onClick="doClick"
+                    android:textColor="@drawable/citymode_textcolor_selector"
+                    android:text="   高速模式\n        55W"
+                    android:background="#ffffff"/>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_marginTop="3dp"
+                android:background="#ffffff"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="亮度："
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="26dp"
+                    android:id="@+id/textView5" />
+                <SeekBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/seekBar"
+                    android:maxHeight="10dp"
+                    android:minHeight="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:thumbOffset="0dp"
+                    android:max="15"
+                    android:secondaryProgress="100"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:background="@drawable/seekbar_background_shape"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toEndOf="@+id/textView5"
+                    android:layout_marginRight="26dp"
+                    android:thumb="@drawable/shape_circle"
+                    android:progressDrawable="@drawable/layer_progress"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="35W"
+                    android:textColor="#818181"
+                    android:id="@+id/textView6"
+                    android:layout_below="@+id/seekBar"
+                    android:layout_toEndOf="@+id/textView5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="45W"
+                    android:textColor="#818181"
+                    android:id="@+id/textView7"
+                    android:paddingLeft="16dp"
+                    android:layout_alignTop="@+id/textView6"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="55W"
+                    android:textColor="#818181"
+                    android:id="@+id/textView8"
+                    android:layout_alignTop="@+id/textView7"
+                    android:layout_alignBottom="@+id/textView7"
+                    android:layout_alignEnd="@+id/seekBar"
+                    android:layout_marginRight="10dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="3dp"
+                android:background="#ffffff">
+                <RelativeLayout
+                    android:id="@+id/titleLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="归家档位设置"
+                        android:textColor="#818181"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#d1d1d1"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"/>
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/titleLayout"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerHorizontal="true">
+
+                    <CheckBox
+                        android:id="@+id/cb_30"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:button="@null"
+                        android:layout_gravity="center_vertical"
+                        android:onClick="doClick"
+                        android:background="@drawable/pressed_30_selector"/>
+
+                    <CheckBox
+                        android:id="@+id/cb_60"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:button="@null"
+                        android:layout_marginLeft="20dp"
+                        android:onClick="doClick"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/pressed_60_selector"/>
+
+                    <CheckBox
+                        android:id="@+id/cb_90"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:button="@null"
+                        android:layout_marginLeft="20dp"
+                        android:onClick="doClick"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/pressed_90_selector"/>
+
+                    <CheckBox
+                        android:id="@+id/cb_120"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:button="@null"
+                        android:layout_marginLeft="20dp"
+                        android:onClick="doClick"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/pressed_120_selector"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

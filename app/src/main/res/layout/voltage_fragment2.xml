@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:a_zhon="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <com.XMBT.bluetooth.le.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title_background="@color/black"
+        app:title_text="智能电池"
+        app:title_textColor="@color/white"
+        app:left_button_text="未连接" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="@color/white"
+        android:drawingCacheQuality="low" />
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电池使用时长：**剩余寿命**"
+                android:id="@+id/textView4"
+                android:layout_gravity="center_horizontal"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="35sp"
+                android:text="0%"
+                android:id="@+id/textView10"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal" />
+
+            <com.XMBT.bluetooth.le.view.LoadingView
+                android:id="@+id/loadingView"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_gravity="center_horizontal"
+                a_zhon:backgroundColor="#9f9c9c"
+                a_zhon:beforeColor="#ff5809"
+                a_zhon:lineLength="12dp"
+                a_zhon:lines="36"
+                a_zhon:max="100"
+                a_zhon:paintBold="10dp"
+                a_zhon:percentText="0V"
+                a_zhon:progress="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sd"
+                android:id="@+id/tv_receiver"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/statusIv"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:src="@drawable/status3" />
+
+            <com.XMBT.bluetooth.le.view.LineChart.LineView
+                android:id="@+id/myline"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

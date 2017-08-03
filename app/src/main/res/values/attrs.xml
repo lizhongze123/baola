@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="color_picker">
+    </declare-styleable>
+
+    <declare-styleable name="a_zhon">
+        <!--每条线的粗细-->
+        <attr name="paintBold" format="dimension" />
+        <!--每条线的长度-->
+        <attr name="lineLength" format="dimension" />
+        <!--线条个数-->
+        <attr name="lines" format="integer" />
+        <!--最大进度-->
+        <attr name="max" format="integer" />
+        <!--当前进度-->
+        <attr name="progress" format="integer" />
+        <!--背景菊花颜色-->
+        <attr name="backgroundColor" format="reference|color" />
+        <!--前景菊花颜色-->
+        <attr name="beforeColor" format="reference|color" />
+        <!--进度文字颜色-->
+        <attr name="textColor" format="reference|color" />
+        <!--进度文字-->
+        <attr name="percentText" format="reference|string" />
+    </declare-styleable>
+
+
+    <declare-styleable name="LineChartView">
+        <!-- x轴的颜色 -->
+        <attr name="xAixsColor" format="color|reference"/>
+        <!-- Y轴的颜色 -->
+        <attr name="yAixsColor" format="color|reference"/>
+        <!-- 水平方向网格线的颜色 -->
+        <attr name="horLineColor" format="color|reference"/>
+        <!-- 垂直方向网格线的颜色 -->
+        <attr name="verLineColor" format="color|reference"/>
+        <!-- x轴的标题字体颜色 -->
+        <attr name="xAixsTitleColor" format="color|reference"/>
+        <!-- y轴的标题字体颜色 -->
+        <attr name="yAixsTitleColor" format="color|reference"/>
+        <!-- x坐标轴的宽度 -->
+        <attr name="xAixsWidth" format="dimension|reference"/>
+        <!-- y坐标轴的宽度 -->
+        <attr name="yAixsWidth" format="dimension|reference"/>
+        <!-- 网格线的宽度 -->
+        <attr name="lineWidth" format="dimension|reference"/>
+        <!-- 指定标准线的颜色 -->
+        <attr name="standardLineColor" format="color|reference"/>
+        <!-- 指定标准数值的颜色 -->
+        <attr name="standardValColor" format="color|reference"/>
+        <!-- 指定标准线的样式 -->
+        <attr name="standardLineStyle" >
+            <!-- 虚线 -->
+            <enum name="DASH" value="8"/>
+            <!-- 实线 -->
+            <enum name="SOLID" value="9"/>
+        </attr>
+        <!-- 指定标准线的宽度 -->
+        <attr name="standardLineWidth" format="dimension|reference"/>
+        <!-- x轴的标题字体大小 -->
+        <attr name="xAixsTitleSize" format="dimension|reference"/>
+        <!-- y轴的标题字体大小 -->
+        <attr name="yAixsTitleSize" format="dimension|reference"/>
+        <!-- 指定标准值的字体大小 -->
+        <attr name="standardValSize" format="dimension|reference"/>
+        <!-- x轴的标题填充间距 -->
+        <attr name="xAixsPadding" format="dimension|reference"/>
+        <!-- y轴的标题填充间距 -->
+        <attr name="yAixsPadding" format="dimension|reference"/>
+        <!-- x轴的标题上填充间距 -->
+        <attr name="xAixsPaddingTop" format="dimension|reference"/>
+        <!-- x轴的标题底部填充间距 -->
+        <attr name="xAixsPaddingBottom" format="dimension|reference"/>
+        <!-- y轴的标题左填充间距 -->
+        <attr name="yAixsPaddingLeft" format="dimension|reference"/>
+        <!-- y轴的标题右填充间距 -->
+        <attr name="yAixsPaddingRight" format="dimension|reference"/>
+        <!-- 标准值的外边框填充 -->
+        <attr name="standardValMargin" format="dimension|reference"/>
+        <!-- 是否显示y坐标轴标题 -->
+        <attr name="hideYAixsTitles" format="boolean"/>
+        <!-- 是否显示指定标准线 -->
+        <attr name="showStandardLine" format="boolean"/>
+        <!-- 是否显示垂直网格线 -->
+        <attr name="showVerGridLine" format="boolean"/>
+        <!-- 是否显示水平网格线 -->
+        <attr name="showHorGridLine" format="boolean"/>
+        <!-- 坐标轴是否和网格线对齐 -->
+        <attr name="isAixsLineAlign" format="boolean"/>
+        <!-- y轴的位置 -->
+        <attr name="yAixsPostion">
+            <enum name="LEFT" value="0"/>
+            <enum name="RIGHT" value="2"/>
+        </attr>
+        <!-- x轴的位置 -->
+        <attr name="xAixsPostion">
+            <enum name="TOP" value="1"/>
+            <enum name="BUTTOM" value="3"/>
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="charging_progress">
+
+        <!--item个数-->
+        <attr name="cgv_item_count" format="integer" />
+
+        <!--方向-->
+        <attr name="cgv_oritation" format="integer" />
+
+        <!--动画时长-->
+        <attr name="cgv_duration" format="integer" />
+
+        <!--边界宽度-->
+        <attr name="cgv_border_width" format="dimension" />
+
+        <!--边界颜色-->
+        <attr name="cgv_border_color" format="color" />
+
+
+        <!--圆角半径-->
+        <attr name="cgv_border_cornor_radius" format="dimension" />
+
+
+        <!--充电内模块的宽度-->
+        <attr name="cgv_item_width" format="dimension" />
+
+        <!--充电内模块的高度-->
+        <attr name="cgv_item_height" format="dimension" />
+
+        <!--充电内模块的前景色，充电中的颜色-->
+        <attr name="cgv_item_charging_src" format="color" />
+
+        <!--充电内模块的背景色，未充电的颜色-->
+        <attr name="cgv_item_charging_background" format="color" />
+
+        <!--view 的背景-->
+        <attr name="cgv_background" format="color" />
+
+
+    </declare-styleable>
+
+</resources>
