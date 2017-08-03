@@ -14,10 +14,6 @@ public class BaseActivity extends FragmentActivity{
     }
 
 
-
-    /*
-
-     */
     public void showToast(String tips) {
         ToastUtils.toastInBottom(this, tips);
     }
