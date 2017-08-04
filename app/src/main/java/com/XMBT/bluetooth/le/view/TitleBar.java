@@ -210,7 +210,7 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
         mTitleBarOnClickListener = listener;
     }
 
-    public void setLeftOnClickListener(OnClickListener listener) {
+    public void setOnLeftOnClickListener(OnClickListener listener) {
         mIvLeft.setOnClickListener(listener);
         mTvLeft.setOnClickListener(listener);
     }
