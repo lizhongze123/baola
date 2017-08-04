@@ -37,9 +37,9 @@ public class AddDeviceActivity extends BaseActivity {
     private void initView() {
         listView = (ListView) findViewById(R.id.listView2);
         titleBar = (TitleBar) findViewById(R.id.titleBar);
-        titleBar.setAction(new TitleBar.TitleBarOnClickListener() {
+        titleBar.setLeftOnClickListener(new View.OnClickListener() {
             @Override
-            public void performAction(View view) {
+            public void onClick(View v) {
                 onBackPressed();
             }
         });

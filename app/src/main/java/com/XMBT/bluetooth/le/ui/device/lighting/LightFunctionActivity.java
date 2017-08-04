@@ -195,20 +195,12 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
 
     private void initTitle() {
         titleBar = (TitleBar) findViewById(R.id.titleBar);
-        titleBar.setOnLeftOnClickListener(new View.OnClickListener() {
+        titleBar.setLeftOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-//        titleBar.setAction(new TitleBar.TitleBarOnClickListener() {
-//            @Override
-//            public void performAction(View view) {
-//                if(view.getId() == R.id.iv_left){
-//                    onBackPressed();
-//                }
-//            }
-//        });
     }
 
     private void initView() {

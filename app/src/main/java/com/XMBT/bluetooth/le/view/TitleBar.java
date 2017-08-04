@@ -62,8 +62,6 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
      */
     private View line;
 
-    private TitleBarOnClickListener mTitleBarOnClickListener;
-
     public TitleBar(Context context) {
         this(context, null);
     }
@@ -202,19 +200,15 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
         }
     }
 
-    public void setAction(TitleBarOnClickListener listener) {
-        mIvLeft.setOnClickListener(this);
-        mIvRight.setOnClickListener(this);
-        mTvLeft.setOnClickListener(this);
-        mTvRight.setOnClickListener(this);
-        mTitleBarOnClickListener = listener;
-    }
-
-    public void setOnLeftOnClickListener(OnClickListener listener) {
+    public void setLeftOnClickListener(OnClickListener listener) {
         mIvLeft.setOnClickListener(listener);
         mTvLeft.setOnClickListener(listener);
     }
 
+    public void setRightOnClicker(OnClickListener listener){
+        mTvRight.setOnClickListener(listener);
+        mIvRight.setOnClickListener(listener);
+    }
 
     /**
      * 设置是否显示分割线
@@ -268,17 +262,11 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
         }
     }
 
-    public interface TitleBarOnClickListener {
-        void performAction(View view);
-    }
-
     @Override
     public void onClick(View v) {
         if (isFastDoubleClick()) {
             return;
         }
-
-//        mTitleBarOnClickListener.performAction(v);
     }
 
 

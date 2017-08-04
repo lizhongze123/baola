@@ -118,9 +118,9 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
     private void initTitle() {
         titleBar = (TitleBar) view.findViewById(R.id.titleBar);
-        titleBar.setAction(new TitleBar.TitleBarOnClickListener() {
+        titleBar.setRightOnClicker(new View.OnClickListener() {
             @Override
-            public void performAction(View view) {
+            public void onClick(View v) {
                 startActivity(new Intent(getContext(), AddDeviceActivity.class));
             }
         });
