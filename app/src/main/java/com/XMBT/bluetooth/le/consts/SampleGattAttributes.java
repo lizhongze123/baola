@@ -107,4 +107,66 @@ public class SampleGattAttributes {
       * 高速模式
      */
     public static String MODE_HIGHWAY = "0466990FF0";
+
+//----------------------------汽车智能启动电源---------------------------
+    /**
+     * 实时电压
+     */
+    public static String REAL_VOLTAGE = "04A758";
+    /**
+     * 电量指示
+     */
+    public static String BATTERY_INDICATOR = "04DA25";
+    /**
+     * 电量指示 第一格0.5秒闪烁
+     */
+    public static String BATTERY_INDICATOR_ONE = "01FE";
+    /**
+     * 电量指示 第一格长亮
+     */
+    public static String BATTERY_INDICATOR_TWO = "02FD";
+    /**
+     * 电量指示 第1~2格长亮
+     */
+    public static String BATTERY_INDICATOR_THREE = "03FC";
+    /**
+     * 电量指示 第1~3格长亮
+     */
+    public static String BATTERY_INDICATOR_FOUR = "04FB";
+    /**
+     * 电量指示 第1~5格长亮
+     */
+    public static String BATTERY_INDICATOR_FIVE = "05FA";
+    /**
+     * 实时温度
+     */
+    public static String REAL_TEMPERATURE = "04BB47";
+    /**
+     * 使用天数
+     */
+    public static String USED_DAYS = "06C936";
+    /**
+     * 灯光照明模式
+     */
+    public static String FLOODLIGHT_OPEN = "0452AD31CE";
+    /**
+     * 灯光关闭
+     */
+    public static String FLOODLIGHT_CLOSE = "0452AD00FF";
+    /**
+     * 警示灯-快闪模式
+     */
+    public static String WARNINGLIGHT_FAST = "04639C8679";
+    /**
+     * 警示灯-关闭
+     */
+    public static String WARNINGLIGHT_CLOSE = "04639C00FF";
+    /**
+     * usb-启动
+     */
+    public static String USB_OPEN = "04748B9768";
+    /**
+     * usb-关闭
+     */
+    public static String USB_CLOSE = "04748B00FF";
 }

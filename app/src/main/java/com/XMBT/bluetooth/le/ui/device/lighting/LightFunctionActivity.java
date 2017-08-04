@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
@@ -46,7 +47,7 @@ import java.util.List;
 /**
  * 汽车智能照明系统
  */
-public class LightFunctionActivity extends Activity implements XBanner.XBannerAdapter{
+public class LightFunctionActivity extends BaseActivity implements XBanner.XBannerAdapter {
 
     private XBanner xBanner;
     private List<String> bannerUrls = new ArrayList<>();
@@ -57,7 +58,7 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
     private SeekBar seekBar;
     private TimePicker tp0, tp1;
 
-    public final static String EXTRA_DATA	= "EXTRA_DATA";
+    public final static String EXTRA_DATA = "EXTRA_DATA";
     private String strTemp;
 
     static final int rssibufferSize = 10;
@@ -72,7 +73,7 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
     private View contentView;
     private Calendar cal;
     private int hour;
-    private int minute,day;
+    private int minute, day;
     private String startTime, endTime;
     private TextView tvAutoInfo;
     private boolean flag = false;
@@ -105,10 +106,10 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
         bannerUrls.add(GlobalConsts.BANNER_URL3);
         bannerUrls.add(GlobalConsts.BANNER_URL4);
 
-        startTime =  PreferenceUtils.readString(this, "light_info", "starttime");
+        startTime = PreferenceUtils.readString(this, "light_info", "starttime");
         endTime = PreferenceUtils.readString(this, "light_info", "endtime");
         flag = PreferenceUtils.readBoolean(this, "light_info", "flag", flag);
-        if(startTime == null && endTime == null){
+        if (startTime == null && endTime == null) {
             startTime = "17:00";
             endTime = "23:00";
         }
@@ -122,13 +123,13 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
         handler1.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.e("lzz","发送防止蓝牙死机命令");
+                Log.e("lzz", "发送防止蓝牙死机命令");
                 String newValue1 = SampleGattAttributes.WRITE_CRASH;
                 byte[] dataToWrite1 = HexUtil.hexStringToBytes(newValue1);
                 IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite1);
                 handler1.postDelayed(this, 1000);
             }
-        },1000);
+        }, 1000);
     }
 
     /**
@@ -153,8 +154,8 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
         int endminute = Integer.valueOf(endtimestr[1]);
         int starttime = starthour * 60 + startminute;
         int endtime = endhour * 60 + endminute;
-        if(cbAuto.isChecked()) {
-            if(nowtime >= starttime&&nowtime <= endtime){
+        if (cbAuto.isChecked()) {
+            if (nowtime >= starttime && nowtime <= endtime) {
                 //开灯指令
                 String newValue = SampleGattAttributes.WRITE_OPEN_LIGHT;
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
@@ -228,12 +229,12 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
                 String strtemp = "";
                 byte[] PwmValue = new byte[2];
                 int i = seekBar.getProgress();
-                PwmValue[0] = (byte)(((i & 0xFF )* iStalls/15) & 0xff);
-                PwmValue[1]	= (byte) ~((byte)(((i & 0xFF )* iStalls/15) & 0xff));
-                strtemp = Utils.bytesToHexString(PwmValue) ;
+                PwmValue[0] = (byte) (((i & 0xFF) * iStalls / 15) & 0xff);
+                PwmValue[1] = (byte) ~((byte) (((i & 0xFF) * iStalls / 15) & 0xff));
+                strtemp = Utils.bytesToHexString(PwmValue);
                 newValue += strtemp;
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write,dataToWrite);
+                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
             }
 
             @Override
@@ -263,30 +264,30 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
         tp0.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                if(minute < 10) {
+                if (minute < 10) {
                     startTime = hourOfDay + ":0" + minute;
-                }else {
-                    startTime = hourOfDay +":" + minute;
+                } else {
+                    startTime = hourOfDay + ":" + minute;
                 }
-                if(hourOfDay < 10){
-                    startTime = "0" + hourOfDay +":" + minute;
-                }else{
-                    startTime = hourOfDay +":" + minute;
+                if (hourOfDay < 10) {
+                    startTime = "0" + hourOfDay + ":" + minute;
+                } else {
+                    startTime = hourOfDay + ":" + minute;
                 }
             }
         });
         tp1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                if(minute < 10) {
+                if (minute < 10) {
                     endTime = hourOfDay + ":0" + minute;
-                }else {
+                } else {
                     endTime = hourOfDay + ":" + minute;
                 }
-                if(hourOfDay < 10){
-                    endTime = "0" + hourOfDay +":" + minute;
-                }else{
-                    endTime = hourOfDay +":" + minute;
+                if (hourOfDay < 10) {
+                    endTime = "0" + hourOfDay + ":" + minute;
+                } else {
+                    endTime = hourOfDay + ":" + minute;
                 }
             }
         });
@@ -294,20 +295,20 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
         connectChanged(isConnSuccessful);
     }
 
-    private void connectChanged(boolean isConnected){
-        if(isConnected){
+    private void connectChanged(boolean isConnected) {
+        if (isConnected) {
             titleBar.setTvRight("已连接");
             titleBar.setTvRightTextColor(getResources().getColor(R.color.dark_blue));
-        }else{
+        } else {
             titleBar.setTvRight("未连接");
             titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
         }
     }
 
-    public void doClick(View view){
+    public void doClick(View view) {
         String newValue;
         byte[] dataToWrite;
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.cb_auto:
 //                cal=Calendar.getInstance();
 //                hour=cal.get(Calendar.HOUR_OF_DAY);
@@ -331,104 +332,105 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
 //
 //                    IndexFragment.WriteCharX( IndexFragment.gattCharacteristic_char1,dataToWrite );
 //                }
-                if(cbAuto.isChecked()) {
+                if (cbAuto.isChecked()) {
                     flag = true;
                     PreferenceUtils.write(LightFunctionActivity.this, "light_info", "flag", true);
-                }else {
+                } else {
                     PreferenceUtils.write(LightFunctionActivity.this, "light_info", "flag", false);
                 }
                 break;
             case R.id.confirmBtn:
                 PreferenceUtils.write(LightFunctionActivity.this, "light_info", "starttime", startTime);
                 PreferenceUtils.write(LightFunctionActivity.this, "light_info", "endtime", startTime);
-                tvAutoInfo.setText(startTime+"开启 " + endTime +"关闭 长按设置时间");
+                tvAutoInfo.setText(startTime + "开启 " + endTime + "关闭 长按设置时间");
                 popupWindow.dismiss();
                 break;
             case R.id.cb_manual:
-                if(cbManual.isChecked()){
+                if (cbManual.isChecked()) {
                     newValue = SampleGattAttributes.WRITE_OPEN_LIGHT;
-                }else {
+                } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                 }
                 dataToWrite = HexUtil.hexStringToBytes(newValue);
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write,dataToWrite);
+                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
                 break;
             case R.id.cb_city:
-                if(cbCity.isChecked()){
+                if (cbCity.isChecked()) {
                     cbHighway.setChecked(false);
                     seekBar.setProgress(0);
                     newValue = SampleGattAttributes.MODE_CITY;
-                    dataToWrite =  HexUtil.hexStringToBytes(newValue);
+                    dataToWrite = HexUtil.hexStringToBytes(newValue);
                     IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_highway:
-                if(cbHighway.isChecked()){
+                if (cbHighway.isChecked()) {
                     cbCity.setChecked(false);
                     seekBar.setProgress(15);
                     newValue = SampleGattAttributes.MODE_HIGHWAY;
-                    dataToWrite =  HexUtil.hexStringToBytes(newValue);
+                    dataToWrite = HexUtil.hexStringToBytes(newValue);
                     IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_30:
-                if(cb30.isChecked()){
+                if (cb30.isChecked()) {
                     cb60.setChecked(false);
                     cb90.setChecked(false);
                     cb120.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_30;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write,dataToWrite);
-                }else {
+                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write,dataToWrite);
+                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_60:
-                if(cb60.isChecked()){
+                if (cb60.isChecked()) {
                     cb30.setChecked(false);
                     cb90.setChecked(false);
                     cb120.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_60;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX( IndexFragment.gattCharacteristic_write,dataToWrite);
-                }else {
+                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX( IndexFragment.gattCharacteristic_write,dataToWrite);
+                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_90:
-                if(cb90.isChecked()){
+                if (cb90.isChecked()) {
                     cb30.setChecked(false);
                     cb60.setChecked(false);
                     cb120.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_90;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX( IndexFragment.gattCharacteristic_write,dataToWrite);
-                }else {
+                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX( IndexFragment.gattCharacteristic_write,dataToWrite);
+                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_120:
-                if (cb120.isChecked()){
+                if (cb120.isChecked()) {
                     cb30.setChecked(false);
                     cb60.setChecked(false);
                     cb90.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_120;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX( IndexFragment.gattCharacteristic_write,dataToWrite);
-                }else {
+                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX( IndexFragment.gattCharacteristic_write,dataToWrite);
+                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
                 }
                 break;
         }
     }
+
     @Override
     public void loadBanner(XBanner banner, View view, int position) {
         Glide.with(this).load(bannerUrls.get(position)).into((ImageView) view);
@@ -448,33 +450,33 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
             String action = intent.getAction();
             String strXqdDd = "";
             String strXqdDdy = "";
-            if (action.equals(GlobalConsts.ACTION_NOTIFI)){
+            if (action.equals(GlobalConsts.ACTION_NOTIFI)) {
                 strTemp = intent.getStringExtra(EXTRA_DATA);
                 //去除：
-                if(!TextUtils.isEmpty(strTemp)){
+                if (!TextUtils.isEmpty(strTemp)) {
                     strTemp = strTemp.replaceAll(":", "");
                 }
 
-                if(strTemp.equals(SampleGattAttributes.AUTO_LIGHT)){
+                if (strTemp.equals(SampleGattAttributes.AUTO_LIGHT)) {
                     //收到自动开灯的信号后判断时间区间
                     startTimer();
                 }
 
-                if (!strTemp.equals("0000000000")){  //过滤掉00:00:00:00:00
+                if (!strTemp.equals("0000000000")) {  //过滤掉00:00:00:00:00
 
-                    if(strTemp.length() == 10){
-                        String substr = strTemp.substring(0,6);
-                        String substr2 = strTemp.substring(6,10);
+                    if (strTemp.length() == 10) {
+                        String substr = strTemp.substring(0, 6);
+                        String substr2 = strTemp.substring(6, 10);
 
-                        if (substr.equals(SampleGattAttributes.BATTERY_VOLTAGE) ){
+                        if (substr.equals(SampleGattAttributes.BATTERY_VOLTAGE)) {
                             //电池电压
                         }
 
-                        if (substr.equals(SampleGattAttributes.BATTERY_TEMPERATURE) ){
+                        if (substr.equals(SampleGattAttributes.BATTERY_TEMPERATURE)) {
                             //电池温度
                         }
 
-                        if (substr.equals(SampleGattAttributes.DAYS_OF_USE) ){
+                        if (substr.equals(SampleGattAttributes.DAYS_OF_USE)) {
                             //使用天数
                         }
 
@@ -482,52 +484,52 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
                             //工作电压
                         }
 
-                        if (substr.equals(SampleGattAttributes.WORK_SHIFT)){
+                        if (substr.equals(SampleGattAttributes.WORK_SHIFT)) {
                             //工作档位
-                            strXqdDdy = "氙气灯电压->"+ substr2;
-                            String sub = substr2.substring(0,2);
-                            seekBar.setProgress(Integer.parseInt(sub,16));
+                            strXqdDdy = "氙气灯电压->" + substr2;
+                            String sub = substr2.substring(0, 2);
+                            seekBar.setProgress(Integer.parseInt(sub, 16));
                         }
 
-                        if (substr.equals(SampleGattAttributes.TROUBLE_INFO)){
+                        if (substr.equals(SampleGattAttributes.TROUBLE_INFO)) {
                             //故障信息
-                            if(substr2.equals(SampleGattAttributes.TROUBLE_INFO_HIGH_VOLTAGE)){
+                            if (substr2.equals(SampleGattAttributes.TROUBLE_INFO_HIGH_VOLTAGE)) {
                                 //氙气大灯故障:工作电压过高
                             }
 
-                            if(substr2.equals(SampleGattAttributes.TROUBLE_INFO_LOW_VOLTAGE)){
+                            if (substr2.equals(SampleGattAttributes.TROUBLE_INFO_LOW_VOLTAGE)) {
                                 //氙气大灯故障:工作电压过低
                             }
 
-                            if(substr2.equals(SampleGattAttributes.TROUBLE_INFO_HIGH_TEMPERATURE)){
+                            if (substr2.equals(SampleGattAttributes.TROUBLE_INFO_HIGH_TEMPERATURE)) {
                                 //氙气大灯故障:工作温度过高
                             }
 
-                            if(substr2.equals(SampleGattAttributes.TROUBLE_INFO_FAILED)){
+                            if (substr2.equals(SampleGattAttributes.TROUBLE_INFO_FAILED)) {
                                 //氙气大灯故障:点灯失败!"+"\n"+"氙气大灯已经关闭
                             }
                         }
 
-                        if(substr.equals(SampleGattAttributes.UNAUTHORIZED)){
+                        if (substr.equals(SampleGattAttributes.UNAUTHORIZED)) {
                             new AlertDialog.Builder(LightFunctionActivity.this)
                                     .setMessage("此手机未认证，请打开车内大灯开关完成认证")
-                                    .setPositiveButton("确定",null)
+                                    .setPositiveButton("确定", null)
                                     .show();
                         }
 
-                        if(strTemp.equals(SampleGattAttributes.LIGHT_ON)){
+                        if (strTemp.equals(SampleGattAttributes.LIGHT_ON)) {
                             cbManual.setChecked(true);
-                        }else if(strTemp.equals(SampleGattAttributes.LIGHT_OFF)){
+                        } else if (strTemp.equals(SampleGattAttributes.LIGHT_OFF)) {
                             cbManual.setChecked(false);
                             resetShift();
                         }
                     }
                 }
-            } else if(action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)){
+            } else if (action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)) {
                 int status = intent.getIntExtra(BluetoothLeClass.CONNECT_STATUS, BluetoothLeClass.STATE_DISCONNECTED);
-                if(status == BluetoothLeClass.STATE_DISCONNECTED)	{
+                if (status == BluetoothLeClass.STATE_DISCONNECTED) {
                     connectChanged(false);
-                } else{
+                } else {
                     connectChanged(true);
                 }
             }
@@ -544,7 +546,7 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
         seekBar.setProgress(0);
     }
 
-    private void UpdateAllParameter(){
+    private void UpdateAllParameter() {
         Message msg = new Message();
         msg.what = REFRESH;
 //        mHandler.sendMessage(msg);
@@ -560,13 +562,13 @@ public class LightFunctionActivity extends Activity implements XBanner.XBannerAd
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
         writeParameter();
     }
 
     @Override
-    protected void onDestroy()	{
+    protected void onDestroy() {
         super.onDestroy();
         writeParameter();
         PreferenceUtils.write(LightFunctionActivity.this, "light_info", "starttime", startTime);
