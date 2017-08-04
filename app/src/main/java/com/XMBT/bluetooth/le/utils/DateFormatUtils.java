@@ -11,15 +11,16 @@ import java.util.Locale;
 
 public class DateFormatUtils {
 
-    public static  final String FORMAT_ALL = "yyyy-MM-dd HH:mm:ss";
-    public static  final String FORMAT_YMDHM = "yyyy-MM-dd HH:mm";
-    public static  final String FORMAT_YMD = "yyyy-MM-dd";
-    public static  final String FORMAT_HMS = "HH:mm:ss";
-    public static  final String FORMAT_HM = "HH:mm";
+    public static final String FORMAT_ALL = "yyyy-MM-dd HH:mm:ss";
+    public static final String FORMAT_YMDHM = "yyyy-MM-dd HH:mm";
+    public static final String FORMAT_YMD = "yyyy-MM-dd";
+    public static final String FORMAT_HMS = "HH:mm:ss";
+    public static final String FORMAT_HM = "HH:mm";
 
 
     /**
      * 当前时间
+     *
      * @param format
      * @return
      */
@@ -29,8 +30,7 @@ public class DateFormatUtils {
     }
 
     /**
-     *
-     * @param time  指定时间
+     * @param time   指定时间
      * @param format
      * @return
      */

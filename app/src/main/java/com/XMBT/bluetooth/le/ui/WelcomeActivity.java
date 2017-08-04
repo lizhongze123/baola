@@ -18,10 +18,11 @@ import com.XMBT.bluetooth.le.utils.ToastUtils;
 
 
 public class WelcomeActivity extends BaseActivity {
-    Handler mhandler=new Handler();
+    Handler mhandler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -33,14 +34,14 @@ public class WelcomeActivity extends BaseActivity {
         setContentView(R.layout.activity_welcome);
         if (Build.VERSION.SDK_INT >= 23) {
             permissionCheck();
-        }else{
+        } else {
             startApp();
         }
     }
 
     private void permissionCheck() {
         boolean hasRequest = AppPermission.requestAllUnGrantedPermission(this);
-        if(!hasRequest){
+        if (!hasRequest) {
             startApp();
         }
     }
@@ -56,9 +57,9 @@ public class WelcomeActivity extends BaseActivity {
                         toastTip = "";
                     }
                 }
-                if(toastTip != null){
-                    ToastUtils.toastInBottom(this,"部分权限被禁用");
-                    ToastUtils.toastInBottom(this,"可能会导致部分功能失效");
+                if (toastTip != null) {
+                    ToastUtils.toastInBottom(this, "部分权限被禁用");
+                    ToastUtils.toastInBottom(this, "可能会导致部分功能失效");
                 }
                 startApp();
                 break;
@@ -69,11 +70,11 @@ public class WelcomeActivity extends BaseActivity {
         mhandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent=new Intent(WelcomeActivity.this,MainActivity.class);
+                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
-        },2000);
+        }, 2000);
     }
 
 }

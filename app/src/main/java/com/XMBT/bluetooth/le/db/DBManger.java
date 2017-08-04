@@ -18,10 +18,10 @@ public class DBManger {
     private SQLiteDatabase db;
     private Cursor cursor;
 
-    public static DBManger getInstance(Context context){
-        if(singleton == null){
-            synchronized(DBManger.class){
-                if(singleton == null){
+    public static DBManger getInstance(Context context) {
+        if (singleton == null) {
+            synchronized (DBManger.class) {
+                if (singleton == null) {
                     singleton = new DBManger(context);
                 }
             }
@@ -29,7 +29,7 @@ public class DBManger {
         return singleton;
     }
 
-    private DBManger(Context context){
+    private DBManger(Context context) {
         baseDBHelper = new BaseDBHelper(context);
     }
 
@@ -56,7 +56,7 @@ public class DBManger {
         List<RecordBean> dataList = new ArrayList<>();
         db = baseDBHelper.getWritableDatabase();
         Cursor cursor = db.query(BaseDBHelper.TABLE_DRIVING_RECORD, null, null, null, null, null, null);
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             RecordBean bean = new RecordBean();
             bean.startTime = cursor.getString(cursor.getColumnIndex("start"));
             bean.stopTime = cursor.getString(cursor.getColumnIndex("stop"));

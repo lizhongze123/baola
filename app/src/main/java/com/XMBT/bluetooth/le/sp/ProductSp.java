@@ -17,25 +17,25 @@ public class ProductSp {
 
     private static ProductSp instance = null;
 
-    public ProductSp(Context context){
+    public ProductSp(Context context) {
         this.mContext = context;
-        sp = context.getSharedPreferences(fileName,Context.MODE_PRIVATE);
+        sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
     }
 
-    public static synchronized ProductSp getInstance(Context context){
-        if(instance == null) {
+    public static synchronized ProductSp getInstance(Context context) {
+        if (instance == null) {
             instance = new ProductSp(context);
         }
         return instance;
     }
 
-    public String getProduct(String key){
+    public String getProduct(String key) {
         String productBase64 = sp.getString(key, "");
         return productBase64;
     }
 
-    public void setProduct(String key, String var){
-        sp.edit().putString(key,var).commit();
+    public void setProduct(String key, String var) {
+        sp.edit().putString(key, var).commit();
     }
 
 }

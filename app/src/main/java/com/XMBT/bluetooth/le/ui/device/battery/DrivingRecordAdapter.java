@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Administrator on 2017/7/25.
  */
 
-public class DrivingRecordAdapter extends RecyclerView.Adapter<RecordHolder>{
+public class DrivingRecordAdapter extends RecyclerView.Adapter<RecordHolder> {
 
     private List<RecordBean> dataList = new ArrayList<>();
     private Context context;
@@ -27,19 +27,19 @@ public class DrivingRecordAdapter extends RecyclerView.Adapter<RecordHolder>{
 
     @Override
     public int getItemViewType(int position) {
-        if(dataList.size() >= 2){
-            if(position != 0){
-                RecordBean bean =  dataList.get(position);
-                if(bean.date.equals(dataList.get(position - 1).date)){
+        if (dataList.size() >= 2) {
+            if (position != 0) {
+                RecordBean bean = dataList.get(position);
+                if (bean.date.equals(dataList.get(position - 1).date)) {
                     return TYPE_FEED;
-                }else{
+                } else {
                     return TYPE_TIME;
                 }
-            }else{
+            } else {
                 return TYPE_TIME;
             }
 
-        }else{
+        } else {
             return TYPE_TIME;
         }
 
@@ -48,7 +48,7 @@ public class DrivingRecordAdapter extends RecyclerView.Adapter<RecordHolder>{
     @Override
     public RecordHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
-        View rootView = LayoutInflater.from(context).inflate(R.layout.item_record,parent,false);
+        View rootView = LayoutInflater.from(context).inflate(R.layout.item_record, parent, false);
         return new RecordHolder(rootView, mListener);
     }
 
@@ -82,12 +82,13 @@ public class DrivingRecordAdapter extends RecyclerView.Adapter<RecordHolder>{
 
     OnRecordItemClickListener mListener;
 
-    public void setOnItemClickListener(OnRecordItemClickListener listener){
+    public void setOnItemClickListener(OnRecordItemClickListener listener) {
         mListener = listener;
     }
 
 }
-class RecordHolder extends RecyclerView.ViewHolder{
+
+class RecordHolder extends RecyclerView.ViewHolder {
 
     private DrivingRecordAdapter.OnRecordItemClickListener listener;
     private TextView tvDate;
@@ -104,22 +105,22 @@ class RecordHolder extends RecyclerView.ViewHolder{
         tvDuration = (TextView) itemView.findViewById(R.id.tv_duration);
     }
 
-    public void setData(final Context context, List<RecordBean> dataList, int position){
+    public void setData(final Context context, List<RecordBean> dataList, int position) {
         RecordBean bean = dataList.get(position);
-        if(bean == null){
+        if (bean == null) {
             return;
         }
-        if(dataList.size() >= 2){
-            if(position != 0){
-                if(bean.date.equals(dataList.get(position - 1).date)){
+        if (dataList.size() >= 2) {
+            if (position != 0) {
+                if (bean.date.equals(dataList.get(position - 1).date)) {
                     tvDate.setVisibility(View.GONE);
-                }else{
+                } else {
                     tvDate.setVisibility(View.VISIBLE);
                 }
-            }else{
+            } else {
                 tvDate.setVisibility(View.VISIBLE);
             }
-        }else{
+        } else {
             tvDate.setVisibility(View.VISIBLE);
         }
         tvDate.setText(bean.date);

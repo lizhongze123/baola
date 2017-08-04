@@ -9,15 +9,15 @@ import android.util.DisplayMetrics;
 public class DeviceConfig {
 
     public static int screenWidth;
-    public static int  screenHeight;
+    public static int screenHeight;
     public static float screenDensity;
 
     /**
      * 设置屏幕宽高及密度
      */
-    public static void setScreenWidthAndHeight(Context context){
+    public static void setScreenWidthAndHeight(Context context) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        screenWidth  = dm.widthPixels;
+        screenWidth = dm.widthPixels;
         screenHeight = dm.heightPixels;
         screenDensity = dm.density;
     }

@@ -16,7 +16,7 @@ import com.baidu.mapapi.map.MapView;
 /**
  * Created by haowenlee on 2017/4/20.
  */
-public class ZoomControlView extends LinearLayout implements View.OnClickListener{
+public class ZoomControlView extends LinearLayout implements View.OnClickListener {
 
     private MapView mapView;
 
@@ -41,7 +41,7 @@ public class ZoomControlView extends LinearLayout implements View.OnClickListene
     }
 
     private void initZoomControlView(Context context) {
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.zoom_control_layout, this);
         zoomIn = (ImageView) view.findViewById(R.id.zoom_control_plus);
         zoomOut = (ImageView) view.findViewById(R.id.zoom_control_reduce);
@@ -52,16 +52,14 @@ public class ZoomControlView extends LinearLayout implements View.OnClickListene
     /**
      * set {@link MapView}
      */
-    public void setMapView(MapView mapView)
-    {
-        if(mapView != null)
-        {
+    public void setMapView(MapView mapView) {
+        if (mapView != null) {
             this.mapView = mapView;
             baiduMap = mapView.getMap();
             mapStatus = baiduMap.getMapStatus();
             MaxLevel = baiduMap.getMaxZoomLevel();
             MinLevel = baiduMap.getMinZoomLevel();
-        }else{
+        } else {
             throw new NullPointerException("you should call setMapView(MapView mapView) at first");
         }
     }
@@ -88,24 +86,21 @@ public class ZoomControlView extends LinearLayout implements View.OnClickListene
 
         float zoom = mapStatus.zoom;
 
-        if(zoom> MinLevel && zoom< MaxLevel)
-        {
+        if (zoom > MinLevel && zoom < MaxLevel) {
 
-            if(!zoomIn.isEnabled()){
+            if (!zoomIn.isEnabled()) {
                 zoomIn.setEnabled(true); //设置为可点击
             }
 
-            if(!zoomOut.isEnabled()){
+            if (!zoomOut.isEnabled()) {
                 zoomOut.setEnabled(true);
             }
 
-        }else if(zoom == MinLevel)
-        {
+        } else if (zoom == MinLevel) {
             zoomOut.setEnabled(false);
             zoomIn.setEnabled(true);
 
-        }else
-        {
+        } else {
 
             zoomIn.setEnabled(false);
             zoomOut.setEnabled(true);

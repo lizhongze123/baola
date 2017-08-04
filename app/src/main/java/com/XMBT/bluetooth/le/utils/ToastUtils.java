@@ -28,11 +28,11 @@ public class ToastUtils {
 
     public static void toastInBottom(Context context, String tip) {
 
-    	if(toast == null){
-    		toast = Toast.makeText(context.getApplicationContext(), tip, Toast.LENGTH_SHORT);
-    	}else{
-    		toast.setText(tip);
-    	}
+        if (toast == null) {
+            toast = Toast.makeText(context.getApplicationContext(), tip, Toast.LENGTH_SHORT);
+        } else {
+            toast.setText(tip);
+        }
         toast.setGravity(Gravity.BOTTOM, 0, 100);
         toast.show();
     }

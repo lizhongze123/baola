@@ -16,7 +16,7 @@ public class WarnCenterActivity extends Activity {
     private ExpandableListView listView;
     private MyListAdapter adapter;
     private String[] groupStrings = new String[]
-            {"位移报警", "震动报警", "低电报警","高压报警","围栏报警"};
+            {"位移报警", "震动报警", "低电报警", "高压报警", "围栏报警"};
     private String[][] childStrings = new String[][]
             {
                     {"暂无报警信息"},
@@ -25,6 +25,7 @@ public class WarnCenterActivity extends Activity {
                     {"暂无报警信息"},
                     {"暂无报警信息"}
             };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,13 +35,13 @@ public class WarnCenterActivity extends Activity {
     }
 
     private void initView() {
-        listView= (ExpandableListView) findViewById(R.id.expand);
+        listView = (ExpandableListView) findViewById(R.id.expand);
         listView.setGroupIndicator(null);//将控件默认的左边箭头去掉，
-        adapter= new MyListAdapter();
+        adapter = new MyListAdapter();
         listView.setAdapter(adapter);
     }
 
-    private class MyListAdapter extends BaseExpandableListAdapter{
+    private class MyListAdapter extends BaseExpandableListAdapter {
 
         @Override
         public int getGroupCount() {
@@ -84,16 +85,16 @@ public class WarnCenterActivity extends Activity {
                 convertView = LayoutInflater.from(WarnCenterActivity.this).inflate(R.layout.item_expand_group, parent, false);
                 groupViewHolder = new GroupViewHolder();
                 groupViewHolder.tvTitle = (TextView) convertView.findViewById(R.id.label_expand_group);
-                groupViewHolder.parentImageViw= (ImageView) convertView.findViewById(R.id.arrowIv);
+                groupViewHolder.parentImageViw = (ImageView) convertView.findViewById(R.id.arrowIv);
                 convertView.setTag(groupViewHolder);
             } else {
                 groupViewHolder = (GroupViewHolder) convertView.getTag();
             }
             groupViewHolder.tvTitle.setText(groupStrings[groupPosition]);
             //判断isExpanded就可以控制是按下还是关闭，同时更换图片
-            if(isExpanded){
+            if (isExpanded) {
                 groupViewHolder.parentImageViw.setBackgroundResource(R.drawable.arrow_bottom);
-            }else{
+            } else {
                 groupViewHolder.parentImageViw.setBackgroundResource(R.drawable.arrow_right);
             }
             return convertView;
@@ -118,17 +119,19 @@ public class WarnCenterActivity extends Activity {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
+
         class GroupViewHolder {
             TextView tvTitle;
             ImageView parentImageViw;
         }
+
         class ChildViewHolder {
             TextView tvTitle;
         }
     }
 
-    public void doClick(View view){
-        switch (view.getId()){
+    public void doClick(View view) {
+        switch (view.getId()) {
             case R.id.backIv:
                 onBackPressed();
                 break;

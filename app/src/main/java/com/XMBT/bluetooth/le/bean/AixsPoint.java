@@ -55,13 +55,13 @@ public class AixsPoint {
         this.title = title;
     }
 
-    public boolean eq(AixsPoint other){
+    public boolean eq(AixsPoint other) {
 
-        if(other!=null){
-            boolean isX=centerX==other.getCenterX();
-            boolean isY=centerY==other.getCenterY();
-            boolean isTitle=title.hashCode()==other.getTitle().hashCode();
-            return isX&&isY&&isTitle;
+        if (other != null) {
+            boolean isX = centerX == other.getCenterX();
+            boolean isY = centerY == other.getCenterY();
+            boolean isTitle = title.hashCode() == other.getTitle().hashCode();
+            return isX && isY && isTitle;
         }
         return false;
     }

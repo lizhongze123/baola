@@ -57,17 +57,17 @@ public class BaiduMapActivity extends Activity {
     MapView mMapView = null;
     YunCheDeviceEntity device;
     public static List<Activity> activityList = new LinkedList<Activity>();
-    List<LocalEntity> localEntities=new ArrayList<LocalEntity>();
+    List<LocalEntity> localEntities = new ArrayList<LocalEntity>();
     public static final String ROUTE_PLAN_NODE = "routePlanNode";
     BaiduMap mBaiduMap;
     ZoomControlView zoomControlView;
-    private CheckBox checkbox1,checkbox2,checkbox3;
+    private CheckBox checkbox1, checkbox2, checkbox3;
     private String mSDCardPath = null;
-    private static final String[] authBaseArr = { Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_FINE_LOCATION };
+    private static final String[] authBaseArr = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_FINE_LOCATION};
     private static final int authBaseRequestCode = 1;
     private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
-    private static final String[] authComArr = { Manifest.permission.READ_PHONE_STATE };
+    private static final String[] authComArr = {Manifest.permission.READ_PHONE_STATE};
     private static final int authComRequestCode = 2;
     private boolean hasInitSuccess = false;
     private boolean hasRequestComAuth = false;
@@ -87,6 +87,7 @@ public class BaiduMapActivity extends Activity {
         }
         getLocate();
     }
+
     private boolean initDirs() {
         mSDCardPath = getSdcardDir();
         if (mSDCardPath == null) {
@@ -103,12 +104,14 @@ public class BaiduMapActivity extends Activity {
         }
         return true;
     }
+
     private String getSdcardDir() {
         if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
             return Environment.getExternalStorageDirectory().toString();
         }
         return null;
     }
+
     String authinfo = null;
     /**
      * 内部TTS播报状态回传handler
@@ -145,6 +148,7 @@ public class BaiduMapActivity extends Activity {
             // showToastMsg("TTSPlayStateListener : TTS play start");
         }
     };
+
     private boolean hasBasePhoneAuth() {
         // TODO Auto-generated method stub
 
@@ -156,6 +160,7 @@ public class BaiduMapActivity extends Activity {
         }
         return true;
     }
+
     private void initSetting() {
         // BNaviSettingManager.setDayNightMode(BNaviSettingManager.DayNightMode.DAY_NIGHT_MODE_DAY);
         BNaviSettingManager
@@ -168,6 +173,7 @@ public class BaiduMapActivity extends Activity {
         bundle.putString(BNCommonSettingParam.TTS_APP_ID, "9454455");
         BNaviSettingManager.setNaviSdkParam(bundle);
     }
+
     private boolean hasCompletePhoneAuth() {
         // TODO Auto-generated method stub
 
@@ -179,6 +185,7 @@ public class BaiduMapActivity extends Activity {
         }
         return true;
     }
+
     private void initNavi() {
 
         BNOuterTTSPlayerCallback ttsCallback = null;
@@ -228,6 +235,7 @@ public class BaiduMapActivity extends Activity {
         }, null, ttsHandler, ttsPlayStateListener);
 
     }
+
     private BNRoutePlanNode.CoordinateType mCoordinateType = null;
 
     private void routeplanToNavi(BNRoutePlanNode.CoordinateType coType) {
@@ -282,6 +290,7 @@ public class BaiduMapActivity extends Activity {
             BaiduNaviManager.getInstance().launchNavigator(this, list, 1, true, new DemoRoutePlanListener(sNode));
         }
     }
+
     public class DemoRoutePlanListener implements BaiduNaviManager.RoutePlanListener {
 
         private BNRoutePlanNode mBNRoutePlanNode = null;
@@ -317,91 +326,92 @@ public class BaiduMapActivity extends Activity {
             Toast.makeText(BaiduMapActivity.this, "算路失败", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void initView() {
-        checkbox1= (CheckBox) findViewById(R.id.checkbox1);
-        checkbox2= (CheckBox) findViewById(R.id.checkbox2);
-        checkbox3= (CheckBox) findViewById(R.id.checkbox3);
+        checkbox1 = (CheckBox) findViewById(R.id.checkbox1);
+        checkbox2 = (CheckBox) findViewById(R.id.checkbox2);
+        checkbox3 = (CheckBox) findViewById(R.id.checkbox3);
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
-        zoomControlView= (ZoomControlView) findViewById(R.id.zoomControlView);
+        zoomControlView = (ZoomControlView) findViewById(R.id.zoomControlView);
         zoomControlView.setMapView(mMapView);
         mMapView.showZoomControls(false);
         mBaiduMap = mMapView.getMap();
     }
 
     private void getLocate() {
-        Intent intent=getIntent();
-        device= (YunCheDeviceEntity) intent.getSerializableExtra("device");
-        SharedPreferences sp=getSharedPreferences("userInfo",MODE_PRIVATE);
-        String mds=sp.getString("mds",null);
-        String id=sp.getString("id",null);
-        OkGo.get(GlobalConsts.URL+"GetDateServices.asmx/GetDate")
+        Intent intent = getIntent();
+        device = (YunCheDeviceEntity) intent.getSerializableExtra("device");
+        SharedPreferences sp = getSharedPreferences("userInfo", MODE_PRIVATE);
+        String mds = sp.getString("mds", null);
+        String id = sp.getString("id", null);
+        OkGo.get(GlobalConsts.URL + "GetDateServices.asmx/GetDate")
                 .tag(this)
-                .params("method","getUserAndGpsInfoByIDsUtcNew")
-                .params("school_id",id)
-                .params("custid",id)
-                .params("userIDs",device.getId())
-                .params("mapType","BAIDU")
-                .params("option","cn")
-                .params("mds",mds)
+                .params("method", "getUserAndGpsInfoByIDsUtcNew")
+                .params("school_id", id)
+                .params("custid", id)
+                .params("userIDs", device.getId())
+                .params("mapType", "BAIDU")
+                .params("option", "cn")
+                .params("mds", mds)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         try {
-                            JSONObject jsonObject=new JSONObject(s);
-                            JSONArray arydata=jsonObject.getJSONArray("data");
-                            for (int i=0;i<arydata.length();i++){
-                                JSONObject datajson=arydata.getJSONObject(i);
-                                JSONObject keyjson=datajson.getJSONObject("key");
-                                int sys_time=keyjson.getInt("sys_time");
-                                int user_name=keyjson.getInt("user_name");
-                                int jingdu=keyjson.getInt("jingdu");
-                                int weidu=keyjson.getInt("weidu");
-                                int ljingdu=keyjson.getInt("ljingdu");
-                                int lweidu=keyjson.getInt("lweidu");
-                                int datetime=keyjson.getInt("datetime");
-                                int heart_time=keyjson.getInt("heart_time");
-                                int su=keyjson.getInt("su");
-                                int status=keyjson.getInt("status");
-                                int hangxiang=keyjson.getInt("hangxiang");
-                                int sim_id=keyjson.getInt("sim_id");
-                                int user_id=keyjson.getInt("user_id");
-                                int sale_type=keyjson.getInt("sale_type");
-                                int iconType=keyjson.getInt("iconType");
-                                int server_time=keyjson.getInt("server_time");
-                                int product_type=keyjson.getInt("product_type");
-                                int expire_date=keyjson.getInt("expire_date");
-                                int group_id=keyjson.getInt("group_id");
-                                int statenumber=keyjson.getInt("statenumber");
-                                int eletric=keyjson.getInt("electric");
-                                JSONArray aryrecord=datajson.getJSONArray("records");
-                                for (int j=0;j<aryrecord.length();j++){
-                                    JSONArray aryrecords=aryrecord.getJSONArray(j);
-                                    long sys_timestr=aryrecords.getLong(sys_time);
-                                    String user_namestr=aryrecords.getString(user_name);
-                                    double jingdustr=aryrecords.getDouble(jingdu);
-                                    double weidustr=aryrecords.getDouble(weidu);
-                                    double ljingdustr=aryrecords.getDouble(ljingdu);
-                                    double lweidustr=aryrecords.getDouble(lweidu);
-                                    long datetimestr=aryrecords.getLong(datetime);
-                                    long heart_timestr=aryrecords.getLong(heart_time);
-                                    int sustr=aryrecords.getInt(su);
-                                    String statusstr=aryrecords.getString(status);
-                                    int hangxiangstr=aryrecords.getInt(hangxiang);
-                                    String sim_idstr=aryrecords.getString(sim_id);
-                                    String user_idstr=aryrecords.getString(user_id);
-                                    String sale_typestr=aryrecords.getString(sale_type);
-                                    String iconTypestr=aryrecords.getString(iconType);
-                                    long server_timestr=aryrecords.getLong(server_time);
-                                    String product_typestr=aryrecords.getString(product_type);
-                                    long expire_datestr=aryrecords.getLong(expire_date);
-                                    String group_idstr=aryrecords.getString(group_id);
-                                    String statusnumberstr=aryrecords.getString(statenumber);
-                                    double eletricstr=aryrecords.getDouble(eletric);
-                                    LocalEntity localEntity=new LocalEntity(sys_timestr,user_namestr,jingdustr,weidustr,ljingdustr
-                                    ,lweidustr,datetimestr,heart_timestr,sustr,hangxiangstr,sim_idstr,user_idstr,iconTypestr,
-                                            sale_typestr,statusstr,server_timestr,product_typestr,expire_datestr,group_idstr,
-                                            statusnumberstr,eletricstr);
+                            JSONObject jsonObject = new JSONObject(s);
+                            JSONArray arydata = jsonObject.getJSONArray("data");
+                            for (int i = 0; i < arydata.length(); i++) {
+                                JSONObject datajson = arydata.getJSONObject(i);
+                                JSONObject keyjson = datajson.getJSONObject("key");
+                                int sys_time = keyjson.getInt("sys_time");
+                                int user_name = keyjson.getInt("user_name");
+                                int jingdu = keyjson.getInt("jingdu");
+                                int weidu = keyjson.getInt("weidu");
+                                int ljingdu = keyjson.getInt("ljingdu");
+                                int lweidu = keyjson.getInt("lweidu");
+                                int datetime = keyjson.getInt("datetime");
+                                int heart_time = keyjson.getInt("heart_time");
+                                int su = keyjson.getInt("su");
+                                int status = keyjson.getInt("status");
+                                int hangxiang = keyjson.getInt("hangxiang");
+                                int sim_id = keyjson.getInt("sim_id");
+                                int user_id = keyjson.getInt("user_id");
+                                int sale_type = keyjson.getInt("sale_type");
+                                int iconType = keyjson.getInt("iconType");
+                                int server_time = keyjson.getInt("server_time");
+                                int product_type = keyjson.getInt("product_type");
+                                int expire_date = keyjson.getInt("expire_date");
+                                int group_id = keyjson.getInt("group_id");
+                                int statenumber = keyjson.getInt("statenumber");
+                                int eletric = keyjson.getInt("electric");
+                                JSONArray aryrecord = datajson.getJSONArray("records");
+                                for (int j = 0; j < aryrecord.length(); j++) {
+                                    JSONArray aryrecords = aryrecord.getJSONArray(j);
+                                    long sys_timestr = aryrecords.getLong(sys_time);
+                                    String user_namestr = aryrecords.getString(user_name);
+                                    double jingdustr = aryrecords.getDouble(jingdu);
+                                    double weidustr = aryrecords.getDouble(weidu);
+                                    double ljingdustr = aryrecords.getDouble(ljingdu);
+                                    double lweidustr = aryrecords.getDouble(lweidu);
+                                    long datetimestr = aryrecords.getLong(datetime);
+                                    long heart_timestr = aryrecords.getLong(heart_time);
+                                    int sustr = aryrecords.getInt(su);
+                                    String statusstr = aryrecords.getString(status);
+                                    int hangxiangstr = aryrecords.getInt(hangxiang);
+                                    String sim_idstr = aryrecords.getString(sim_id);
+                                    String user_idstr = aryrecords.getString(user_id);
+                                    String sale_typestr = aryrecords.getString(sale_type);
+                                    String iconTypestr = aryrecords.getString(iconType);
+                                    long server_timestr = aryrecords.getLong(server_time);
+                                    String product_typestr = aryrecords.getString(product_type);
+                                    long expire_datestr = aryrecords.getLong(expire_date);
+                                    String group_idstr = aryrecords.getString(group_id);
+                                    String statusnumberstr = aryrecords.getString(statenumber);
+                                    double eletricstr = aryrecords.getDouble(eletric);
+                                    LocalEntity localEntity = new LocalEntity(sys_timestr, user_namestr, jingdustr, weidustr, ljingdustr
+                                            , lweidustr, datetimestr, heart_timestr, sustr, hangxiangstr, sim_idstr, user_idstr, iconTypestr,
+                                            sale_typestr, statusstr, server_timestr, product_typestr, expire_datestr, group_idstr,
+                                            statusnumberstr, eletricstr);
                                     localEntities.add(localEntity);
                                 }
                             }
@@ -416,15 +426,15 @@ public class BaiduMapActivity extends Activity {
 
     private void setMarker() {
         LocalEntity localEntity = null;
-        for(int i=0;i<localEntities.size();i++){
-            if(localEntities.get(i).getUser_name().equals(device.getFullname())){
-                localEntity=localEntities.get(i);
+        for (int i = 0; i < localEntities.size(); i++) {
+            if (localEntities.get(i).getUser_name().equals(device.getFullname())) {
+                localEntity = localEntities.get(i);
                 break;
             }
         }
 
         //定义Maker坐标点
-        LatLng point = new LatLng(localEntity.getWeidu(),localEntity.getJingdu());
+        LatLng point = new LatLng(localEntity.getWeidu(), localEntity.getJingdu());
         //构建Marker图标
         BitmapDescriptor bitmap = BitmapDescriptorFactory
                 .fromResource(R.drawable.map_annotation_image);
@@ -445,25 +455,25 @@ public class BaiduMapActivity extends Activity {
         mBaiduMap.setMapStatus(mMapStatusUpdate);
     }
 
-    public void doClick(View view){
-        switch (view.getId()){
+    public void doClick(View view) {
+        switch (view.getId()) {
             case R.id.backIv:
                 onBackPressed();
                 break;
             case R.id.checkbox1:
-                if(checkbox1.isChecked()){
+                if (checkbox1.isChecked()) {
                     //卫星地图
                     mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
-                }else {
+                } else {
                     //普通地图
                     mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
                 }
                 break;
             case R.id.checkbox3:
-                if(checkbox3.isChecked()){
+                if (checkbox3.isChecked()) {
                     //开启交通图
                     mBaiduMap.setTrafficEnabled(true);
-                }else {
+                } else {
                     //开启交通图
                     mBaiduMap.setTrafficEnabled(false);
                 }
@@ -474,14 +484,14 @@ public class BaiduMapActivity extends Activity {
                 }
                 break;
             case R.id.checkbox2:
-                if(checkbox2.isChecked()){
+                if (checkbox2.isChecked()) {
 
-                }else {
-                    SharedPreferences sp=getSharedPreferences("diaglog_toast",MODE_PRIVATE);
-                    int flag=sp.getInt("flag",-1);
-                    if(flag==1){
+                } else {
+                    SharedPreferences sp = getSharedPreferences("diaglog_toast", MODE_PRIVATE);
+                    int flag = sp.getInt("flag", -1);
+                    if (flag == 1) {
                         return;
-                    }else {
+                    } else {
                         new AlertDialog.Builder(this)
                                 .setTitle("提示")
                                 .setMessage("关闭视角跟随时，重新定位后将不会再自动调整视角到当前车辆位置")
@@ -512,18 +522,21 @@ public class BaiduMapActivity extends Activity {
         //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
         mMapView.onDestroy();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
         mMapView.onResume();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
         mMapView.onPause();
     }
+
     private BNOuterTTSPlayerCallback mTTSCallback = new BNOuterTTSPlayerCallback() {
 
         @Override

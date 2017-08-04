@@ -60,7 +60,7 @@ public class AddDeviceActivity extends BaseActivity {
                                 sendBroadcast(intent);
                                 finish();
                             }
-                        }).setNegativeButton("取消",null).create().show();
+                        }).setNegativeButton("取消", null).create().show();
             }
         });
     }
@@ -70,25 +70,25 @@ public class AddDeviceActivity extends BaseActivity {
         addDeviceEntity.setImg(R.drawable.xm_ligh);
         addDeviceEntity.setTitle(getString(R.string.lighting));
         addDeviceEntity.setDeviceName(GlobalConsts.LIGHTING);
-        addDeviceEntities.add(0,addDeviceEntity);
+        addDeviceEntities.add(0, addDeviceEntity);
 
         AddDeviceEntity addDeviceEntity1 = new AddDeviceEntity();
         addDeviceEntity1.setImg(R.drawable.battery);
         addDeviceEntity1.setTitle(getString(R.string.power));
         addDeviceEntity1.setDeviceName(GlobalConsts.POWER);
-        addDeviceEntities.add(1,addDeviceEntity1);
+        addDeviceEntities.add(1, addDeviceEntity1);
 
         AddDeviceEntity addDeviceEntity2 = new AddDeviceEntity();
         addDeviceEntity2.setDeviceName(GlobalConsts.BATTERY);
         addDeviceEntity2.setTitle(getString(R.string.battery));
         addDeviceEntity2.setImg(R.drawable.battery_electric);
-        addDeviceEntities.add(2,addDeviceEntity2);
+        addDeviceEntities.add(2, addDeviceEntity2);
 
         AddDeviceEntity addDeviceEntity3 = new AddDeviceEntity();
         addDeviceEntity3.setDeviceName(GlobalConsts.GPS_BATTERY);
         addDeviceEntity3.setTitle(getString(R.string.gpsbattery));
         addDeviceEntity3.setImg(R.drawable.battery_automobile);
-        addDeviceEntities.add(3,addDeviceEntity3);
+        addDeviceEntities.add(3, addDeviceEntity3);
     }
 
 

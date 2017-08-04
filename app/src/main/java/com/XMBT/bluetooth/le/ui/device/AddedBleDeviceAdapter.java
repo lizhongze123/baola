@@ -41,9 +41,9 @@ public class AddedBleDeviceAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView=View.inflate(context, R.layout.listitem_device,null);
-        TextView titleTv= (TextView) convertView.findViewById(R.id.device_name);
-        ImageView picIv= (ImageView) convertView.findViewById(R.id.imageView3);
+        convertView = View.inflate(context, R.layout.listitem_device, null);
+        TextView titleTv = (TextView) convertView.findViewById(R.id.device_name);
+        ImageView picIv = (ImageView) convertView.findViewById(R.id.imageView3);
         titleTv.setText(addDeviceEntities.get(position).getTitle());
         picIv.setImageResource(addDeviceEntities.get(position).getImg());
         return convertView;

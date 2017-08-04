@@ -10,7 +10,7 @@ import com.XMBT.bluetooth.le.base.BaseActivity;
  * Created by Administrator on 2017/7/17.
  */
 
-public class TestActivity extends BaseActivity{
+public class TestActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

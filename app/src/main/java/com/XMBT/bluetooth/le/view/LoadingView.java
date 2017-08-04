@@ -3,6 +3,7 @@ package com.XMBT.bluetooth.le.view;
 /**
  * Created by haowenlee on 2016/12/12.
  */
+
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -221,12 +222,12 @@ public class LoadingView extends View {
     private void drawPercentText(Canvas canvas) {
         // 绘制中间的文字进度
         float textWidth = textPaint.measureText(percentText);
-        float textHeight = (textPaint .descent() + textPaint.ascent())/2;
-        if(!TextUtils.isEmpty(percentText)){
-            canvas.drawText(percentText, xOrigin - textWidth/2,  yOrigin - textHeight , textPaint);
-        }else{
+        float textHeight = (textPaint.descent() + textPaint.ascent()) / 2;
+        if (!TextUtils.isEmpty(percentText)) {
+            canvas.drawText(percentText, xOrigin - textWidth / 2, yOrigin - textHeight, textPaint);
+        } else {
             textWidth = textPaint.measureText(0 + "");
-            canvas.drawText(0 + "", xOrigin - textWidth/2,  yOrigin - textHeight , textPaint);
+            canvas.drawText(0 + "", xOrigin - textWidth / 2, yOrigin - textHeight, textPaint);
         }
     }
 

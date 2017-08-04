@@ -12,10 +12,11 @@ import android.view.ViewGroup;
  */
 public class FortificationFragment extends Fragment {
     View view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=View.inflate(getActivity(),R.layout.fortification_fragment,null);
+        view = View.inflate(getActivity(), R.layout.fortification_fragment, null);
         return view;
     }
 }

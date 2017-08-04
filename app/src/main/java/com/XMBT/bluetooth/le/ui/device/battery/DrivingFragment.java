@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    public final static String EXTRA_DATA	= "EXTRA_DATA";
+    public final static String EXTRA_DATA = "EXTRA_DATA";
     private View view;
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     SimpleCalendarDialogFragment dialogFragment;
@@ -64,7 +64,7 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
     private int mSuspensionHeight;
     private List<RecordBean> dataList = new ArrayList<>();
 
-    public static DrivingFragment newInstance(Boolean isConnSuccessful){
+    public static DrivingFragment newInstance(Boolean isConnSuccessful) {
         DrivingFragment itemFragement = new DrivingFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(IndexFragment.CONNECTED_STATUS, isConnSuccessful);
@@ -75,9 +75,9 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = View.inflate(getActivity(), R.layout.driving_fragment,null);
+        view = View.inflate(getActivity(), R.layout.driving_fragment, null);
         Bundle arguments = getArguments();
-        if(arguments != null){
+        if (arguments != null) {
             isConnSuccessful = arguments.getBoolean(IndexFragment.CONNECTED_STATUS);
         }
         initViews();
@@ -113,17 +113,19 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         adapter.addAll(dataList);
-        if(dataList.size() != 0){
+        if (dataList.size() != 0) {
             mSuspensionTv.setText(dataList.get(0).date);
         }
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 mSuspensionHeight = mSuspensionBar.getHeight();
             }
 
-            @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (adapter.getItemViewType(mCurrentPosition + 1) == DrivingRecordAdapter.TYPE_TIME) {
                     View view = linearLayoutManager.findViewByPosition(mCurrentPosition + 1);
@@ -152,12 +154,12 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
         mSuspensionTv.setText(dataList.get(mCurrentPosition).date);
     }
 
-    private void connectChanged(boolean isConnected){
-        if(isAdded()){
-            if(isConnected){
+    private void connectChanged(boolean isConnected) {
+        if (isAdded()) {
+            if (isConnected) {
                 titleBar.setTvLeft("已连接");
                 titleBar.setTvLeftTextColor(getResources().getColor(R.color.dark_blue));
-            }else{
+            } else {
                 titleBar.setTvLeft("未连接");
                 titleBar.setTvLeftTextColor(getResources().getColor(R.color.white));
             }
@@ -205,7 +207,7 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
         @Override
         public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
             textView.setText(FORMATTER.format(date.getDate()));
-            Toast.makeText(getActivity(),"暂无记录",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "暂无记录", Toast.LENGTH_SHORT).show();
             dismiss();
         }
     }
@@ -214,11 +216,11 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)){
+            if (action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)) {
                 int status = intent.getIntExtra(BluetoothLeClass.CONNECT_STATUS, BluetoothLeClass.STATE_DISCONNECTED);
-                if(status == BluetoothLeClass.STATE_DISCONNECTED)	{
+                if (status == BluetoothLeClass.STATE_DISCONNECTED) {
                     connectChanged(false);
-                } else{
+                } else {
                     connectChanged(true);
                 }
             }

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LineView2 extends View{
+public class LineView2 extends View {
 
     private List<ItemBean> mItems = new ArrayList<>();//  折线数据
 
@@ -113,11 +113,11 @@ public class LineView2 extends View{
     private int timeInterval = 60000;
     private int textHeight;
 
-    private Handler handler = new Handler(Looper.getMainLooper()){
+    private Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what == 0){
+            if (msg.what == 0) {
                 invalidate();
             }
         }
@@ -188,7 +188,7 @@ public class LineView2 extends View{
     }
 
     /**
-     * @param changed  表示view有新的尺寸或位置
+     * @param changed 表示view有新的尺寸或位置
      * @param left
      * @param top
      * @param right
@@ -213,7 +213,7 @@ public class LineView2 extends View{
 //			初始化原点坐标
         int textWidth = (int) mTextPaint.measureText("000");
         textHeight = (int) (mTextFontMetrics.bottom - mTextFontMetrics.top);
-        xOrigin = textWidth ;
+        xOrigin = textWidth;
         yOrigin = mHeight - textHeight;
     }
 
@@ -263,7 +263,7 @@ public class LineView2 extends View{
         super.onDraw(canvas);
         drawAxes(canvas);
         drawLine(canvas);
-        handler.sendEmptyMessageDelayed(0,1000);
+        handler.sendEmptyMessageDelayed(0, 1000);
     }
 
     private void drawLine(Canvas canvas) {
@@ -275,7 +275,8 @@ public class LineView2 extends View{
         Path mPath = new Path();
 
         for (int i = 0; i < mItems.size(); i++) {
-            float x = (mItems.get(i).getMsec() - mItems.get(0).getMsec()) * xInterval + xOrigin;;
+            float x = (mItems.get(i).getMsec() - mItems.get(0).getMsec()) * xInterval + xOrigin;
+            ;
             if (i == 0) {
                 mPath.moveTo(x, yOrigin - (mItems.get(i).getValue() - min) / yInterval);
             } else {
@@ -289,14 +290,14 @@ public class LineView2 extends View{
         int mMargin10 = DensityUtils.dp2px(getContext(), 10);
         //画横线
         int[] yTextWidthArray = new int[textArray.length];
-        for(int i = 0; i <= textArray.length; i++){
+        for (int i = 0; i <= textArray.length; i++) {
             canvas.drawLine(xOrigin, yOrigin / textArray.length * i, mWidth - mMargin10, yOrigin / textArray.length * i, mGridPaint);
-            if(i != textArray.length){
+            if (i != textArray.length) {
                 //Y轴上的文字
                 yTextWidthArray[i] = (int) mTextPaint.measureText(textArray[i] + "0");
-                if(i == 0){
+                if (i == 0) {
                     canvas.drawText(textArray[i] + "", xOrigin - yTextWidthArray[i], yOrigin / textArray.length * i + textHeight, mTextPaint);
-                }else{
+                } else {
                     canvas.drawText(textArray[i] + "", xOrigin - yTextWidthArray[i], yOrigin / textArray.length * i + textHeight / 3, mTextPaint);
                 }
             }
@@ -304,14 +305,14 @@ public class LineView2 extends View{
 
         String[] timeArray = new String[7];
         //画竖线
-        for(int i = 0; i < timeArray.length; i++){
+        for (int i = 0; i < timeArray.length; i++) {
             canvas.drawLine((mWidth - xOrigin - mMargin10) / (timeArray.length - 1) * i + xOrigin, yOrigin, (mWidth - xOrigin - mMargin10) / (timeArray.length - 1) * i + xOrigin, 0, mGridPaint);
             timeArray[i] = i + "s";
             //X轴上的文字
             int textWidth = (int) mTextPaint.measureText(timeArray[i]);
-            if(i == timeArray.length - 1){
+            if (i == timeArray.length - 1) {
                 canvas.drawText(timeArray[i], (mWidth - xOrigin - mMargin10) / (timeArray.length - 1) * i + xOrigin - textWidth, mHeight, mTextPaint);
-            }else{
+            } else {
                 canvas.drawText(timeArray[i], (mWidth - xOrigin - mMargin10) / (timeArray.length - 1) * i + xOrigin - textWidth / 2, mHeight, mTextPaint);
             }
         }
@@ -320,6 +321,7 @@ public class LineView2 extends View{
 
     /**
      * 设置坐标数据
+     *
      * @param items
      */
     public void setItems(List<ItemBean> items) {

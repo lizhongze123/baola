@@ -55,10 +55,10 @@ public class MyApplication extends Application {
 //              //方法四：使用bks证书和密码管理客户端证书（双向认证），使用预埋证书，校验服务端证书（自签名证书）
 //               .setCertificates(getAssets().open("xxx.bks"), "123456", getAssets().open("yyy.cer"))//
 
-                    //配置https的域名匹配规则，详细看demo的初始化介绍，不需要就不要加入，使用不当会导致https握手失败
+            //配置https的域名匹配规则，详细看demo的初始化介绍，不需要就不要加入，使用不当会导致https握手失败
 //               .setHostnameVerifier(new SafeHostnameVerifier())
 
-                    //可以添加全局拦截器，不需要就不要加入，错误写法直接导致任何回调不执行
+            //可以添加全局拦截器，不需要就不要加入，错误写法直接导致任何回调不执行
 //                .addInterceptor(new Interceptor() {
 //                    @Override
 //                    public Response intercept(Chain chain) throws IOException {
@@ -66,7 +66,7 @@ public class MyApplication extends Application {
 //                    }
 //                })
 
-                    //这两行同上，不需要就不要加入
+            //这两行同上，不需要就不要加入
 //                    .addCommonHeaders(headers)  //设置全局公共头
 //                    .addCommonParams(params);   //设置全局公共参数
 

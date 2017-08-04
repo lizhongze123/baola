@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LineView extends View{
+public class LineView extends View {
 
     private List<ItemBean> mItems = new ArrayList<>();//  折线数据
 
@@ -113,11 +113,11 @@ public class LineView extends View{
     private int timeInterval = 60000;
     private int textHeight;
 
-    private Handler handler = new Handler(Looper.getMainLooper()){
+    private Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what == 0){
+            if (msg.what == 0) {
                 invalidate();
             }
         }
@@ -188,7 +188,7 @@ public class LineView extends View{
     }
 
     /**
-     * @param changed  表示view有新的尺寸或位置
+     * @param changed 表示view有新的尺寸或位置
      * @param left
      * @param top
      * @param right
@@ -213,7 +213,7 @@ public class LineView extends View{
 //			初始化原点坐标
         int textWidth = (int) mTextPaint.measureText("100%%");
         textHeight = (int) (mTextFontMetrics.bottom - mTextFontMetrics.top);
-        xOrigin = textWidth ;
+        xOrigin = textWidth;
         yOrigin = mHeight - textHeight;
     }
 
@@ -263,7 +263,7 @@ public class LineView extends View{
         super.onDraw(canvas);
         drawAxes(canvas);
         drawLine(canvas);
-        handler.sendEmptyMessageDelayed(0,1000);
+        handler.sendEmptyMessageDelayed(0, 1000);
     }
 
     private void drawLine(Canvas canvas) {
@@ -291,37 +291,37 @@ public class LineView extends View{
         int mMargin10 = dp2px(getContext(), 10);
         //画横线
         int[] yTextWidthArray = new int[textArray.length];
-        for(int i = 0; i <= textArray.length; i++){
+        for (int i = 0; i <= textArray.length; i++) {
             canvas.drawLine(xOrigin, yOrigin / textArray.length * i, mWidth - mMargin10, yOrigin / textArray.length * i, mGridPaint);
-            if(i != textArray.length){
+            if (i != textArray.length) {
                 //Y轴上的文字
                 yTextWidthArray[i] = (int) mTextPaint.measureText(textArray[i] + "%%");
-                if(i == 0){
-                    canvas.drawText(String.format("%s",textArray[i] * max / 100) + "%", xOrigin - yTextWidthArray[i], yOrigin / textArray.length * i + textHeight, mTextPaint);
-                }else{
-                    canvas.drawText(String.format("%s",textArray[i] * max / 100) + "%", xOrigin - yTextWidthArray[i], yOrigin / textArray.length * i + textHeight / 3, mTextPaint);
+                if (i == 0) {
+                    canvas.drawText(String.format("%s", textArray[i] * max / 100) + "%", xOrigin - yTextWidthArray[i], yOrigin / textArray.length * i + textHeight, mTextPaint);
+                } else {
+                    canvas.drawText(String.format("%s", textArray[i] * max / 100) + "%", xOrigin - yTextWidthArray[i], yOrigin / textArray.length * i + textHeight / 3, mTextPaint);
                 }
             }
         }
 
         //如果过了5分钟，往左侧移动一分钟
-        if((startTime + timeInterval * 5) <= System.currentTimeMillis()){
+        if ((startTime + timeInterval * 5) <= System.currentTimeMillis()) {
             startTime = startTime + timeInterval;
-            if(onLineListener != null){
+            if (onLineListener != null) {
                 onLineListener.onChange();
             }
         }
 
         String[] timeArray = new String[6];
         //画竖线
-        for(int i = 0; i < timeArray.length; i++){
+        for (int i = 0; i < timeArray.length; i++) {
             canvas.drawLine((mWidth - xOrigin - mMargin10) / (timeArray.length - 1) * i + xOrigin, yOrigin, (mWidth - xOrigin - mMargin10) / (timeArray.length - 1) * i + xOrigin, 0, mGridPaint);
             timeArray[i] = sdf.format(new Time(startTime + timeInterval * i));
             //X轴上的文字
             int textWidth = (int) mTextPaint.measureText(timeArray[i]);
-            if(i == timeArray.length - 1){
+            if (i == timeArray.length - 1) {
                 canvas.drawText(timeArray[i], (mWidth - xOrigin - mMargin10) / (timeArray.length - 1) * i + xOrigin - textWidth, mHeight, mTextPaint);
-            }else{
+            } else {
                 canvas.drawText(timeArray[i], (mWidth - xOrigin - mMargin10) / (timeArray.length - 1) * i + xOrigin - textWidth / 2, mHeight, mTextPaint);
             }
         }
@@ -335,19 +335,20 @@ public class LineView extends View{
 
     /**
      * 设置坐标数据
+     *
      * @param items
      */
     public void setItems(List<ItemBean> items) {
         mItems = items;
     }
 
-    public interface OnLineListener{
+    public interface OnLineListener {
         void onChange();
     }
 
     private OnLineListener onLineListener;
 
-    public void setLineListener(OnLineListener onLineListener){
+    public void setLineListener(OnLineListener onLineListener) {
         this.onLineListener = onLineListener;
     }
 }

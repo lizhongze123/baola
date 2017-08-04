@@ -38,17 +38,17 @@ import java.util.Random;
 /**
  * 汽车智能动力电池--充电测试Fragment
  */
-public class ChargeFragment extends BaseFragment implements View.OnClickListener{
+public class ChargeFragment extends BaseFragment implements View.OnClickListener {
 
-    public final static String EXTRA_DATA	= "EXTRA_DATA";
+    public final static String EXTRA_DATA = "EXTRA_DATA";
 
-    private ProgressBar pb1,pb2;
-    private ImageView ivTriangle1,ivTriangle2;
-    private TextView tvVoltage1,tvVoltage2;
-    private TextView tvInfo1,tvInfo2;
+    private ProgressBar pb1, pb2;
+    private ImageView ivTriangle1, ivTriangle2;
+    private TextView tvVoltage1, tvVoltage2;
+    private TextView tvInfo1, tvInfo2;
     private View view;
-    private Button btnStart,btnRestart;
-    private RelativeLayout firstLayout,secondLayout,thirdLayout;
+    private Button btnStart, btnRestart;
+    private RelativeLayout firstLayout, secondLayout, thirdLayout;
     private TitleBar titleBar;
     private TextView tvLeftStandard1, tvLeftStandard2;
     private DashboardView dashboardView;
@@ -77,7 +77,7 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
 
     private boolean isHigh = false;
 
-    public static ChargeFragment newInstance(Boolean isConnSuccessful){
+    public static ChargeFragment newInstance(Boolean isConnSuccessful) {
         ChargeFragment itemFragement = new ChargeFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(IndexFragment.CONNECTED_STATUS, isConnSuccessful);
@@ -88,9 +88,9 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = View.inflate(getActivity(), R.layout.charge_fragment,null);
+        view = View.inflate(getActivity(), R.layout.charge_fragment, null);
         Bundle arguments = getArguments();
-        if(arguments != null){
+        if (arguments != null) {
             isConnSuccessful = arguments.getBoolean(IndexFragment.CONNECTED_STATUS);
         }
         initViews();
@@ -125,7 +125,7 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
         //画出标准区间
         int margin = standardVoltage * 300 / maxVoltage;  //求出标准所占的margin
         RelativeLayout.LayoutParams rl = (RelativeLayout.LayoutParams) tvLeftStandard1.getLayoutParams();
-        rl.setMarginStart(DensityUtils.dip2px(getActivity(),margin));
+        rl.setMarginStart(DensityUtils.dip2px(getActivity(), margin));
         tvLeftStandard1.setLayoutParams(rl);
         tvLeftStandard2.setLayoutParams(rl);
 
@@ -134,12 +134,12 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
         registerBoradcastReceiver();
     }
 
-    private void connectChanged(boolean isConnected){
-        if(isAdded()){
-            if(isConnected){
+    private void connectChanged(boolean isConnected) {
+        if (isAdded()) {
+            if (isConnected) {
                 titleBar.setTvLeft("已连接");
                 titleBar.setTvLeftTextColor(getResources().getColor(R.color.dark_blue));
-            }else{
+            } else {
                 titleBar.setTvLeft("未连接");
                 titleBar.setTvLeftTextColor(getResources().getColor(R.color.white));
             }
@@ -150,52 +150,52 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(GlobalConsts.ACTION_NOTIFI)){
+            if (action.equals(GlobalConsts.ACTION_NOTIFI)) {
                 strTemp = intent.getStringExtra(EXTRA_DATA);
 
-                if (!strTemp.equals("00:00:00:00:00")){  //过滤掉00:00:00:00:00
+                if (!strTemp.equals("00:00:00:00:00")) {  //过滤掉00:00:00:00:00
 
-                    if(strTemp.length() == 14){
-                        if(strTemp.substring(0,2).equals("08")){
-                            String substr = strTemp.substring(3,5) + strTemp.substring(6,8);
-                            int voltage10 = Integer.parseInt(substr,16);
-                            if(isHigh){
+                    if (strTemp.length() == 14) {
+                        if (strTemp.substring(0, 2).equals("08")) {
+                            String substr = strTemp.substring(3, 5) + strTemp.substring(6, 8);
+                            int voltage10 = Integer.parseInt(substr, 16);
+                            if (isHigh) {
                                 highvVltageList.add(voltage10);
-                            }else{
+                            } else {
                                 lowVoltageList.add(voltage10);
                             }
                         }
                     }
                 }
-            } else if(action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)){
+            } else if (action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)) {
                 int status = intent.getIntExtra(BluetoothLeClass.CONNECT_STATUS, BluetoothLeClass.STATE_DISCONNECTED);
-                if(status == BluetoothLeClass.STATE_DISCONNECTED)	{
+                if (status == BluetoothLeClass.STATE_DISCONNECTED) {
                     connectChanged(false);
-                } else{
+                } else {
                     connectChanged(true);
                 }
             }
         }
     };
 
-    private void setProgress1(Integer ii){
+    private void setProgress1(Integer ii) {
         int margin = ii * 300 / maxVoltage;  //求出progress所占的margin
         RelativeLayout.LayoutParams rl = (RelativeLayout.LayoutParams) ivTriangle1.getLayoutParams();
-        rl.setMarginStart(DensityUtils.dip2px(getActivity(),margin) - DensityUtils.dip2px(getActivity(),8));
+        rl.setMarginStart(DensityUtils.dip2px(getActivity(), margin) - DensityUtils.dip2px(getActivity(), 8));
         ivTriangle1.setLayoutParams(rl);
         pb1.setProgress(ii);
         float voltage = (float) ii / 100;
         DecimalFormat df = new DecimalFormat("0.00");
         tvVoltage1.setText(df.format(voltage) + "V");
 
-        if(ii <= standardVoltage){
+        if (ii <= standardVoltage) {
             //电压偏低
             pb1.setProgressDrawable(getResources().getDrawable(R.drawable.voltage_progress_warn));
             ivTriangle1.setImageResource(R.drawable.sort_down_red);
             tvVoltage1.setTextColor(getResources().getColor(android.R.color.holo_red_light));
             tvInfo1.setText("怠速状态充电电压为" + df.format(voltage) + "V，电压偏低");
             tvInfo1.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-        }else if(ii > standardVoltage){
+        } else if (ii > standardVoltage) {
             //正常电压
             pb1.setProgressDrawable(getResources().getDrawable(R.drawable.voltage_progress));
             ivTriangle1.setImageResource(R.drawable.sort_down_green);
@@ -205,24 +205,24 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
         }
     }
 
-    private void setProgress2(Integer ii){
+    private void setProgress2(Integer ii) {
         int margin = ii * 300 / maxVoltage;  //求出progress所占的margin
         RelativeLayout.LayoutParams rl = (RelativeLayout.LayoutParams) ivTriangle2.getLayoutParams();
-        rl.setMarginStart(DensityUtils.dip2px(getActivity(),margin) - DensityUtils.dip2px(getActivity(),8));
+        rl.setMarginStart(DensityUtils.dip2px(getActivity(), margin) - DensityUtils.dip2px(getActivity(), 8));
         ivTriangle2.setLayoutParams(rl);
         pb2.setProgress(ii);
         float voltage = (float) ii / 100;
         DecimalFormat df = new DecimalFormat("0.00");
         tvVoltage2.setText(df.format(voltage) + "V");
 
-        if(ii <= standardVoltage){
+        if (ii <= standardVoltage) {
             //电压偏低
             pb2.setProgressDrawable(getResources().getDrawable(R.drawable.voltage_progress_warn));
             ivTriangle2.setImageResource(R.drawable.sort_down_red);
             tvVoltage2.setTextColor(getResources().getColor(android.R.color.holo_red_light));
             tvInfo2.setText("高速状态充电电压为" + df.format(voltage) + "V，电压偏低");
             tvInfo2.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-        }else if(ii > standardVoltage){
+        } else if (ii > standardVoltage) {
             //正常电压
             pb2.setProgressDrawable(getResources().getDrawable(R.drawable.voltage_progress));
             ivTriangle2.setImageResource(R.drawable.sort_down_green);
@@ -234,7 +234,7 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_start:
                 isHigh = true;
                 firstLayout.setVisibility(View.GONE);
@@ -255,13 +255,13 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
         @Override
         public void run() {
             //对应dashboardView中的setProgress()方法
-            ObjectAnimator a= ObjectAnimator.ofFloat(dashboardView,"degree",startDegree,endDegree);
+            ObjectAnimator a = ObjectAnimator.ofFloat(dashboardView, "degree", startDegree, endDegree);
             a.setInterpolator(new LinearInterpolator());
             a.setDuration(500);
             a.start();
             startDegree = endDegree;
             endDegree = randomFloat();
-            handler.postDelayed(this,500);
+            handler.postDelayed(this, 500);
         }
     };
 
@@ -283,7 +283,7 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
             handler.removeCallbacks(task);
             secondLayout.setVisibility(View.GONE);
             thirdLayout.setVisibility(View.VISIBLE);
-            if(lowVoltageList.size() > 0 && highvVltageList.size() > 0){
+            if (lowVoltageList.size() > 0 && highvVltageList.size() > 0) {
                 Integer ii = Collections.max(lowVoltageList);
                 Integer i2 = Collections.max(highvVltageList);
                 setProgress1(ii);
@@ -294,14 +294,15 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
 
     /**
      * 45.0 - 67.5 之间的随机数
+     *
      * @return
      */
-    private float randomFloat(){
+    private float randomFloat() {
         float min = 45.0f;
         float max = 67.5f;
         float f = min + ((max - min) * new Random().nextFloat());
         BigDecimal b = new BigDecimal(f);
-        float f1 = b.setScale(1,BigDecimal.ROUND_HALF_UP).floatValue();
+        float f1 = b.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
         return f1;
     }
 

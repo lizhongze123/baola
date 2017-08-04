@@ -7,7 +7,7 @@ public class ItemBean {
     private String tag;
     private long msec;
 
-    public ItemBean(int value, String tag, long msec){
+    public ItemBean(int value, String tag, long msec) {
         this.value = value;
         this.tag = tag;
         this.msec = msec;

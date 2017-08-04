@@ -63,7 +63,7 @@ public class DateTimePickDialogUtil implements OnDateChangedListener, OnTimeChan
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), this);
         DateTime dateTime = new DateTime(calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH)+1,
+                calendar.get(Calendar.MONTH) + 1,
                 calendar.get(Calendar.DAY_OF_MONTH),
                 0,
                 0);
@@ -74,10 +74,11 @@ public class DateTimePickDialogUtil implements OnDateChangedListener, OnTimeChan
 
     /**
      * 弹出日期时间选择框方法
+     *
      * @param inputDate:为需要设置的日期时间文本编辑框
      * @return
      */
-    public AlertDialog dateTimePickDialog(final int flag,String title) {
+    public AlertDialog dateTimePickDialog(final int flag, String title) {
 
         LinearLayout dateTimeLayout = (LinearLayout) activity
                 .getLayoutInflater().inflate(R.layout.layout_datetime, null);
@@ -96,16 +97,16 @@ public class DateTimePickDialogUtil implements OnDateChangedListener, OnTimeChan
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if(flag==0) {
+                                if (flag == 0) {
                                     Intent intent = new Intent("datetime");
                                     intent.putExtra("flag", 0);
                                     activity.sendBroadcast(intent);
-                                }else {
-                                Toast.makeText(activity,"这段时间内没有轨迹",Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(activity, "这段时间内没有轨迹", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener(){
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

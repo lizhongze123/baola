@@ -145,12 +145,12 @@ public class ChargingProgess extends View {
         super.onDraw(canvas);
 
         int left = 0;
-        int top = mHeight  / 4;
+        int top = mHeight / 4;
         int right = (int) item_height / 2;
         int bottom = 3 * mHeight / 4;
 
         //顶部的矩形
-        RectF topRect = new RectF(mWidth, top, mWidth+right, bottom);
+        RectF topRect = new RectF(mWidth, top, mWidth + right, bottom);
         canvas.drawRoundRect(topRect, border_cornor_radius, border_cornor_radius, mPaint);
         //总的进度背景
         RectF border = new RectF(left, left, mWidth, mHeight);
@@ -161,7 +161,7 @@ public class ChargingProgess extends View {
         mPaint.setColor((background));
 
         //填充顶部矩形的背景
-        RectF topRectInner = new RectF(mWidth+left + border_cornor_radius / 2, top + border_cornor_radius / 2, mWidth+right - border_cornor_radius / 2, bottom - border_cornor_radius / 2);
+        RectF topRectInner = new RectF(mWidth + left + border_cornor_radius / 2, top + border_cornor_radius / 2, mWidth + right - border_cornor_radius / 2, bottom - border_cornor_radius / 2);
         canvas.drawRect(topRectInner, mPaint);
 
         //填充总的进度背景
@@ -179,7 +179,7 @@ public class ChargingProgess extends View {
             mPaint.setColor((item_charging_background));
             RectF backRect = new RectF((i + 1) * item_height / 2 + (i - 1) * item_height,
                     mHeight / 4,
-                    item_height / 2 + i * (3 * item_height / 2),3 * mHeight / 4);
+                    item_height / 2 + i * (3 * item_height / 2), 3 * mHeight / 4);
             canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
         }
 
@@ -257,7 +257,7 @@ public class ChargingProgess extends View {
         for (int i = item_count; i > (item_count - j); i--) {
             RectF backRect = new RectF((i + 1) * item_height / 2 + (i - 1) * item_height,
                     mHeight / 4,
-                    item_height / 2 + i * (3 * item_height / 2),3 * mHeight / 4);
+                    item_height / 2 + i * (3 * item_height / 2), 3 * mHeight / 4);
             canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
             mPaint.setStyle(Paint.Style.FILL);
             mPaint.setColor(item_charging_src);
@@ -270,7 +270,7 @@ public class ChargingProgess extends View {
         if (i > 0) {
             RectF backRect = new RectF((i + 1) * item_height / 2 + (i - 1) * item_height,
                     mHeight / 4,
-                    item_height / 2 + i * (3 * item_height / 2),3 * mHeight / 4);
+                    item_height / 2 + i * (3 * item_height / 2), 3 * mHeight / 4);
             mPaint.setStyle(Paint.Style.FILL);
             if (show) {
                 mPaint.setColor((item_charging_src));
@@ -339,10 +339,10 @@ public class ChargingProgess extends View {
             mHeight = (int) (item_count * item_height + (item_count + 1) * item_height / 2 + item_height);
             mWidth = (int) (2 * item_width);
         } else {
-            mHeight=(int) (2 * item_width);
-            mWidth=(int) (item_count * item_height + (item_count + 1) * item_height / 2 + item_height);
+            mHeight = (int) (2 * item_width);
+            mWidth = (int) (item_count * item_height + (item_count + 1) * item_height / 2 + item_height);
         }
-        setMeasuredDimension(mWidth+(int)(item_height/2), mHeight);
+        setMeasuredDimension(mWidth + (int) (item_height / 2), mHeight);
     }
 
 

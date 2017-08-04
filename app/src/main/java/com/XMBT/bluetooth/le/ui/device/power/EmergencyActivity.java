@@ -138,7 +138,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                 }
                 if (!strTemp.equals("0000000000")) {  //过滤掉00:00:00:00:00
 
-                    if(strTemp.length() == 10){
+                    if (strTemp.length() == 10) {
                         String substr = strTemp.substring(0, 6);
                         String substr2 = strTemp.substring(6, 10);
 
@@ -225,7 +225,6 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             }
                         }
                     }
-
 
 
                 }

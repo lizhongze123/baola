@@ -17,20 +17,21 @@ import com.XMBT.bluetooth.le.ui.misc.LoginActivity;
 public class MeFragment extends Fragment {
     private View view;
     private Button button;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=View.inflate(getActivity(),R.layout.me_fragment,null);
+        view = View.inflate(getActivity(), R.layout.me_fragment, null);
         initView();
         return view;
     }
 
     private void initView() {
-        button= (Button) view.findViewById(R.id.loginBtn);
+        button = (Button) view.findViewById(R.id.loginBtn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getActivity(),LoginActivity.class);
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
             }
         });

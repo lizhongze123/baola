@@ -22,9 +22,8 @@ public class DensityUtils {
 
     /**
      * 将sp转换成px
-     *
      */
-    public static float sp2px(Context context, int sp){
+    public static float sp2px(Context context, int sp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, metrics);
     }

@@ -20,13 +20,14 @@ import java.util.List;
 public class AppPermission {
 
     public static final int PERMISSION_REQUEST_CODE = 101;
+
     /**
      * 傻瓜化，获取所有配置的权限，再找出需要动态申请的权限，进行申请
      *
      * @param activity
      * @return true：进行了申请，在
      * {@link ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult(
-     * int, String[], int[])}里的REQUEST_CODE={@link #PERMISSION_REQUEST_CODE}接收结果;
+     *int, String[], int[])}里的REQUEST_CODE={@link #PERMISSION_REQUEST_CODE}接收结果;
      * false：没有需要申请的权限
      */
     @TargetApi(Build.VERSION_CODES.M)
@@ -51,16 +52,17 @@ public class AppPermission {
     @TargetApi(Build.VERSION_CODES.M)
     public static boolean requestUnGrantedPermission(Activity activity, List<String> permissions) {
         List<String> unGrantedPermissions = findUnGrantedPermissions(activity, permissions);
-        if(unGrantedPermissions != null && unGrantedPermissions.size() > 0) {
+        if (unGrantedPermissions != null && unGrantedPermissions.size() > 0) {
             requestPermissions(activity, unGrantedPermissions.toArray(new String[unGrantedPermissions.size()]));
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     /**
      * 过滤出未准许的权限
+     *
      * @param context
      * @param permissions
      * @return
@@ -78,16 +80,18 @@ public class AppPermission {
 
     /**
      * 请求权限，弹出用户确认框
+     *
      * @param context
      * @param permissions
      */
     @TargetApi(Build.VERSION_CODES.M)
     public static void requestPermissions(Activity context, String[] permissions) {
-        ActivityCompat.requestPermissions(context,permissions, PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions(context, permissions, PERMISSION_REQUEST_CODE);
     }
 
     /**
      * 过滤掉同组的权限（权限申请只需要申请组内的其中一个，同组成员共同权限）
+     *
      * @param permissions
      * @return
      */

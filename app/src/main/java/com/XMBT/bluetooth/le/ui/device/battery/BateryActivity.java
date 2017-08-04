@@ -26,7 +26,7 @@ public class BateryActivity extends BaseActivity {
     private ChargeFragment chargeFragment;
     private DrivingFragment drivingFragment;
 
-    private RadioButton[]  btnAry = new RadioButton[4];
+    private RadioButton[] btnAry = new RadioButton[4];
     private Fragment[] fragmentAry = null;
     private int currentIndex;
     private int selectedIndex;
@@ -53,17 +53,17 @@ public class BateryActivity extends BaseActivity {
         startTestFragment = StartTestFragment2.newInstance(isConnSuccessful);
         chargeFragment = ChargeFragment.newInstance(isConnSuccessful);
         drivingFragment = DrivingFragment.newInstance(isConnSuccessful);
-        fragmentAry = new Fragment[]{voltageFragment,startTestFragment,chargeFragment,drivingFragment};
+        fragmentAry = new Fragment[]{voltageFragment, startTestFragment, chargeFragment, drivingFragment};
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container,voltageFragment);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, voltageFragment);
         fragmentTransaction.show(voltageFragment);
         fragmentTransaction.commit();
     }
 
     private void addListener() {
-        myButtonListener=new MyButtonListener();
-        for(int i = 0; i < btnAry.length; i++){
+        myButtonListener = new MyButtonListener();
+        for (int i = 0; i < btnAry.length; i++) {
             btnAry[i].setOnClickListener(myButtonListener);
         }
     }
@@ -81,12 +81,12 @@ public class BateryActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)){
+            if (action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)) {
                 int status = intent.getIntExtra("CONNECT_STATUC", 0);
-                if(status == 0)	{
-                   //断开连接
+                if (status == 0) {
+                    //断开连接
                     isConnSuccessful = false;
-                } else{
+                } else {
                     //已连接
                     isConnSuccessful = true;
                 }
@@ -94,11 +94,11 @@ public class BateryActivity extends BaseActivity {
         }
     };
 
-    class MyButtonListener implements View.OnClickListener{
+    class MyButtonListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
-            switch (view.getId()){
+            switch (view.getId()) {
                 case R.id.radio1:
                     selectedIndex = 0;
                     break;
@@ -112,11 +112,11 @@ public class BateryActivity extends BaseActivity {
                     selectedIndex = 3;
                     break;
             }
-            if(selectedIndex!=currentIndex){
+            if (selectedIndex != currentIndex) {
                 FragmentTransaction transation = getSupportFragmentManager().beginTransaction();
                 transation.hide(fragmentAry[currentIndex]);
-                if(!fragmentAry[selectedIndex].isAdded()){
-                    transation.add(R.id.fragment_container,fragmentAry[selectedIndex]);
+                if (!fragmentAry[selectedIndex].isAdded()) {
+                    transation.add(R.id.fragment_container, fragmentAry[selectedIndex]);
                 }
                 transation.show(fragmentAry[selectedIndex]);
                 transation.commit();

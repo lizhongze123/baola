@@ -8,6 +8,7 @@ public class HexUtil {
 
     /**
      * 将byte[]数组转化为8、10、16等各种进制，例如byte[0x11,0x20]→4384，约等于1120（16进制）→4384，radix代表进制
+     *
      * @param bytes
      * @param radix
      * @return
@@ -18,6 +19,7 @@ public class HexUtil {
 
     /**
      * 将String的十六进制原封不动转化为byte的十六进制，例如7e20→new byte[]{0x7e，0x20}
+     *
      * @return
      */
     public static byte[] hexStringToBytes(String hexString) {
@@ -48,26 +50,26 @@ public class HexUtil {
 
     /**
      * 数组切割
+     *
      * @param data
      * @return
      */
-    public static byte[] bytesCut(byte[] data,int start,int end) {
+    public static byte[] bytesCut(byte[] data, int start, int end) {
         byte[] idData;
-        idData = Arrays.copyOfRange(data,start,end);
+        idData = Arrays.copyOfRange(data, start, end);
         return idData;
     }
-
 
 
     /**
      * 数组反转
      */
     public static byte[] bytesCollections(byte[] data) {
-        for(int a = 0;a<data.length/2;a++){
+        for (int a = 0; a < data.length / 2; a++) {
             //数组反转 高低位
             byte temp = data[a];
-            data[a] = data[data.length-1-a];
-            data[data.length-1-a] = temp;
+            data[a] = data[data.length - 1 - a];
+            data[data.length - 1 - a] = temp;
         }
         return data;
     }
@@ -78,9 +80,9 @@ public class HexUtil {
      */
     public static String stringCollections(String str) {
 
-        String s2="";
+        String s2 = "";
         char[] cs = str.toCharArray();
-        for(int i = cs.length-1;i >= 0;i--) {
+        for (int i = cs.length - 1; i >= 0; i--) {
             s2 = s2 + cs[i];
         }
         LogUtils.e(s2);
@@ -90,7 +92,7 @@ public class HexUtil {
     /**
      * 将字符转为16进制字节数组
      */
-    public static byte[] str2bytes(String str){
+    public static byte[] str2bytes(String str) {
         byte[] data = new byte[200];
         data = str.getBytes();
         final StringBuilder stringBuilder = new StringBuilder(data.length);
@@ -103,6 +105,7 @@ public class HexUtil {
     /**
      * 将十六进制的byte[]原封不动的转化为string，
      * 并且每个byte之间用空格分开，如byte[]{0x7e，0x80,0x11,0x20}→7e 80 11 20，,可用于log打印
+     *
      * @param data
      * @return
      */
@@ -119,15 +122,15 @@ public class HexUtil {
     }
 
 
-    public static String byteStringCollections(String value){
+    public static String byteStringCollections(String value) {
         int len = value.length();
         char[] hexChars = value.toCharArray();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < len - 1; i = i + 2) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.insert(0,hexChars[i]);
+            stringBuilder.insert(0, hexChars[i]);
             stringBuilder.append(hexChars[i + 1]);
-            sb.insert(0,stringBuilder.toString());
+            sb.insert(0, stringBuilder.toString());
         }
         return sb.toString();
     }

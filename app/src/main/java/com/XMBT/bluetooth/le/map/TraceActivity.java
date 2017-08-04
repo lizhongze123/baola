@@ -34,8 +34,8 @@ public class TraceActivity extends Activity {
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_trace);
         initView();
-        receiver=new MyBroadCastReceiver();
-        registerReceiver(receiver,new IntentFilter("datetime"));
+        receiver = new MyBroadCastReceiver();
+        registerReceiver(receiver, new IntentFilter("datetime"));
         showAlertDialog();
 
     }
@@ -50,43 +50,43 @@ public class TraceActivity extends Activity {
         final AlertDialog.Builder builder = new AlertDialog.Builder(TraceActivity.this);
         builder.setTitle("请选择时间");
         //    指定下拉列表的显示数据
-        final String[] times = {"前天", "昨天", "今天", "前一个小时", "自定义","取消"};
+        final String[] times = {"前天", "昨天", "今天", "前一个小时", "自定义", "取消"};
         //    设置一个下拉的列表选择项
-        builder.setItems(times, new DialogInterface.OnClickListener()
-        {
+        builder.setItems(times, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
 //                Toast.makeText(TraceActivity.this, "选择的时间为：" + times[which], Toast.LENGTH_SHORT).show();
-                if(times[which].equals("取消")){
+                if (times[which].equals("取消")) {
                     builder.show().dismiss();
-                }else if(times[which].equals("前天")){
-                    Toast.makeText(TraceActivity.this,"这段时间内没有历史轨迹",Toast.LENGTH_SHORT).show();
-                }else if(times[which].equals("昨天")){
-                    Toast.makeText(TraceActivity.this,"这段时间内没有历史轨迹",Toast.LENGTH_SHORT).show();
-                }else if(times[which].equals("今天")){
-                    Toast.makeText(TraceActivity.this,"这段时间内没有历史轨迹",Toast.LENGTH_SHORT).show();
-                }else if(times[which].equals("前一个小时")){
-                    Toast.makeText(TraceActivity.this,"这段时间内没有历史轨迹",Toast.LENGTH_SHORT).show();
-                }else if(times[which].equals("自定义")){
+                } else if (times[which].equals("前天")) {
+                    Toast.makeText(TraceActivity.this, "这段时间内没有历史轨迹", Toast.LENGTH_SHORT).show();
+                } else if (times[which].equals("昨天")) {
+                    Toast.makeText(TraceActivity.this, "这段时间内没有历史轨迹", Toast.LENGTH_SHORT).show();
+                } else if (times[which].equals("今天")) {
+                    Toast.makeText(TraceActivity.this, "这段时间内没有历史轨迹", Toast.LENGTH_SHORT).show();
+                } else if (times[which].equals("前一个小时")) {
+                    Toast.makeText(TraceActivity.this, "这段时间内没有历史轨迹", Toast.LENGTH_SHORT).show();
+                } else if (times[which].equals("自定义")) {
                     showDateTimePickerDialog();
                 }
             }
         });
         builder.show();
     }
+
     private void showDateTimePickerDialog() {
-        DateTimePickDialogUtil dateTimePicker=new DateTimePickDialogUtil(
-                TraceActivity.this,"");
-        dateTimePicker.dateTimePickDialog(0,"开始时间");
+        DateTimePickDialogUtil dateTimePicker = new DateTimePickDialogUtil(
+                TraceActivity.this, "");
+        dateTimePicker.dateTimePickDialog(0, "开始时间");
     }
+
     private void initView() {
         mMapView = (MapView) findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
     }
 
-    public void doClick(View view){
-        switch (view.getId()){
+    public void doClick(View view) {
+        switch (view.getId()) {
             case R.id.backIv:
                 onBackPressed();
                 break;
@@ -114,15 +114,16 @@ public class TraceActivity extends Activity {
 //                .params("from",)
 //                .params("to",)
     }
-    class MyBroadCastReceiver extends BroadcastReceiver{
+
+    class MyBroadCastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            int flag=intent.getIntExtra("flag",-1);
-            if(flag==0){
-                DateTimePickDialogUtil dateTimePicker=new DateTimePickDialogUtil(
-                        TraceActivity.this,"");
-                dateTimePicker.dateTimePickDialog(1,"结束时间");
+            int flag = intent.getIntExtra("flag", -1);
+            if (flag == 0) {
+                DateTimePickDialogUtil dateTimePicker = new DateTimePickDialogUtil(
+                        TraceActivity.this, "");
+                dateTimePicker.dateTimePickDialog(1, "结束时间");
             }
         }
     }

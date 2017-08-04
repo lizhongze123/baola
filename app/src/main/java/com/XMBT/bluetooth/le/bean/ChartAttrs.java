@@ -60,7 +60,6 @@ public class ChartAttrs {
     private int standardValMargin;
 
 
-
     public int getxAixsColor() {
         return xAixsColor;
     }

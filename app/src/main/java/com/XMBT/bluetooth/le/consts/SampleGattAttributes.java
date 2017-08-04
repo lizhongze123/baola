@@ -103,8 +103,8 @@ public class SampleGattAttributes {
      * 城市模式
      */
     public static String MODE_CITY = "04669900FF";
-     /**
-      * 高速模式
+    /**
+     * 高速模式
      */
     public static String MODE_HIGHWAY = "0466990FF0";
 

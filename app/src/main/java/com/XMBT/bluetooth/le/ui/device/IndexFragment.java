@@ -55,7 +55,7 @@ import java.util.List;
  * 这界面只做蓝牙初始化，不做连接
  */
 
-public class IndexFragment extends BaseFragment implements AdapterView.OnItemClickListener{
+public class IndexFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
     private View view;
     private ListView listView;
@@ -77,7 +77,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     public static final String MAC_ADDRESS = "mac_address";
     public static final String CONNECTED_STATUS = "connected_status";
     /**
-     *是否自动连接
+     * 是否自动连接
      */
     private boolean AutoConectFlag = true;
     public static BluetoothGattCharacteristic gattCharacteristic_write = null;
@@ -113,7 +113,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
         mDeviceReceiver = new MyDeviceReceiver();
         getActivity().registerReceiver(mDeviceReceiver, new IntentFilter(GlobalConsts.FILTER_ADD_DEVICE));
         mConnectReceiver = new MyConnectReceiver();
-        getActivity().registerReceiver(mConnectReceiver,new IntentFilter(GlobalConsts.FILTER_ACTION_CONNECT));
+        getActivity().registerReceiver(mConnectReceiver, new IntentFilter(GlobalConsts.FILTER_ACTION_CONNECT));
     }
 
     private void initTitle() {
@@ -145,25 +145,25 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     }
 
     /**
-     * @param key  产品名字
+     * @param key 产品名字
      */
-    private void readObject(String key){
+    private void readObject(String key) {
 
-        if(PreferenceUtils.readBoolean(getContext(), "productInfo", key)){
+        if (PreferenceUtils.readBoolean(getContext(), "productInfo", key)) {
             AddDeviceEntity addDeviceEntity = new AddDeviceEntity();
-            if(key.equals(GlobalConsts.LIGHTING)){
+            if (key.equals(GlobalConsts.LIGHTING)) {
                 addDeviceEntity.setImg(R.drawable.xm_ligh);
                 addDeviceEntity.setTitle(getString(R.string.lighting));
                 addDeviceEntity.setDeviceName(GlobalConsts.LIGHTING);
-            }else if(key.equals(GlobalConsts.POWER)){
+            } else if (key.equals(GlobalConsts.POWER)) {
                 addDeviceEntity.setImg(R.drawable.battery);
                 addDeviceEntity.setTitle(getString(R.string.power));
                 addDeviceEntity.setDeviceName(GlobalConsts.POWER);
-            } else if(key.equals(GlobalConsts.BATTERY)){
+            } else if (key.equals(GlobalConsts.BATTERY)) {
                 addDeviceEntity.setDeviceName(GlobalConsts.BATTERY);
                 addDeviceEntity.setTitle(getString(R.string.battery));
                 addDeviceEntity.setImg(R.drawable.battery_electric);
-            } else if(key.equals(GlobalConsts.GPS_BATTERY)){
+            } else if (key.equals(GlobalConsts.GPS_BATTERY)) {
                 addDeviceEntity.setDeviceName(GlobalConsts.GPS_BATTERY);
                 addDeviceEntity.setTitle(getString(R.string.gpsbattery));
                 addDeviceEntity.setImg(R.drawable.battery_automobile);
@@ -198,6 +198,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
     /**
      * 扫描蓝牙设备
+     *
      * @param enable
      */
     private void scanLeDevice(final boolean enable) {
@@ -212,8 +213,8 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
         }
     }
 
-    public static void WriteCharX( BluetoothGattCharacteristic GattCharacteristic, byte[] writeValue)	{
-        if (GattCharacteristic != null)	{
+    public static void WriteCharX(BluetoothGattCharacteristic GattCharacteristic, byte[] writeValue) {
+        if (GattCharacteristic != null) {
             GattCharacteristic.setValue(writeValue);
             mBLE.writeCharacteristic(GattCharacteristic);
         }
@@ -236,12 +237,12 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     /**
      * 设置notify
      */
-    public static void setNotify(){
-        if(gattCharacteristic_char2 != null) {
+    public static void setNotify() {
+        if (gattCharacteristic_char2 != null) {
             LogUtils.e("开始设置notify-------------");
             boolean enabled = true;
             mBLE.setCharacteristicNotification(gattCharacteristic_char2, enabled);
-        }else{
+        } else {
             LogUtils.e("没有成功设置notify");
         }
     }
@@ -270,10 +271,11 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
     /**
      * 把扫描出来的设备添加进来，不重复添加
+     *
      * @param device
      */
     public void addDevice(iBeaconClass.iBeacon device) {
-        if (device == null){
+        if (device == null) {
             LogUtils.d("device is null ");
             return;
         }
@@ -302,6 +304,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
     /**
      * 发现服务后的操作
+     *
      * @param gattServices
      */
     private void displayGattServices(List<BluetoothGattService> gattServices) {
@@ -346,7 +349,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic, int status) {
-            Log.v("MyLog","onCharRead " + gatt.getDevice().getName() + " read "	+ characteristic.getUuid().toString() + " -> "
+            Log.v("MyLog", "onCharRead " + gatt.getDevice().getName() + " read " + characteristic.getUuid().toString() + " -> "
                     + Utils.bytesToHexString(characteristic.getValue()));
 
         }
@@ -366,13 +369,13 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     private ProgressDialog progressDialog;
     private boolean isConnSuccessful = false;
 
-    private void startTheProductActivity(Class<?> clazz, String bluetoothAddress, int position){
+    private void startTheProductActivity(Class<?> clazz, String bluetoothAddress, int position) {
         boolean isHas = false;
-        LogUtils.i("mLeDevices.size()--"+ mLeDevices.size());
-        for(int i = 0; i < mLeDevices.size(); i++){
-            LogUtils.i("mLeDevices.size()--"+ i + "///name is--" +mLeDevices.get(i).name);
+        LogUtils.i("mLeDevices.size()--" + mLeDevices.size());
+        for (int i = 0; i < mLeDevices.size(); i++) {
+            LogUtils.i("mLeDevices.size()--" + i + "///name is--" + mLeDevices.get(i).name);
             //如果设备名字相同就连接
-            if(mLeDevices.get(i).name != null && mLeDevices.get(i).name.equals(bleDeviceName)){
+            if (mLeDevices.get(i).name != null && mLeDevices.get(i).name.equals(bleDeviceName)) {
                 connectDevice = mLeDevices.get(i);
                 if (connectDevice != null) {
                     progressDialog = new ProgressDialog(getContext());
@@ -392,10 +395,10 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
                 }
             }
         }
-        if(!isHas){
+        if (!isHas) {
             showToast("未能检测到该设备，请稍后重试");
         }
-        if(progressDialog != null){
+        if (progressDialog != null) {
             progressDialog.dismiss();
         }
         Intent intent = new Intent(getActivity(), clazz);
@@ -407,19 +410,19 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         bleDeviceName = productList.get(position).getDeviceName();
-        if(bleDeviceName.equals(GlobalConsts.LIGHTING)){
+        if (bleDeviceName.equals(GlobalConsts.LIGHTING)) {
             startTheProductActivity(LightFunctionActivity.class, bluetoothAddress, position);
-        }else if(bleDeviceName.equals(GlobalConsts.POWER)){
+        } else if (bleDeviceName.equals(GlobalConsts.POWER)) {
             startTheProductActivity(EmergencyActivity.class, bluetoothAddress, position);
-        }else if(bleDeviceName.equals(GlobalConsts.BATTERY)){
+        } else if (bleDeviceName.equals(GlobalConsts.BATTERY)) {
             startTheProductActivity(BateryActivity.class, bluetoothAddress, position);
-        }else{
-            Intent intent = new Intent(getActivity(),YunCheListActivity.class);
+        } else {
+            Intent intent = new Intent(getActivity(), YunCheListActivity.class);
             startActivity(intent);
         }
     }
 
-    class MyDeviceReceiver extends BroadcastReceiver{
+    class MyDeviceReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -431,48 +434,48 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
                 //已添加的设备保存到sp中
                 String productName = addDeviceEntity.getDeviceName();
-                PreferenceUtils.write(getContext(), "productInfo", productName ,true);
+                PreferenceUtils.write(getContext(), "productInfo", productName, true);
 
             } else {
-                if(names.contains(addDeviceEntity.getTitle())){
+                if (names.contains(addDeviceEntity.getTitle())) {
                     showToast("您已经添加过该设备了");
-                }else {
+                } else {
                     productList.add(addDeviceEntity);
                     names.add(addDeviceEntity.getTitle());
                     adapter.notifyDataSetChanged();
 
                     String productName = addDeviceEntity.getDeviceName();
-                    PreferenceUtils.write(getContext(), "productInfo", productName ,true);
+                    PreferenceUtils.write(getContext(), "productInfo", productName, true);
 
                 }
             }
         }
     }
 
-    class MyConnectReceiver extends BroadcastReceiver{
+    class MyConnectReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            int error = intent.getIntExtra("error",-1);
-            if(error == 0){
+            int error = intent.getIntExtra("error", -1);
+            if (error == 0) {
                 LogUtils.e("连接状态改变--接收器");
-                if(connectDevice != null) {
+                if (connectDevice != null) {
                     boolean bRet = mBLE.connect(connectDevice.bluetoothAddress);
                     LogUtils.i("connect bRet = " + bRet);
                     showToast("正在连接设备并获取服务中");
-                }else {
+                } else {
                     showToast("连接设备失败，请重新尝试");
                 }
             }
         }
     }
 
-    public static void disconnect(){
+    public static void disconnect() {
         mBLE.disconnect();
     }
 
     @Override
-    public void onDestroy () {
+    public void onDestroy() {
         super.onDestroy();
         getActivity().unregisterReceiver(mDeviceReceiver);
         getActivity().unregisterReceiver(mConnectReceiver);

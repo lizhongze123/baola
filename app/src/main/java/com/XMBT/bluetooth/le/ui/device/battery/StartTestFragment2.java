@@ -59,8 +59,8 @@ public class StartTestFragment2 extends Fragment {
     private LineView2 lineView;
     private TextView tvLeftStandard;
 
-    public final static String EXTRA_DATA	= "EXTRA_DATA";
-    public final static String EXTRA_UUID	= "EXTRA_UUID";
+    public final static String EXTRA_DATA = "EXTRA_DATA";
+    public final static String EXTRA_UUID = "EXTRA_UUID";
     public final static String EXTRA_STATUS = "EXTRA_STATUS";
     /**
      * 收到的数据
@@ -91,7 +91,7 @@ public class StartTestFragment2 extends Fragment {
 
     private List<ItemBean> mItems;
 
-    public static StartTestFragment2 newInstance(Boolean isConnSuccessful){
+    public static StartTestFragment2 newInstance(Boolean isConnSuccessful) {
         StartTestFragment2 itemFragement = new StartTestFragment2();
         Bundle bundle = new Bundle();
         bundle.putBoolean(IndexFragment.CONNECTED_STATUS, isConnSuccessful);
@@ -104,7 +104,7 @@ public class StartTestFragment2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = View.inflate(getActivity(), R.layout.fragment_starttest2, null);
         Bundle arguments = getArguments();
-        if(arguments != null){
+        if (arguments != null) {
             isConnSuccessful = arguments.getBoolean(IndexFragment.CONNECTED_STATUS);
         }
         initViews();
@@ -129,7 +129,7 @@ public class StartTestFragment2 extends Fragment {
         //画出标准区间
         int margin = standardVoltage * 300 / maxVoltage;  //求出标准所占的margin
         RelativeLayout.LayoutParams rl = (RelativeLayout.LayoutParams) tvLeftStandard.getLayoutParams();
-        rl.setMarginStart(DensityUtils.dip2px(getActivity(),margin));
+        rl.setMarginStart(DensityUtils.dip2px(getActivity(), margin));
         tvLeftStandard.setLayoutParams(rl);
 
         connectChanged(isConnSuccessful);
@@ -140,29 +140,29 @@ public class StartTestFragment2 extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(GlobalConsts.ACTION_NOTIFI)){
+            if (action.equals(GlobalConsts.ACTION_NOTIFI)) {
                 strTemp = intent.getStringExtra(EXTRA_DATA);
 
-                if (!strTemp.equals("00:00:00:00:00")){  //过滤掉00:00:00:00:00
+                if (!strTemp.equals("00:00:00:00:00")) {  //过滤掉00:00:00:00:00
 
-                    if(strTemp.length() == 14){
-                        if(strTemp.substring(0,2).equals("04")){
+                    if (strTemp.length() == 14) {
+                        if (strTemp.substring(0, 2).equals("04")) {
                             //启动信号  0X04A35C6699
                             startTime = System.currentTimeMillis();
                             date = DateFormatUtils.getDate(startTime, DateFormatUtils.FORMAT_ALL);
                             tvTime.setText(date);
                             voltageList = new ArrayList<>();
                             mItems = new ArrayList<>();
-                        }else if(strTemp.substring(0,2).equals("08")){
+                        } else if (strTemp.substring(0, 2).equals("08")) {
                             //电压命令为：0X08xxyyzzww；其中xxyy为电压值，zzww为电压值反码
                             long currentTime = System.currentTimeMillis();
-                            if(currentTime < startTime + 2000){
+                            if (currentTime < startTime + 2000) {
                                 //取收到启动信号后的两秒内的最小值
-                                String substr = strTemp.substring(3,5) + strTemp.substring(6,8);
-                                int voltage10 = Integer.parseInt(substr,16);
+                                String substr = strTemp.substring(3, 5) + strTemp.substring(6, 8);
+                                int voltage10 = Integer.parseInt(substr, 16);
                                 voltageList.add(voltage10);
                                 addBean(currentTime, voltage10);
-                            }else if(startTime != 0 && currentTime > startTime + 2000){
+                            } else if (startTime != 0 && currentTime > startTime + 2000) {
                                 //接收两秒的数据完毕
                                 Integer ii = Collections.min(voltageList);
                                 setProgress(ii);
@@ -171,11 +171,11 @@ public class StartTestFragment2 extends Fragment {
                         }
                     }
                 }
-            } else if(action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)){
+            } else if (action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)) {
                 int status = intent.getIntExtra(BluetoothLeClass.CONNECT_STATUS, BluetoothLeClass.STATE_DISCONNECTED);
-                if(status == BluetoothLeClass.STATE_DISCONNECTED)	{
+                if (status == BluetoothLeClass.STATE_DISCONNECTED) {
                     connectChanged(false);
-                } else{
+                } else {
                     connectChanged(true);
                 }
             }
@@ -184,13 +184,12 @@ public class StartTestFragment2 extends Fragment {
 
 
     /**
-     *
-     * @param ii  放大100倍
+     * @param ii 放大100倍
      */
-    private void setProgress(Integer ii){
+    private void setProgress(Integer ii) {
         int margin = ii * 300 / maxVoltage;  //求出progress所占的margin
         RelativeLayout.LayoutParams rl = (RelativeLayout.LayoutParams) ivTriangle.getLayoutParams();
-        rl.setMarginStart(DensityUtils.dip2px(getActivity(),margin) - DensityUtils.dip2px(getActivity(),8));
+        rl.setMarginStart(DensityUtils.dip2px(getActivity(), margin) - DensityUtils.dip2px(getActivity(), 8));
         ivTriangle.setLayoutParams(rl);
         progressBar.setProgress(ii);
         float voltage = (float) ii / 100;
@@ -198,7 +197,7 @@ public class StartTestFragment2 extends Fragment {
         tvVoltage.setText(df.format(voltage) + "V");
         statusIv.setVisibility(View.VISIBLE);
 
-        if(ii <= standardVoltage){
+        if (ii <= standardVoltage) {
             //电压偏低
             progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.voltage_progress_warn));
             ivTriangle.setImageResource(R.drawable.sort_down_red);
@@ -206,7 +205,7 @@ public class StartTestFragment2 extends Fragment {
             statusIv.setImageResource(R.drawable.startvoltage_warn);
             tvInfo.setText("启动电压为" + df.format(voltage) + "V，电压偏低");
             tvInfo.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-        }else if(ii > standardVoltage){
+        } else if (ii > standardVoltage) {
             //正常电压
             progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.voltage_progress));
             ivTriangle.setImageResource(R.drawable.sort_down_green);
@@ -215,24 +214,24 @@ public class StartTestFragment2 extends Fragment {
             tvInfo.setText("启动电压为" + df.format(voltage) + "V，电压正常");
             tvInfo.setTextColor(getResources().getColor(android.R.color.holo_green_light));
         }
-        for(int i = 0;i < voltageList.size(); i++){
-            Log.e("lizhongze",i + "--电压为--"+voltageList.get(i).toString());
+        for (int i = 0; i < voltageList.size(); i++) {
+            Log.e("lizhongze", i + "--电压为--" + voltageList.get(i).toString());
         }
     }
 
-    private void addBean(long currentTime, int voltage10){
+    private void addBean(long currentTime, int voltage10) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         final String time0 = sdf.format(new Time(currentTime));
-        ItemBean itemBean = new ItemBean(voltage10,time0,currentTime);
+        ItemBean itemBean = new ItemBean(voltage10, time0, currentTime);
         mItems.add(itemBean);
     }
 
-    private void connectChanged(boolean isConnected){
-        if(isAdded()){
-            if(isConnected){
+    private void connectChanged(boolean isConnected) {
+        if (isAdded()) {
+            if (isConnected) {
                 titleBar.setTvLeft("已连接");
                 titleBar.setTvLeftTextColor(getResources().getColor(R.color.dark_blue));
-            }else{
+            } else {
                 statusIv.setVisibility(View.INVISIBLE);
                 titleBar.setTvLeft("未连接");
                 titleBar.setTvLeftTextColor(getResources().getColor(R.color.white));

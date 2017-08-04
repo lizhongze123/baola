@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.XMBT.bluetooth.le.utils.LogUtils;
 
-public class BaseDBHelper extends SQLiteOpenHelper{
+public class BaseDBHelper extends SQLiteOpenHelper {
 
     /**
      * 数据库名字
@@ -38,7 +38,7 @@ public class BaseDBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(newVersion > oldVersion){
+        if (newVersion > oldVersion) {
             db.execSQL("drop table if exists " + TABLE_DRIVING_RECORD);
             onCreate(db);
         }

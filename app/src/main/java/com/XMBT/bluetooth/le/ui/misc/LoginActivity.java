@@ -28,7 +28,8 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 public class LoginActivity extends Activity {
-    private EditText phoneEt,passwordEt;
+    private EditText phoneEt, passwordEt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,55 +39,55 @@ public class LoginActivity extends Activity {
     }
 
     private void initView() {
-        phoneEt= (EditText) findViewById(R.id.phoneEt);
-        passwordEt= (EditText) findViewById(R.id.passwordEt);
+        phoneEt = (EditText) findViewById(R.id.phoneEt);
+        passwordEt = (EditText) findViewById(R.id.passwordEt);
     }
 
-    public void doClick(View view){
-        switch (view.getId()){
+    public void doClick(View view) {
+        switch (view.getId()) {
             case R.id.imageView4:
                 onBackPressed();
                 break;
             case R.id.button8:
-                Intent intent=new Intent(this,RegisterActivity.class);
+                Intent intent = new Intent(this, RegisterActivity.class);
                 startActivity(intent);
                 break;
             case R.id.button7:
-                Intent intent1=new Intent(this,ForgetPassWordActivity.class);
+                Intent intent1 = new Intent(this, ForgetPassWordActivity.class);
                 startActivity(intent1);
                 break;
             case R.id.button9:
-                StringBuilder sb=new StringBuilder();
-                if (TextUtils.isEmpty(phoneEt.getText().toString())){
+                StringBuilder sb = new StringBuilder();
+                if (TextUtils.isEmpty(phoneEt.getText().toString())) {
                     sb.append("账号不能为空\n");
                 }
-                if (TextUtils.isEmpty(passwordEt.getText().toString())){
+                if (TextUtils.isEmpty(passwordEt.getText().toString())) {
                     sb.append("密码不能为空");
                 }
-                if(sb.toString().equals("")){
-                    OkGo.post(GlobalConsts.URL+"GetDateServices.asmx/loginSystem")
+                if (sb.toString().equals("")) {
+                    OkGo.post(GlobalConsts.URL + "GetDateServices.asmx/loginSystem")
                             .tag(this)
-                            .params("LoginName",phoneEt.getText().toString())
-                            .params("LoginPassword",passwordEt.getText().toString())
-                            .params("LoginType","ENTERPRISE")
-                            .params("ISMD5","0")
-                            .params("timeZone","8")
-                            .params("apply","APP")
-                            .params("loginUrl","http://app.ycqpmall.com/")
+                            .params("LoginName", phoneEt.getText().toString())
+                            .params("LoginPassword", passwordEt.getText().toString())
+                            .params("LoginType", "ENTERPRISE")
+                            .params("ISMD5", "0")
+                            .params("timeZone", "8")
+                            .params("apply", "APP")
+                            .params("loginUrl", "http://app.ycqpmall.com/")
                             .execute(new StringCallback() {
                                 @Override
                                 public void onSuccess(String s, Call call, Response response) {
                                     try {
-                                        JSONObject jsonObject=new JSONObject(s);
-                                        String success=jsonObject.getString("success");
-                                        if(success.equals("false")){
-                                            String msg=jsonObject.getString("msg");
-                                            Toast.makeText(LoginActivity.this,msg,Toast.LENGTH_SHORT).show();
-                                        }else {
-                                            String id=jsonObject.getString("id");
-                                            String mds=jsonObject.getString("mds");
-                                            String grade=jsonObject.getString("grade");
-                                            User user=new User(id,mds,grade);
+                                        JSONObject jsonObject = new JSONObject(s);
+                                        String success = jsonObject.getString("success");
+                                        if (success.equals("false")) {
+                                            String msg = jsonObject.getString("msg");
+                                            Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            String id = jsonObject.getString("id");
+                                            String mds = jsonObject.getString("mds");
+                                            String grade = jsonObject.getString("grade");
+                                            User user = new User(id, mds, grade);
                                             SharedPreferences preferences = getSharedPreferences("userInfo", MODE_PRIVATE);
                                             // 创建字节输出流
                                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -100,10 +101,10 @@ public class LoginActivity extends Activity {
                                                         .toByteArray()));
                                                 SharedPreferences.Editor editor = preferences.edit();
                                                 editor.putString("product", oAuth_Base64);
-                                                editor.putString("mds",mds);
-                                                editor.putString("id",id);
+                                                editor.putString("mds", mds);
+                                                editor.putString("id", id);
                                                 editor.commit();
-                                                Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                                                 finish();
                                             } catch (IOException e) {
                                                 // TODO Auto-generated
@@ -115,8 +116,8 @@ public class LoginActivity extends Activity {
                                 }
                             });
 
-                }else {
-                    Toast.makeText(this,sb.toString(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, sb.toString(), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

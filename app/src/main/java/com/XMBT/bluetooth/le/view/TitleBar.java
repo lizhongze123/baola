@@ -19,10 +19,10 @@ import android.widget.TextView;
 import com.XMBT.bluetooth.le.R;
 
 /**
- *  标题栏控件
+ * 标题栏控件
  */
 
-public class TitleBar extends RelativeLayout  implements View.OnClickListener {
+public class TitleBar extends RelativeLayout implements View.OnClickListener {
 
 
     /**
@@ -92,7 +92,7 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
         title_textSize = typedArray.getDimensionPixelSize(R.styleable.TitleBar_title_textSize, sp2px(context, 16));
 
         /**右边保存按钮相关*/
-        right_button_image_id = typedArray.getResourceId(R.styleable.TitleBar_right_button_image,0);
+        right_button_image_id = typedArray.getResourceId(R.styleable.TitleBar_right_button_image, 0);
         right_button_text = typedArray.getString(R.styleable.TitleBar_right_button_text);
         right_button_textColor = typedArray.getColor(R.styleable.TitleBar_right_button_textColor, Color.GRAY);
         right_button_textSize = typedArray.getDimensionPixelSize(R.styleable.TitleBar_right_button_textSize, sp2px(context, 14));
@@ -141,7 +141,7 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
     }
 
     public void setTitleTextSize(int textSize) {
-        mTvTilte.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
+        mTvTilte.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 
     public void setTitle_textColor(int textColor) {
@@ -158,7 +158,7 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
     }
 
     public void setTvLeftTextSize(int textSize) {
-        mTvLeft.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
+        mTvLeft.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 
     public void setTvLeftTextColor(int textColor) {
@@ -175,7 +175,7 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
     }
 
     public void setTvRightTextSize(int textSize) {
-        mTvRight.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
+        mTvRight.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 
     public void setTvRightTextColor(int textColor) {
@@ -205,7 +205,7 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
         mTvLeft.setOnClickListener(listener);
     }
 
-    public void setRightOnClicker(OnClickListener listener){
+    public void setRightOnClicker(OnClickListener listener) {
         mTvRight.setOnClickListener(listener);
         mIvRight.setOnClickListener(listener);
     }
@@ -250,8 +250,9 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
     }
 
 
-    public  long lastClickTime = 0;
-    public  boolean isFastDoubleClick() {
+    public long lastClickTime = 0;
+
+    public boolean isFastDoubleClick() {
         long time = System.currentTimeMillis();
         long timeD = time - lastClickTime;
         if (timeD >= 0 && timeD <= 500) {
@@ -268,7 +269,6 @@ public class TitleBar extends RelativeLayout  implements View.OnClickListener {
             return;
         }
     }
-
 
 
     public static int dp2px(Context context, float dpValue) {

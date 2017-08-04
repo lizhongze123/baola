@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 设备实体类
  */
 
-public class AddDeviceEntity implements Serializable{
+public class AddDeviceEntity implements Serializable {
 
     /**
      * 设备名字
@@ -25,7 +25,8 @@ public class AddDeviceEntity implements Serializable{
      */
     int status;
 
-    public AddDeviceEntity() {}
+    public AddDeviceEntity() {
+    }
 
     public AddDeviceEntity(String deviceName, int img, String title, int status) {
         this.deviceName = deviceName;

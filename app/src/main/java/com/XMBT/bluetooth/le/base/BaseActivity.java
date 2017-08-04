@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.XMBT.bluetooth.le.utils.ToastUtils;
 
-public class BaseActivity extends FragmentActivity{
+public class BaseActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

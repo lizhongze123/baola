@@ -10,23 +10,25 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class ToolsUtil {
     public static ProgressDialog progressDialog;
-    public static void showProgressDialog(Activity activity, String msg){
-        progressDialog=new ProgressDialog(activity);
+
+    public static void showProgressDialog(Activity activity, String msg) {
+        progressDialog = new ProgressDialog(activity);
 
         progressDialog.setMessage(msg);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
     }
 
-    public static void closeProgressDialog(){
-        if(progressDialog!=null){
+    public static void closeProgressDialog() {
+        if (progressDialog != null) {
             progressDialog.cancel();
-            progressDialog=null;
+            progressDialog = null;
         }
     }
 
     /**
      * 解码
+     *
      * @param bytes
      * @return
      */
