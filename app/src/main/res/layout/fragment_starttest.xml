@@ -7,9 +7,13 @@
     android:background="@color/black">
 
     <com.XMBT.bluetooth.le.view.TitleBar
-        android:id="@+id/myNewAppTitle"
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:title_background="@color/black"
+        app:title_text="智能电池"
+        app:title_textColor="@color/white"
+        app:left_button_text="未连接" />
 
     <View
         android:layout_width="match_parent"
@@ -27,6 +31,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="检测时间："
@@ -38,24 +43,23 @@
                 android:id="@+id/statusIv"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
+                android:visibility="gone"
                 android:src="@drawable/startvoltage_normal"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginTop="40dp"
+                android:layout_height="160dp"
+                android:layout_marginTop="30dp"
                 android:layout_margin="10dp"
+                android:padding="10dp"
                 android:background="@drawable/shape_bg_gray">
 
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="启动电压："
-                    android:textSize="20sp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="16dp"
+                    android:text="启动电压"
+                    android:textSize="18sp"
                     android:textColor="#ffffff"/>
 
                 <ProgressBar
@@ -63,105 +67,81 @@
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:progress="130"
-                    android:max="190"
-                    android:progressDrawable="@drawable/voltage_progress"
+                    android:progress="0"
+                    android:max="1800"
+                    android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true" />
+                    android:progressDrawable="@drawable/voltage_progress" />
+
                 <TextView
-                    android:id="@+id/voltageTv"
+                    android:id="@+id/tvVoltage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0.0V"
-                    android:layout_above="@+id/triangle"
-                    android:layout_alignStart="@+id/triangle"
+                    android:layout_above="@+id/ivTriangle"
+                    android:layout_alignStart="@+id/ivTriangle"
                     android:layout_marginBottom="-6dp"
                     android:textColor="@android:color/holo_green_light"/>
+
                 <ImageView
-                    android:id="@+id/triangle"
+                    android:id="@+id/ivTriangle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/sort_down_green"
                     android:layout_above="@+id/pb"
                     android:layout_alignStart="@+id/pb" />
+
                 <RelativeLayout
-                    android:layout_width="111dp"
+                    android:id="@+id/rl"
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/pb"
-                    android:layout_alignEnd="@+id/pb">
+                    android:layout_alignStart="@+id/pb">
 
                     <TextView
+                        android:id="@+id/tv_leftStandard"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="|"
                         android:textColor="@android:color/white"/>
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/tv_rightStandard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="|"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="标准区间"
-                        android:textColor="@android:color/white"
-                        android:layout_centerHorizontal="true"/>
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@+id/tv_leftStandard"
+                        android:textColor="@android:color/white" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="|"
-                        android:textColor="@android:color/white"
-                        android:layout_alignParentRight="true"/>
                 </RelativeLayout>
 
                 <TextView
+                    android:id="@+id/tvInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/holo_green_light"
-                    android:text="启动电压为："
                     android:layout_alignParentBottom="true"
                     android:layout_margin="16dp"/>
+
             </RelativeLayout>
 
-            <com.XMBT.bluetooth.le.view.LineChartView
-                android:id="@+id/chartView"
+            <com.XMBT.bluetooth.le.view.LineChart.LineView2
+                android:id="@+id/myline"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="50dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/black"
-                app:horLineColor="#44929292"
-                app:isAixsLineAlign="true"
-                app:lineWidth="1dp"
-                app:standardLineColor="@android:color/holo_red_dark"
-                app:standardLineStyle="DASH"
-                app:standardLineWidth="1dp"
-                app:standardValSize="18sp"
-                app:standardValColor="@android:color/holo_green_dark"
-                app:verLineColor="#44929292"
-                app:xAixsColor="#929292"
-                app:standardValMargin="16dp"
-                app:xAixsPaddingBottom="12dp"
-                app:xAixsPaddingTop="12dp"
-                app:xAixsPostion="BUTTOM"
-                app:xAixsTitleColor="#929292"
-                app:xAixsTitleSize="10sp"
-                app:xAixsWidth="1dp"
-                app:yAixsColor="#44929292"
-                app:yAixsPaddingLeft="8dp"
-                app:yAixsPaddingRight="8dp"
-                app:yAixsPostion="LEFT"
-                app:yAixsTitleColor="#999999"
-                app:yAixsTitleSize="12sp"
-                app:yAixsWidth="1dp"/>
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
 
     </ScrollView>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="sd"
-        android:layout_below="@+id/loadingView"
-        android:id="@+id/tv_receiver"
-        android:visibility="gone"/>
 
 </LinearLayout>

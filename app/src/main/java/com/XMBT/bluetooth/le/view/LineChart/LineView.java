@@ -243,12 +243,12 @@ public class LineView extends View {
         } else {
             if (type == 0) {
                 // 最小不能低于最小的宽度
-                result = dp2px(getContext(), defaultMinWidth) + getPaddingLeft() + getPaddingRight();
+                result = DensityUtils.dp2px(getContext(), defaultMinWidth) + getPaddingLeft() + getPaddingRight();
             } else {
                 // 最小不能小于最小的高度加上一些数据
                 int textHeight = (int) (mTextFontMetrics.bottom - mTextFontMetrics.top);
                 // 加上2个文字的高度
-                result = dp2px(getContext(), defaultMinHeight) + 2 * textHeight + getPaddingTop() + getPaddingBottom();
+                result = DensityUtils.dp2px(getContext(), defaultMinHeight) + 2 * textHeight + getPaddingTop() + getPaddingBottom();
             }
             //wrap_content
             if (mode == MeasureSpec.AT_MOST) {
@@ -288,7 +288,7 @@ public class LineView extends View {
 
     private void drawAxes(Canvas canvas) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        int mMargin10 = dp2px(getContext(), 10);
+        int mMargin10 = DensityUtils.dp2px(getContext(), 10);
         //画横线
         int[] yTextWidthArray = new int[textArray.length];
         for (int i = 0; i <= textArray.length; i++) {
@@ -326,11 +326,6 @@ public class LineView extends View {
             }
         }
 
-    }
-
-    public static int dp2px(Context context, float dpVal) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                dpVal, context.getResources().getDisplayMetrics());
     }
 
     /**

@@ -214,7 +214,7 @@ public class BateryActivity extends BaseActivity {
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            view = View.inflate(getActivity(), R.layout.fragment_starttest2, null);
+            view = View.inflate(getActivity(), R.layout.fragment_starttest, null);
             Bundle arguments = getArguments();
             if (arguments != null) {
                 isConnSuccessful = arguments.getBoolean(MainActivity.CONNECTED_STATUS);
