@@ -36,7 +36,7 @@ public class LineView extends View {
     /**
      * 默认最小高度
      */
-    private static final int defaultMinHeight = 200;
+    private static final int defaultMinHeight = 150;
 
     /**
      * 字体最小默认12sp

@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * 汽车智能动力电池--电压测试Fragment
  */
-public class VoltageFragment2 extends Fragment {
+public class VoltageFragment extends Fragment {
 
     private View view;
 
@@ -103,8 +103,8 @@ public class VoltageFragment2 extends Fragment {
      */
     private List<Integer> voltageList = new ArrayList<>();
 
-    public static VoltageFragment2 newInstance(Boolean isConnSuccessful) {
-        VoltageFragment2 itemFragement = new VoltageFragment2();
+    public static VoltageFragment newInstance(Boolean isConnSuccessful) {
+        VoltageFragment itemFragement = new VoltageFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(MainActivity.CONNECTED_STATUS, isConnSuccessful);
         itemFragement.setArguments(bundle);
@@ -114,7 +114,7 @@ public class VoltageFragment2 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = View.inflate(getActivity(), R.layout.voltage_fragment2, null);
+        view = View.inflate(getActivity(), R.layout.voltage_fragment, null);
         Bundle arguments = getArguments();
         if (arguments != null) {
             isConnSuccessful = arguments.getBoolean(MainActivity.CONNECTED_STATUS);

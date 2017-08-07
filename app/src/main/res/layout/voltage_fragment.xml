@@ -8,9 +8,19 @@
     android:orientation="vertical">
 
     <com.XMBT.bluetooth.le.view.TitleBar
-        android:id="@+id/myNewAppTitle"
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:title_background="@color/black"
+        app:title_text="智能电池"
+        app:title_textColor="@color/white"
+        app:left_button_text="未连接" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="@color/white"
+        android:drawingCacheQuality="low" />
     
     <ScrollView
         android:layout_width="match_parent"
@@ -27,7 +37,6 @@
                 android:text="电池使用时长：**剩余寿命**"
                 android:id="@+id/textView4"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
                 android:textSize="16sp"/>
 
             <TextView
@@ -37,21 +46,21 @@
                 android:text="0%"
                 android:id="@+id/textView10"
                 android:textColor="@color/white"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"/>
+                android:layout_gravity="center_horizontal" />
 
             <com.XMBT.bluetooth.le.view.LoadingView
                 android:id="@+id/loadingView"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 a_zhon:backgroundColor="#9f9c9c"
                 a_zhon:beforeColor="#ff5809"
                 a_zhon:lineLength="12dp"
                 a_zhon:lines="36"
                 a_zhon:max="100"
-                a_zhon:paintBold="10dp"
-                a_zhon:progress="70" />
+                a_zhon:paintBold="8dp"
+                a_zhon:percentText="0V"
+                a_zhon:progress="0" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,41 +71,16 @@
 
             <ImageView
                 android:id="@+id/statusIv"
+                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:src="@drawable/status3" />
 
-            <com.XMBT.bluetooth.le.view.Line2ChartView
-                android:id="@+id/chartView"
+            <com.XMBT.bluetooth.le.view.LineChart.LineView
+                android:id="@+id/myline"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="50dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/black"
-                app:horLineColor="#44929292"
-                app:isAixsLineAlign="true"
-                app:lineWidth="1dp"
-                app:standardLineColor="@android:color/holo_red_dark"
-                app:standardLineStyle="DASH"
-                app:standardLineWidth="1dp"
-                app:standardValSize="18sp"
-                app:standardValColor="@android:color/holo_green_dark"
-                app:verLineColor="#44929292"
-                app:xAixsColor="#929292"
-                app:standardValMargin="16dp"
-                app:xAixsPaddingBottom="12dp"
-                app:xAixsPaddingTop="12dp"
-                app:xAixsPostion="BUTTOM"
-                app:xAixsTitleColor="#929292"
-                app:xAixsTitleSize="10sp"
-                app:xAixsWidth="1dp"
-                app:yAixsColor="#44929292"
-                app:yAixsPaddingLeft="8dp"
-                app:yAixsPaddingRight="8dp"
-                app:yAixsPostion="LEFT"
-                app:yAixsTitleColor="#999999"
-                app:yAixsTitleSize="12sp"
-                app:yAixsWidth="1dp"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>

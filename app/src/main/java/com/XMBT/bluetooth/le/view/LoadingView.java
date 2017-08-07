@@ -1,9 +1,5 @@
 package com.XMBT.bluetooth.le.view;
 
-/**
- * Created by haowenlee on 2016/12/12.
- */
-
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,13 +8,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.utils.DensityUtils;
-import com.XMBT.bluetooth.le.utils.LogUtils;
 
 /*
  *以下为自定义的属性,如需使用需在attrs.xml文件中添加以下代码
@@ -40,12 +34,6 @@ import com.XMBT.bluetooth.le.utils.LogUtils;
  *      <!--进度文字颜色-->
  *      <attr name="textColor" format="reference|color" />
  *  </declare-styleable>
- */
-/*
- * 文件名:     LoadingView
- * 创建者:     阿钟
- * 创建时间:   2016/11/9 22:05
- * 描述:       自定义菊花进度条
  */
 public class LoadingView extends View {
 
@@ -84,7 +72,7 @@ public class LoadingView extends View {
 
     private int xOrigin;
     private int yOrigin;
-    private int circleRadius = 60;
+    private int circleRadius;
     private float defaultSize;
 
     public LoadingView(Context context) {
@@ -107,7 +95,7 @@ public class LoadingView extends View {
     private void obtainStyledAttrs(Context context, AttributeSet attrs) {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.a_zhon);
         paintBold = array.getDimensionPixelSize(R.styleable.a_zhon_paintBold, 10);
-        lineLength = array.getDimensionPixelSize(R.styleable.a_zhon_lineLength, 25);
+        lineLength = array.getDimensionPixelSize(R.styleable.a_zhon_lineLength, 20);
         bgPaintColor = array.getColor(R.styleable.a_zhon_backgroundColor, Color.GRAY);
         beforePaintColor = array.getColor(R.styleable.a_zhon_beforeColor, Color.YELLOW);
         lines = array.getInt(R.styleable.a_zhon_lines, 20);
@@ -150,11 +138,13 @@ public class LoadingView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //获取view的宽度
-        mWidth = getViewSize(DensityUtils.dp2px(getContext(), 180), widthMeasureSpec);
+        mWidth = getViewSize(DensityUtils.dp2px(getContext(), 150), widthMeasureSpec);
         //获取view的高度
-        mHeight = getViewSize(DensityUtils.dp2px(getContext(), 180), heightMeasureSpec);
+        mHeight = getViewSize(DensityUtils.dp2px(getContext(), 150), heightMeasureSpec);
+        setMeasuredDimension(mWidth, mHeight);
+
     }
 
     /**
@@ -179,7 +169,7 @@ public class LoadingView extends View {
                 break;
             case MeasureSpec.AT_MOST: //如果测量模式是最大取值为size
                 //我们将大小取最大值,你也可以取其他值
-                viewSize = size;
+                viewSize = defaultSize;
                 break;
             case MeasureSpec.EXACTLY: //如果是固定的大小，那就不要去改变它
                 viewSize = size;
@@ -193,6 +183,7 @@ public class LoadingView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         xOrigin = mWidth / 2;
         yOrigin = mHeight / 2;
+        circleRadius = mWidth / 3;
     }
 
     @Override
@@ -200,13 +191,15 @@ public class LoadingView extends View {
         super.onDraw(canvas);
         drawInnerCircle(canvas); //画内圆
         drawPercentText(canvas);
+        drawScale(canvas);
+    }
 
+    private void drawScale(Canvas canvas) {
         int x = mWidth / 2;
         int y = mHeight / 2;
-        int r = x - 5;
         for (int i = 0; i < lines; i++) {
             //绘制下层菊花
-            canvas.drawLine(x, y - r, x, y - r + lineLength, bgPaint);
+            canvas.drawLine(x, 0, x,  lineLength, bgPaint);
             canvas.rotate(360 / lines, x, y);
         }
         //获取需要绘制多少个刻度
@@ -214,7 +207,7 @@ public class LoadingView extends View {
         //绘制上层菊花,也就是进度
         canvas.rotate(360 / lines, x, y);
         for (; count > 0; count--) {
-            canvas.drawLine(x, y - r, x, y - r + lineLength, bfPaint);
+            canvas.drawLine(x, 0, x,  lineLength, bfPaint);
             canvas.rotate(360 / lines, x, y);
         }
     }
@@ -232,7 +225,7 @@ public class LoadingView extends View {
     }
 
     private void drawInnerCircle(Canvas canvas) {
-        canvas.drawCircle(xOrigin, yOrigin, DensityUtils.dp2px(getContext(), circleRadius), cirPaint);
+        canvas.drawCircle(xOrigin, yOrigin, circleRadius, cirPaint);
         cirPaint.setColor(Color.BLACK);
     }
 

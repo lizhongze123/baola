@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class BateryActivity extends BaseActivity {
 
-    private VoltageFragment2 voltageFragment;
+    private VoltageFragment voltageFragment;
     private StartTestFragment2 startTestFragment;
     private ChargeFragment chargeFragment;
     private DrivingFragment drivingFragment;
@@ -70,7 +70,7 @@ public class BateryActivity extends BaseActivity {
         btnAry[1] = (RadioButton) findViewById(R.id.radio2);
         btnAry[2] = (RadioButton) findViewById(R.id.radio3);
         btnAry[3] = (RadioButton) findViewById(R.id.radio4);
-        voltageFragment = VoltageFragment2.newInstance(isConnSuccessful);
+        voltageFragment = VoltageFragment.newInstance(isConnSuccessful);
         startTestFragment = StartTestFragment2.newInstance(isConnSuccessful);
         chargeFragment = ChargeFragment.newInstance(isConnSuccessful);
         drivingFragment = DrivingFragment.newInstance(isConnSuccessful);
