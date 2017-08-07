@@ -20,7 +20,7 @@ import com.XMBT.bluetooth.le.bean.RecordBean;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.db.DBManger;
-import com.XMBT.bluetooth.le.ui.device.IndexFragment;
+import com.XMBT.bluetooth.le.ui.MainActivity;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.ToastUtils;
@@ -43,8 +43,6 @@ public class VoltageFragment2 extends Fragment {
     private View view;
 
     public final static String EXTRA_DATA = "EXTRA_DATA";
-    public final static String EXTRA_UUID = "EXTRA_UUID";
-    public final static String EXTRA_STATUS = "EXTRA_STATUS";
 
     private TitleBar titleBar;
     private TextView tv_receive;
@@ -108,7 +106,7 @@ public class VoltageFragment2 extends Fragment {
     public static VoltageFragment2 newInstance(Boolean isConnSuccessful) {
         VoltageFragment2 itemFragement = new VoltageFragment2();
         Bundle bundle = new Bundle();
-        bundle.putBoolean(IndexFragment.CONNECTED_STATUS, isConnSuccessful);
+        bundle.putBoolean(MainActivity.CONNECTED_STATUS, isConnSuccessful);
         itemFragement.setArguments(bundle);
         return itemFragement;
     }
@@ -119,7 +117,7 @@ public class VoltageFragment2 extends Fragment {
         view = View.inflate(getActivity(), R.layout.voltage_fragment2, null);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            isConnSuccessful = arguments.getBoolean(IndexFragment.CONNECTED_STATUS);
+            isConnSuccessful = arguments.getBoolean(MainActivity.CONNECTED_STATUS);
         }
         initViews();
         return view;

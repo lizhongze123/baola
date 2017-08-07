@@ -1,6 +1,5 @@
 package com.XMBT.bluetooth.le.ui.device.lighting;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,7 +17,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -31,8 +29,7 @@ import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
-import com.XMBT.bluetooth.le.ui.device.AddDeviceActivity;
-import com.XMBT.bluetooth.le.ui.device.IndexFragment;
+import com.XMBT.bluetooth.le.ui.MainActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.Utils;
@@ -98,7 +95,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
     }
 
     private void initDatas() {
-        isConnSuccessful = getIntent().getBooleanExtra(IndexFragment.CONNECTED_STATUS, false);
+        isConnSuccessful = getIntent().getBooleanExtra(MainActivity.CONNECTED_STATUS, false);
 
         bannerUrls.add(GlobalConsts.BANNER_URL0);
         bannerUrls.add(GlobalConsts.BANNER_URL1);
@@ -126,7 +123,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 Log.e("lzz", "发送防止蓝牙死机命令");
                 String newValue1 = SampleGattAttributes.WRITE_CRASH;
                 byte[] dataToWrite1 = HexUtil.hexStringToBytes(newValue1);
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite1);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite1);
                 handler1.postDelayed(this, 1000);
             }
         }, 1000);
@@ -138,7 +135,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
     private void readDangwei() {
         String newValue = SampleGattAttributes.WRITE_SHIFT;
         byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
-        IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+        MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
     }
 
     private void startTimer() {
@@ -159,7 +156,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 //开灯指令
                 String newValue = SampleGattAttributes.WRITE_OPEN_LIGHT;
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
             }
         }
     }
@@ -234,7 +231,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 strtemp = Utils.bytesToHexString(PwmValue);
                 newValue += strtemp;
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
             }
 
             @Override
@@ -352,7 +349,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                 }
                 dataToWrite = HexUtil.hexStringToBytes(newValue);
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 break;
             case R.id.cb_city:
                 if (cbCity.isChecked()) {
@@ -360,7 +357,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     seekBar.setProgress(0);
                     newValue = SampleGattAttributes.MODE_CITY;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_highway:
@@ -369,7 +366,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     seekBar.setProgress(15);
                     newValue = SampleGattAttributes.MODE_HIGHWAY;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_30:
@@ -379,11 +376,11 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     cb120.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_30;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_60:
@@ -393,11 +390,11 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     cb120.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_60;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_90:
@@ -407,11 +404,11 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     cb120.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_90;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_120:
@@ -421,11 +418,11 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     cb90.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_120;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                 }
                 break;
         }

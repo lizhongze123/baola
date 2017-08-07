@@ -14,7 +14,7 @@ import android.widget.RadioButton;
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.device.IndexFragment;
+import com.XMBT.bluetooth.le.ui.MainActivity;
 
 /**
  * 汽车智能动力电池
@@ -38,7 +38,7 @@ public class BateryActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_batery);
-        isConnSuccessful = getIntent().getBooleanExtra(IndexFragment.CONNECTED_STATUS, false);
+        isConnSuccessful = getIntent().getBooleanExtra(MainActivity.CONNECTED_STATUS, false);
         initView();
         addListener();
         registerBoradcastReceiver();
@@ -130,7 +130,7 @@ public class BateryActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        IndexFragment.disconnect();
+        MainActivity.disconnect();
         unregisterReceiver(mBroadcastReceiver);
     }
 }

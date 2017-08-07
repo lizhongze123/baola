@@ -23,7 +23,7 @@ import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseFragment;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.device.IndexFragment;
+import com.XMBT.bluetooth.le.ui.MainActivity;
 import com.XMBT.bluetooth.le.utils.DensityUtils;
 import com.XMBT.bluetooth.le.view.DashboardView;
 import com.XMBT.bluetooth.le.view.TitleBar;
@@ -80,7 +80,7 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
     public static ChargeFragment newInstance(Boolean isConnSuccessful) {
         ChargeFragment itemFragement = new ChargeFragment();
         Bundle bundle = new Bundle();
-        bundle.putBoolean(IndexFragment.CONNECTED_STATUS, isConnSuccessful);
+        bundle.putBoolean(MainActivity.CONNECTED_STATUS, isConnSuccessful);
         itemFragement.setArguments(bundle);
         return itemFragement;
     }
@@ -91,7 +91,7 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
         view = View.inflate(getActivity(), R.layout.charge_fragment, null);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            isConnSuccessful = arguments.getBoolean(IndexFragment.CONNECTED_STATUS);
+            isConnSuccessful = arguments.getBoolean(MainActivity.CONNECTED_STATUS);
         }
         initViews();
         return view;

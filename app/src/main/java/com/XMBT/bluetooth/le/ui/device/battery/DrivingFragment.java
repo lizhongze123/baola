@@ -26,8 +26,7 @@ import com.XMBT.bluetooth.le.bean.RecordBean;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.db.DBManger;
-import com.XMBT.bluetooth.le.ui.device.IndexFragment;
-import com.XMBT.bluetooth.le.utils.DateFormatUtils;
+import com.XMBT.bluetooth.le.ui.MainActivity;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -36,7 +35,6 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -67,7 +65,7 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
     public static DrivingFragment newInstance(Boolean isConnSuccessful) {
         DrivingFragment itemFragement = new DrivingFragment();
         Bundle bundle = new Bundle();
-        bundle.putBoolean(IndexFragment.CONNECTED_STATUS, isConnSuccessful);
+        bundle.putBoolean(MainActivity.CONNECTED_STATUS, isConnSuccessful);
         itemFragement.setArguments(bundle);
         return itemFragement;
     }
@@ -78,7 +76,7 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
         view = View.inflate(getActivity(), R.layout.driving_fragment, null);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            isConnSuccessful = arguments.getBoolean(IndexFragment.CONNECTED_STATUS);
+            isConnSuccessful = arguments.getBoolean(MainActivity.CONNECTED_STATUS);
         }
         initViews();
         return view;

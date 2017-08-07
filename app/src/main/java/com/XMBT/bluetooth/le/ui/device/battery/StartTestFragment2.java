@@ -4,11 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,24 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
-import com.XMBT.bluetooth.le.bean.ChartLine;
-import com.XMBT.bluetooth.le.bean.DataAixsPoint;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.device.IndexFragment;
+import com.XMBT.bluetooth.le.ui.MainActivity;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.DensityUtils;
-import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.view.LineChart.ItemBean;
-import com.XMBT.bluetooth.le.view.LineChart.LineView;
 import com.XMBT.bluetooth.le.view.LineChart.LineView2;
-import com.XMBT.bluetooth.le.view.LineChartView;
 import com.XMBT.bluetooth.le.view.TitleBar;
 
 import java.sql.Time;
@@ -94,7 +84,7 @@ public class StartTestFragment2 extends Fragment {
     public static StartTestFragment2 newInstance(Boolean isConnSuccessful) {
         StartTestFragment2 itemFragement = new StartTestFragment2();
         Bundle bundle = new Bundle();
-        bundle.putBoolean(IndexFragment.CONNECTED_STATUS, isConnSuccessful);
+        bundle.putBoolean(MainActivity.CONNECTED_STATUS, isConnSuccessful);
         itemFragement.setArguments(bundle);
         return itemFragement;
     }
@@ -105,7 +95,7 @@ public class StartTestFragment2 extends Fragment {
         view = View.inflate(getActivity(), R.layout.fragment_starttest2, null);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            isConnSuccessful = arguments.getBoolean(IndexFragment.CONNECTED_STATUS);
+            isConnSuccessful = arguments.getBoolean(MainActivity.CONNECTED_STATUS);
         }
         initViews();
         return view;

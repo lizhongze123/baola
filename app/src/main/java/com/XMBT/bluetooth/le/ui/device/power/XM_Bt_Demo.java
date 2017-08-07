@@ -7,9 +7,8 @@ import java.util.HashMap;
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.ble.Stalls_Activity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.device.IndexFragment;
+import com.XMBT.bluetooth.le.ui.MainActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
-import com.XMBT.bluetooth.le.utils.Utils;
 
 
 import android.app.Activity;
@@ -110,7 +109,7 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new ItemClickListener());
 
-        IndexFragment.setNotify();
+        MainActivity.setNotify();
         registerBoradcastReceiver();
 
         mHandler = new Handler() {
@@ -276,7 +275,7 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
                 String newValue = "0433CC31CE";
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
 
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
 
             }
 
@@ -284,7 +283,7 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
                 String newValue2 = "0433CC42BD";
                 byte[] dataToWrite2 = HexUtil.hexStringToBytes(newValue2);
 
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite2);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite2);
             }
 
             if (strTemp.equals("车灯状态")) {
@@ -292,7 +291,7 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
                 String newValue = "0433CC53AC";
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
 
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
             }
 
             if (strTemp.equals("氙气灯(开)")) {
@@ -300,7 +299,7 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
                 String newValue = "0455AA31CE";
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
 
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
             }
 
             if (strTemp.equals("档位设置")) {
@@ -316,7 +315,7 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
                 String newValue = "0455AA00FF";
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
 
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
             }
 
             if (strTemp.equals("归家(30秒)")) {
@@ -324,7 +323,7 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
                 String newValue = "0477881EE1";
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
 
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
             }
 
             if (strTemp.equals("归家(60秒)")) {
@@ -332,7 +331,7 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
                 String newValue = "0477883CC3";
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
 
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
             }
 
             if (strTemp.equals("归家(90秒)")) {
@@ -341,7 +340,7 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
 
 
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
             }
 
             // 25
@@ -350,7 +349,7 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
                 String newValue = "0477887887";
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
 
-                IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
             }
 
         }

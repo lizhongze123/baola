@@ -16,7 +16,7 @@ import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
-import com.XMBT.bluetooth.le.ui.device.IndexFragment;
+import com.XMBT.bluetooth.le.ui.MainActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.view.ChargingProgess;
 import com.XMBT.bluetooth.le.view.TitleBar;
@@ -58,7 +58,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     }
 
     private void initDatas() {
-        isConnSuccessful = getIntent().getBooleanExtra(IndexFragment.CONNECTED_STATUS, false);
+        isConnSuccessful = getIntent().getBooleanExtra(MainActivity.CONNECTED_STATUS, false);
         bannerUrls.add(GlobalConsts.BANNER_URL0);
         bannerUrls.add(GlobalConsts.BANNER_URL1);
         bannerUrls.add(GlobalConsts.BANNER_URL2);
@@ -256,7 +256,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                     }
                     newValue = SampleGattAttributes.FLOODLIGHT_OPEN;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                     tvFloodlight.setChecked(true);
                     tvFloodlight.setText("照明灯(开启)");
                     tvUsb.setChecked(true);
@@ -264,7 +264,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                 } else {
                     newValue = SampleGattAttributes.FLOODLIGHT_CLOSE;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                     tvFloodlight.setChecked(false);
                     tvFloodlight.setText("照明灯(关闭)");
                     tvUsb.setChecked(false);
@@ -279,7 +279,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                     }
                     newValue = SampleGattAttributes.WARNINGLIGHT_FAST;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                     tvWarninglight.setChecked(true);
                     tvWarninglight.setText("警示灯(开启)");
                     tvUsb.setChecked(true);
@@ -287,7 +287,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                 } else {
                     newValue = SampleGattAttributes.WARNINGLIGHT_CLOSE;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                     tvWarninglight.setChecked(false);
                     tvWarninglight.setText("警示灯(关闭)");
                     tvUsb.setChecked(false);
@@ -303,13 +303,13 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                     newValue = SampleGattAttributes.USB_OPEN;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
 
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                     tvUsb.setChecked(true);
                     tvUsb.setText("USB输出(开启)");
                 } else {
                     newValue = SampleGattAttributes.USB_CLOSE;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    IndexFragment.WriteCharX(IndexFragment.gattCharacteristic_write, dataToWrite);
+                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
                     tvUsb.setChecked(false);
                     tvUsb.setText("USB输出(关闭)");
                     tvWarninglight.setChecked(false);
