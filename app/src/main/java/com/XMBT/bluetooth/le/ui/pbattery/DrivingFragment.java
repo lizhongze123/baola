@@ -84,6 +84,12 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
 
     private void initTitle() {
         titleBar = (TitleBar) view.findViewById(R.id.titleBar);
+        titleBar.setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 //        mNewAppTitle.setRightTitle("日期");
 //        mNewAppTitle.setOnRightButtonClickListener(new TitleBar.OnRightButtonClickListener() {
 //            @Override
@@ -155,11 +161,11 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
     private void connectChanged(boolean isConnected) {
         if (isAdded()) {
             if (isConnected) {
-                titleBar.setTvLeft("已连接");
-                titleBar.setTvLeftTextColor(getResources().getColor(R.color.dark_blue));
+                titleBar.setTvRight("已连接");
+                titleBar.setTvRightTextColor(getResources().getColor(R.color.dark_blue));
             } else {
-                titleBar.setTvLeft("未连接");
-                titleBar.setTvLeftTextColor(getResources().getColor(R.color.white));
+                titleBar.setTvRight("未连接");
+                titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
             }
         }
     }

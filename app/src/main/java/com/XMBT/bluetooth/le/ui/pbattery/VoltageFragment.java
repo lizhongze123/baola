@@ -45,7 +45,6 @@ public class VoltageFragment extends Fragment {
     public final static String EXTRA_DATA = "EXTRA_DATA";
 
     private TitleBar titleBar;
-    private TextView tv_receive;
     private ImageView statusIv;
     private LoadingView loadingView;
     private String strTemp;
@@ -125,6 +124,12 @@ public class VoltageFragment extends Fragment {
 
     private void initTitle() {
         titleBar = (TitleBar) view.findViewById(R.id.titleBar);
+        titleBar.setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     private void initViews() {
@@ -148,7 +153,6 @@ public class VoltageFragment extends Fragment {
             }
         });
 
-        tv_receive = (TextView) view.findViewById(R.id.tv_receiver);
         statusIv = (ImageView) view.findViewById(R.id.statusIv);
         loadingView = (LoadingView) view.findViewById(R.id.loadingView);
         persentTv = (TextView) view.findViewById(R.id.textView10);
@@ -164,7 +168,6 @@ public class VoltageFragment extends Fragment {
             String strXqdDd = "";
             String strXqdDdy = "";
             if (action.equals(GlobalConsts.ACTION_NOTIFI)) {  //收到notify
-                tv_receive.setText("");
                 strTemp = intent.getStringExtra(EXTRA_DATA);
                 if (!strTemp.equals("00:00:00:00:00")) {  //过滤掉00:00:00:00:00
                     if (strTemp.length() == 14) {
@@ -296,12 +299,11 @@ public class VoltageFragment extends Fragment {
     private void connectChanged(boolean isConnected) {
         if (isAdded()) {
             if (isConnected) {
-                titleBar.setTvLeft("已连接");
-                titleBar.setTvLeftTextColor(getResources().getColor(R.color.dark_blue));
+                titleBar.setTvRight("已连接");
+                titleBar.setTvRightTextColor(getResources().getColor(R.color.dark_blue));
             } else {
-                statusIv.setVisibility(View.INVISIBLE);
-                titleBar.setTvLeft("未连接");
-                titleBar.setTvLeftTextColor(getResources().getColor(R.color.white));
+                titleBar.setTvRight("未连接");
+                titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
             }
         }
     }

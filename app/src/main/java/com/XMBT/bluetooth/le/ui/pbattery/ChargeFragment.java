@@ -99,6 +99,12 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
 
     private void initTitle() {
         titleBar = (TitleBar) view.findViewById(R.id.titleBar);
+        titleBar.setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     private void initViews() {
@@ -137,11 +143,11 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
     private void connectChanged(boolean isConnected) {
         if (isAdded()) {
             if (isConnected) {
-                titleBar.setTvLeft("已连接");
-                titleBar.setTvLeftTextColor(getResources().getColor(R.color.dark_blue));
+                titleBar.setTvRight("已连接");
+                titleBar.setTvRightTextColor(getResources().getColor(R.color.dark_blue));
             } else {
-                titleBar.setTvLeft("未连接");
-                titleBar.setTvLeftTextColor(getResources().getColor(R.color.white));
+                titleBar.setTvRight("未连接");
+                titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
             }
         }
     }

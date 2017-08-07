@@ -10,10 +10,11 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title_background="@color/black"
         app:title_text="智能电池"
-        app:title_textColor="@color/white"
-        app:left_button_text="未连接" />
+        app:left_button_image="@drawable/common_ic_left_arrow"
+        app:title_textColor="#fff"
+        app:title_background="@color/black"
+        app:right_button_text="未连接"/>
 
     <View
         android:layout_width="match_parent"
