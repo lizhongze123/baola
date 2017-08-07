@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -479,5 +480,23 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     public void onPause() {
         super.onPause();
         scanLeDevice(false);
+    }
+
+    private boolean isExit = false;
+
+    @Override
+    public void onBackPressed() {
+        if(isExit){
+            super.onBackPressed();
+        }else{
+            isExit = true;
+            showToast("再次点击将退出程序");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isExit = false;
+                }
+            }, 2000);
+        }
     }
 }
