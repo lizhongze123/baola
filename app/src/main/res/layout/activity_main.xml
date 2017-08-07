@@ -10,14 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title_background="@color/title_bg"
-        app:title_text="我的设备"
+        app:title_text="设备"
         app:title_textColor="@color/white"
         app:right_button_image="@android:drawable/ic_menu_add"/>
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:background="#ffffff"
         android:id="@+id/relativeLayout2">
@@ -30,7 +30,7 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:id="@+id/imageView"
             android:src="@drawable/menu"
             android:layout_centerVertical="true" />
