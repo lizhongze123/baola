@@ -13,6 +13,7 @@ import android.view.WindowManager;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.ui.main.MainActivity;
 import com.XMBT.bluetooth.le.utils.AppPermission;
 import com.XMBT.bluetooth.le.utils.ToastUtils;
 

@@ -52,11 +52,11 @@
             android:value="CeVtrbbrVvuFyqRp7qAZhPRujBfx96Hn" />
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
         <activity android:name=".ble.DeviceScanActivity" />
-        <activity android:name=".ui.device.power.XM_Bt_Demo" />
+        <activity android:name=".ui.gbattery.XM_Bt_Demo" />
         <activity android:name=".ble.Stalls_Activity" />
         <activity
             android:name=".ui.WelcomeActivity"
@@ -68,20 +68,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.device.AddDeviceActivity"
+            android:name=".ui.main.AddDeviceActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
         <activity
-            android:name=".ui.device.lighting.LightFunctionActivity"
+            android:name=".ui.light.LightFunctionActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity android:name=".ui.device.battery.BateryActivity" />
-        <activity android:name=".ui.device.power.EmergencyActivity" />
+        <activity android:name=".ui.pbattery.BateryActivity" />
+        <activity android:name=".ui.gbattery.EmergencyActivity" />
         <activity android:name=".ui.misc.LoginActivity" />
         <activity android:name=".ui.misc.RegisterActivity" />
         <activity android:name=".ui.misc.ForgetPassWordActivity" />
         <activity android:name=".YunCheActivity" />
         <activity android:name=".map.BaiduMapActivity" />
         <activity android:name=".YunCheListActivity" />
-        <activity android:name=".ui.device.AddYuncheActivity" />
+        <activity android:name=".ui.AddYuncheActivity" />
         <activity
             android:name=".map.BNDemoGuideActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
@@ -103,7 +103,7 @@
         <activity android:name=".FortificationActivity" />
         <activity android:name=".WarnCenterActivity" />
         <activity android:name=".map.FenceActivity"/>
-        <activity android:name=".ui.device.battery.TestActivity"/>
+        <activity android:name=".ui.pbattery.TestActivity"/>
     </application>
 
 </manifest>

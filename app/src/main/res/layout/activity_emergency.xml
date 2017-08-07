@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.XMBT.bluetooth.le.ui.device.power.EmergencyActivity">
+    tools:context="com.XMBT.bluetooth.le.ui.gbattery.EmergencyActivity">
 
     <com.XMBT.bluetooth.le.view.TitleBar
         android:id="@+id/titleBar"

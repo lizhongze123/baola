@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui.device.battery;
+package com.XMBT.bluetooth.le.ui.pbattery;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,7 +20,7 @@ import com.XMBT.bluetooth.le.bean.RecordBean;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.db.DBManger;
-import com.XMBT.bluetooth.le.ui.MainActivity;
+import com.XMBT.bluetooth.le.ui.main.MainActivity;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.ToastUtils;

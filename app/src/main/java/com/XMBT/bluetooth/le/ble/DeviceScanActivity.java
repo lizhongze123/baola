@@ -31,7 +31,7 @@ import java.util.List;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.utils.Utils;
-import com.XMBT.bluetooth.le.ui.device.power.XM_Bt_Demo;
+import com.XMBT.bluetooth.le.ui.gbattery.XM_Bt_Demo;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass.OnDataAvailableListener;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass.OnServiceDiscoverListener;
 import com.XMBT.bluetooth.le.bean.iBeaconClass;

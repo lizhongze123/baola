@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui.device;
+package com.XMBT.bluetooth.le.ui;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

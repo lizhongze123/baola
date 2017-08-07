@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.device.AddYuncheActivity;
+import com.XMBT.bluetooth.le.ui.AddYuncheActivity;
 import com.XMBT.bluetooth.le.ui.misc.LoginActivity;
 import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;

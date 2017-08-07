@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui;
+package com.XMBT.bluetooth.le.ui.main;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -27,11 +27,9 @@ import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
-import com.XMBT.bluetooth.le.ui.device.AddDeviceActivity;
-import com.XMBT.bluetooth.le.ui.device.IndexDeviceAdapter;
-import com.XMBT.bluetooth.le.ui.device.battery.BateryActivity;
-import com.XMBT.bluetooth.le.ui.device.lighting.LightFunctionActivity;
-import com.XMBT.bluetooth.le.ui.device.power.EmergencyActivity;
+import com.XMBT.bluetooth.le.ui.pbattery.BateryActivity;
+import com.XMBT.bluetooth.le.ui.light.LightFunctionActivity;
+import com.XMBT.bluetooth.le.ui.gbattery.EmergencyActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;

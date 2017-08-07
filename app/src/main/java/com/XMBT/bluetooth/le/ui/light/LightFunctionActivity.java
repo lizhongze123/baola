@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui.device.lighting;
+package com.XMBT.bluetooth.le.ui.light;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -29,7 +29,7 @@ import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
-import com.XMBT.bluetooth.le.ui.MainActivity;
+import com.XMBT.bluetooth.le.ui.main.MainActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.Utils;

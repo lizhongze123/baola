@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui.device.battery;
+package com.XMBT.bluetooth.le.ui.pbattery;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

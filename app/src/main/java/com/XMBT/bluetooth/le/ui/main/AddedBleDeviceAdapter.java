@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui.device;
+package com.XMBT.bluetooth.le.ui.main;
 
 import android.content.Context;
 import android.view.View;
@@ -13,14 +13,13 @@ import com.XMBT.bluetooth.le.bean.AddDeviceEntity;
 import java.util.List;
 
 /**
- * 我的设备Fragment 适配器
+ * Created by haowenlee on 2016/10/21.
  */
-public class IndexDeviceAdapter extends BaseAdapter {
+public class AddedBleDeviceAdapter extends BaseAdapter {
+    List<AddDeviceEntity> addDeviceEntities;
+    Context context;
 
-    private List<AddDeviceEntity> addDeviceEntities;
-    private Context context;
-
-    public IndexDeviceAdapter(List<AddDeviceEntity> addDeviceEntities, Context context) {
+    public AddedBleDeviceAdapter(List<AddDeviceEntity> addDeviceEntities, Context context) {
         this.addDeviceEntities = addDeviceEntities;
         this.context = context;
     }
@@ -42,15 +41,11 @@ public class IndexDeviceAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = View.inflate(context, R.layout.index_device_item, null);
+        convertView = View.inflate(context, R.layout.listitem_device, null);
         TextView titleTv = (TextView) convertView.findViewById(R.id.device_name);
         ImageView picIv = (ImageView) convertView.findViewById(R.id.imageView3);
-//        TextView statusTv= (TextView) convertView.findViewById(R.id.textView4);
         titleTv.setText(addDeviceEntities.get(position).getTitle());
         picIv.setImageResource(addDeviceEntities.get(position).getImg());
-//        if(addDeviceEntities.get(position).getStatus()==1){
-//            statusTv.setText("设备在线");
-//        }
         return convertView;
     }
 }

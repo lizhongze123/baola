@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui.device.battery;
+package com.XMBT.bluetooth.le.ui.pbattery;
 
 import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
@@ -23,7 +23,7 @@ import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseFragment;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.MainActivity;
+import com.XMBT.bluetooth.le.ui.main.MainActivity;
 import com.XMBT.bluetooth.le.utils.DensityUtils;
 import com.XMBT.bluetooth.le.view.DashboardView;
 import com.XMBT.bluetooth.le.view.TitleBar;

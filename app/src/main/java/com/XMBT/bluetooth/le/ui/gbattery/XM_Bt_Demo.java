@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui.device.power;
+package com.XMBT.bluetooth.le.ui.gbattery;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.ble.Stalls_Activity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.MainActivity;
+import com.XMBT.bluetooth.le.ui.main.MainActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
 
 

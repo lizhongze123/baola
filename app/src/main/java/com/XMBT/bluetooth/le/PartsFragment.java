@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui.advice;
+package com.XMBT.bluetooth.le;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,34 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.utils.ToolsUtil;
 
 /**
- * 咨询fragment
+ * Created by haowenlee on 2016/10/18.
  */
-
-public class AdviceFragment extends Fragment {
+public class PartsFragment extends Fragment {
     View view;
     WebView webView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = View.inflate(getActivity(), R.layout.advice_fragment, null);
+        view = View.inflate(getActivity(), R.layout.parts_fragment, null);
         webView = (WebView) view.findViewById(R.id.webView);
         ToolsUtil.showProgressDialog(getActivity(), "加载中...");
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("http://wx.vemax.cn/bbs2");
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
+        webView.loadUrl("http://ycsn.ycqpmall.com/");
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -45,6 +36,7 @@ public class AdviceFragment extends Fragment {
                 }
             }
         });
+
 
         return view;
     }

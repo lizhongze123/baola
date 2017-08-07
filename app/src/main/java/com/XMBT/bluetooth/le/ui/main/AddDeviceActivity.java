@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui.device;
+package com.XMBT.bluetooth.le.ui.main;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
