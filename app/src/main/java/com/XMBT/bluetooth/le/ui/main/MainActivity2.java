@@ -19,6 +19,7 @@ import com.XMBT.bluetooth.le.ui.gbattery.EmergencyActivity;
 import com.XMBT.bluetooth.le.ui.light.LightFunctionActivity;
 import com.XMBT.bluetooth.le.ui.pbattery.BatteryActivity;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;
+import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
 
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        StatusBarHelper.setStatusBarColor(this, R.color.title_color);
+
         register();
         getSavedDevice();
         ininView();

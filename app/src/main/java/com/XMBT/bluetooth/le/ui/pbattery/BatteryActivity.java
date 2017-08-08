@@ -15,6 +15,7 @@ import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 
 /**
  * 汽车智能动力电池
@@ -38,6 +39,7 @@ public class BatteryActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_batery);
+        StatusBarHelper.setStatusBarColor(this, R.color.black);
         registerBoradcastReceiver();
         initBle();
         initViews();
