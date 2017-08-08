@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * 我的设备activity
  */
-public class MainActivity2 extends BaseActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     private ListView listView;
     private TitleBar titleBar;
@@ -70,7 +70,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
         titleBar.setRightOnClicker(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity2.this, AddDeviceActivity.class));
+                startActivity(new Intent(MainActivity.this, AddDeviceActivity.class));
             }
         });
     }
@@ -141,7 +141,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
         } else if (bleDeviceName.equals(GlobalConsts.BATTERY)) {
             startTheProductActivity(BatteryActivity.class, bluetoothAddress, position);
         } else {
-            Intent intent = new Intent(MainActivity2.this, YunCheListActivity.class);
+            Intent intent = new Intent(MainActivity.this, YunCheListActivity.class);
             startActivity(intent);
         }
     }
@@ -158,7 +158,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
 
                 //已添加的设备保存到sp中
                 String productName = addDeviceEntity.getDeviceName();
-                PreferenceUtils.write(MainActivity2.this, "productInfo", productName, true);
+                PreferenceUtils.write(MainActivity.this, "productInfo", productName, true);
 
             } else {
                 if (names.contains(addDeviceEntity.getTitle())) {
@@ -169,7 +169,7 @@ public class MainActivity2 extends BaseActivity implements AdapterView.OnItemCli
                     adapter.notifyDataSetChanged();
 
                     String productName = addDeviceEntity.getDeviceName();
-                    PreferenceUtils.write(MainActivity2.this, "productInfo", productName, true);
+                    PreferenceUtils.write(MainActivity.this, "productInfo", productName, true);
 
                 }
             }
