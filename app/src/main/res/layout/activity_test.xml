@@ -6,76 +6,9 @@
     android:background="@color/black"
     android:orientation="vertical">
 
-    <ScrollView
+    <ListView
+        android:id="@+id/lv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"></ListView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="电池使用时长：**剩余寿命**"
-                android:id="@+id/textView4"
-                android:layout_gravity="center_horizontal"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="35sp"
-                android:text="0%"
-                android:id="@+id/textView10"
-                android:textColor="@color/white"
-                android:layout_gravity="center_horizontal" />
-
-            <com.XMBT.bluetooth.le.view.LoadingView
-                android:visibility="gone"
-                android:id="@+id/loadingView"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
-                android:layout_gravity="center_horizontal"
-                a_zhon:backgroundColor="#9f9c9c"
-                a_zhon:beforeColor="#ff5809"
-                a_zhon:lineLength="12dp"
-                a_zhon:lines="36"
-                a_zhon:max="100"
-                a_zhon:paintBold="10dp"
-                a_zhon:progress="70" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="sd"
-                android:id="@+id/tv_receiver"
-                android:visibility="gone"/>
-
-            <ImageView
-                android:id="@+id/statusIv"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:src="@drawable/status3" />
-
-            <com.XMBT.bluetooth.le.view.LineChart.LineView
-                android:id="@+id/myline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <com.XMBT.bluetooth.le.view.LineChart.LineView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <com.XMBT.bluetooth.le.view.LineChart.LineView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <com.XMBT.bluetooth.le.view.LineChart.LineView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>

@@ -21,9 +21,9 @@ import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseFragment;
+import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.main.MainActivity;
 import com.XMBT.bluetooth.le.utils.DensityUtils;
 import com.XMBT.bluetooth.le.view.DashboardView;
 import com.XMBT.bluetooth.le.view.TitleBar;
@@ -53,7 +53,6 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
     private TextView tvLeftStandard1, tvLeftStandard2;
     private DashboardView dashboardView;
 
-    private boolean isConnSuccessful = false;
     /**
      * 标准电压
      */
@@ -79,9 +78,6 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
 
     public static ChargeFragment newInstance(Boolean isConnSuccessful) {
         ChargeFragment itemFragement = new ChargeFragment();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(MainActivity.CONNECTED_STATUS, isConnSuccessful);
-        itemFragement.setArguments(bundle);
         return itemFragement;
     }
 
@@ -89,10 +85,6 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = View.inflate(getActivity(), R.layout.charge_fragment, null);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            isConnSuccessful = arguments.getBoolean(MainActivity.CONNECTED_STATUS);
-        }
         initViews();
         return view;
     }
@@ -103,6 +95,16 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
+            }
+        });
+        titleBar.setRightOnClicker(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(BleManager.isConnSuccessful){
+                    BleManager.getInstance(getContext()).disconnect();
+                }else{
+                    BleManager.getInstance(getContext()).startScan(getContext(), GlobalConsts.BATTERY);
+                }
             }
         });
     }
@@ -136,7 +138,7 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
         tvLeftStandard2.setLayoutParams(rl);
 
         timeCount = new TimeCount(5000, 1000);
-        connectChanged(isConnSuccessful);
+        connectChanged(BleManager.isConnSuccessful);
         registerBoradcastReceiver();
     }
 
@@ -242,11 +244,15 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_start:
-                isHigh = true;
-                firstLayout.setVisibility(View.GONE);
-                secondLayout.setVisibility(View.VISIBLE);
-                handler.postDelayed(task, 200);
-                timeCount.start();
+                if(BleManager.isConnSuccessful){
+                    isHigh = true;
+                    firstLayout.setVisibility(View.GONE);
+                    secondLayout.setVisibility(View.VISIBLE);
+                    handler.postDelayed(task, 200);
+                    timeCount.start();
+                }else{
+                    showToastCenter("请先连接设备");
+                }
                 break;
             case R.id.btn_restart:
                 highvVltageList.clear();

@@ -13,7 +13,7 @@ import android.view.WindowManager;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
-import com.XMBT.bluetooth.le.ui.main.MainActivity;
+import com.XMBT.bluetooth.le.ui.main.MainActivity2;
 import com.XMBT.bluetooth.le.utils.AppPermission;
 import com.XMBT.bluetooth.le.utils.ToastUtils;
 
@@ -71,7 +71,7 @@ public class WelcomeActivity extends BaseActivity {
         mhandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                Intent intent = new Intent(WelcomeActivity.this, MainActivity2.class);
                 startActivity(intent);
                 finish();
             }

@@ -23,10 +23,10 @@ import android.widget.Toast;
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseFragment;
 import com.XMBT.bluetooth.le.bean.RecordBean;
+import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.db.DBManger;
-import com.XMBT.bluetooth.le.ui.main.MainActivity;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -42,7 +42,6 @@ import java.util.List;
  */
 public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    public final static String EXTRA_DATA = "EXTRA_DATA";
     private View view;
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     SimpleCalendarDialogFragment dialogFragment;
@@ -56,8 +55,6 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
     private SwipeRefreshLayout srl;
     private DrivingRecordAdapter adapter;
 
-    private boolean isConnSuccessful = false;
-
     private RelativeLayout mSuspensionBar;
     private int mSuspensionHeight;
     private List<RecordBean> dataList = new ArrayList<>();
@@ -65,7 +62,7 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
     public static DrivingFragment newInstance(Boolean isConnSuccessful) {
         DrivingFragment itemFragement = new DrivingFragment();
         Bundle bundle = new Bundle();
-        bundle.putBoolean(MainActivity.CONNECTED_STATUS, isConnSuccessful);
+        bundle.putBoolean(BleManager.CONNECTED_STATUS, isConnSuccessful);
         itemFragement.setArguments(bundle);
         return itemFragement;
     }
@@ -74,10 +71,6 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = View.inflate(getActivity(), R.layout.driving_fragment, null);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            isConnSuccessful = arguments.getBoolean(MainActivity.CONNECTED_STATUS);
-        }
         initViews();
         return view;
     }
@@ -88,6 +81,16 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
+            }
+        });
+        titleBar.setRightOnClicker(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (BleManager.isConnSuccessful) {
+                    BleManager.getInstance(getContext()).disconnect();
+                } else {
+                    BleManager.getInstance(getContext()).startScan(getContext(), GlobalConsts.BATTERY);
+                }
             }
         });
 //        mNewAppTitle.setRightTitle("日期");
@@ -118,7 +121,10 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
         recyclerView.setHasFixedSize(true);
         adapter.addAll(dataList);
         if (dataList.size() != 0) {
+            mSuspensionTv.setVisibility(View.VISIBLE);
             mSuspensionTv.setText(dataList.get(0).date);
+        } else {
+            mSuspensionTv.setVisibility(View.GONE);
         }
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -150,7 +156,7 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
                 }
             }
         });
-        connectChanged(isConnSuccessful);
+        connectChanged(BleManager.isConnSuccessful);
         registerBoradcastReceiver();
     }
 
@@ -175,12 +181,6 @@ public class DrivingFragment extends BaseFragment implements SwipeRefreshLayout.
         srl.postDelayed(new Runnable() {
             @Override
             public void run() {
-                RecordBean bean6 = new RecordBean();
-                bean6.date = "2017-08-07";
-                bean6.startTime = "11:11";
-                bean6.stopTime = "22:22";
-                bean6.duration = 88 + "分钟";
-                DBManger.getInstance(getContext()).addRecord(bean6);
                 srl.setRefreshing(false);
                 adapter.clear();
                 dataList.clear();

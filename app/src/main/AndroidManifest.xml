@@ -52,9 +52,11 @@
             android:value="CeVtrbbrVvuFyqRp7qAZhPRujBfx96Hn" />
 
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.main.MainActivity2"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
+
         <activity android:name=".ble.DeviceScanActivity" />
         <activity android:name=".ui.gbattery.XM_Bt_Demo" />
         <activity android:name=".ble.Stalls_Activity" />
@@ -73,7 +75,7 @@
         <activity
             android:name=".ui.light.LightFunctionActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity android:name=".ui.pbattery.BateryActivity" />
+        <activity android:name=".ui.pbattery.BatteryActivity" />
         <activity android:name=".ui.gbattery.EmergencyActivity" />
         <activity android:name=".ui.misc.LoginActivity" />
         <activity android:name=".ui.misc.RegisterActivity" />

@@ -37,4 +37,15 @@ public class ToastUtils {
         toast.show();
     }
 
+    public static void toastInCenter(Context context, String tip) {
+
+        if (toast == null) {
+            toast = Toast.makeText(context.getApplicationContext(), tip, Toast.LENGTH_SHORT);
+        } else {
+            toast.setText(tip);
+        }
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
+
 }

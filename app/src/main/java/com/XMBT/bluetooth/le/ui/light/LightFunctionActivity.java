@@ -26,10 +26,10 @@ import android.widget.TimePicker;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
-import com.XMBT.bluetooth.le.ui.main.MainActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.Utils;
@@ -58,13 +58,6 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
     public final static String EXTRA_DATA = "EXTRA_DATA";
     private String strTemp;
 
-    static final int rssibufferSize = 10;
-    int[] rssibuffer = new int[rssibufferSize];
-    int rssibufferIndex = 0;
-    boolean rssiUsedFalg = false;
-
-    public static final int REFRESH = 0x000001;
-
     private int iStalls = 15;
     private PopupWindow popupWindow;
     private View contentView;
@@ -76,27 +69,35 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
     private boolean flag = false;
 
     private TitleBar titleBar;
-    private boolean isConnSuccessful;
     private final Handler handler1 = new Handler();
+
+    private BleManager bleManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_function);
+        initBle();
         initDatas();
         initPopWindow();
         initView();
         cbAuto.setChecked(flag);
-        startTimer1();
-        readDangwei();
+        if(BleManager.isConnSuccessful){
+            startTimer1();
+            readDangwei();
+        }
         registerBoradcastReceiver();
-        ReadParameter();
-        UpdateAllParameter();
+    }
+
+    private void initBle() {
+        bleManager = BleManager.getInstance(this);
+        if (!bleManager.isSupportBle()) {
+            showToast(getResources().getString(R.string.ble_not_supported));
+        }
+        bleManager.startScan(this,GlobalConsts.LIGHTING);
     }
 
     private void initDatas() {
-        isConnSuccessful = getIntent().getBooleanExtra(MainActivity.CONNECTED_STATUS, false);
-
         bannerUrls.add(GlobalConsts.BANNER_URL0);
         bannerUrls.add(GlobalConsts.BANNER_URL1);
         bannerUrls.add(GlobalConsts.BANNER_URL2);
@@ -123,7 +124,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 Log.e("lzz", "发送防止蓝牙死机命令");
                 String newValue1 = SampleGattAttributes.WRITE_CRASH;
                 byte[] dataToWrite1 = HexUtil.hexStringToBytes(newValue1);
-                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite1);
+                bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite1);
                 handler1.postDelayed(this, 1000);
             }
         }, 1000);
@@ -135,7 +136,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
     private void readDangwei() {
         String newValue = SampleGattAttributes.WRITE_SHIFT;
         byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
-        MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
     }
 
     private void startTimer() {
@@ -156,7 +157,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 //开灯指令
                 String newValue = SampleGattAttributes.WRITE_OPEN_LIGHT;
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
-                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
             }
         }
     }
@@ -199,6 +200,16 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 onBackPressed();
             }
         });
+        titleBar.setRightOnClicker(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(BleManager.isConnSuccessful){
+                    BleManager.getInstance(LightFunctionActivity.this).disconnect();
+                }else{
+                    BleManager.getInstance(LightFunctionActivity.this).startScan(LightFunctionActivity.this, GlobalConsts.LIGHTING);
+                }
+            }
+        });
     }
 
     private void initView() {
@@ -231,7 +242,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 strtemp = Utils.bytesToHexString(PwmValue);
                 newValue += strtemp;
                 byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
-                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
             }
 
             @Override
@@ -289,7 +300,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
             }
         });
         tvAutoInfo.setText(startTime + "开启 " + endTime + "关闭 长按设置时间");
-        connectChanged(isConnSuccessful);
+        connectChanged(BleManager.isConnSuccessful);
     }
 
     private void connectChanged(boolean isConnected) {
@@ -349,7 +360,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                 }
                 dataToWrite = HexUtil.hexStringToBytes(newValue);
-                MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 break;
             case R.id.cb_city:
                 if (cbCity.isChecked()) {
@@ -357,7 +368,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     seekBar.setProgress(0);
                     newValue = SampleGattAttributes.MODE_CITY;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_highway:
@@ -366,7 +377,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     seekBar.setProgress(15);
                     newValue = SampleGattAttributes.MODE_HIGHWAY;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_30:
@@ -376,11 +387,11 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     cb120.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_30;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_60:
@@ -390,11 +401,11 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     cb120.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_60;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_90:
@@ -404,11 +415,11 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     cb120.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_90;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 }
                 break;
             case R.id.cb_120:
@@ -418,11 +429,11 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     cb90.setChecked(false);
                     newValue = SampleGattAttributes.SHIFT_120;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 } else {
                     newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    MainActivity.WriteCharX(MainActivity.gattCharacteristic_write, dataToWrite);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                 }
                 break;
         }
@@ -543,31 +554,14 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         seekBar.setProgress(0);
     }
 
-    private void UpdateAllParameter() {
-        Message msg = new Message();
-        msg.what = REFRESH;
-//        mHandler.sendMessage(msg);
-    }
-
-    private void writeParameter() {
-        SharedPreferences.Editor sharedata = getSharedPreferences("data", 0).edit();
-    }
-
-
-    private void ReadParameter() {
-        SharedPreferences sharedata = getSharedPreferences("data", 0);
-    }
-
     @Override
     protected void onStop() {
         super.onStop();
-        writeParameter();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        writeParameter();
         PreferenceUtils.write(LightFunctionActivity.this, "light_info", "starttime", startTime);
         PreferenceUtils.write(LightFunctionActivity.this, "light_info", "endtime", startTime);
 //      editor.putInt("progress",seekBar.getProgress());

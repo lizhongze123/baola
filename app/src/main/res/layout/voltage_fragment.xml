@@ -67,17 +67,16 @@
 
             <ImageView
                 android:id="@+id/statusIv"
-                android:visibility="gone"
+                android:visibility="invisible"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:src="@drawable/status3" />
 
             <com.XMBT.bluetooth.le.view.LineChart.LineView
                 android:id="@+id/myline"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

@@ -17,4 +17,8 @@ public class BaseFragment extends Fragment {
         ToastUtils.toastInBottom(getActivity(), tips);
     }
 
+    public void showToastCenter(String tips) {
+        ToastUtils.toastInCenter(getActivity(), tips);
+    }
+
 }

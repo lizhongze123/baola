@@ -13,13 +13,13 @@ import android.widget.RadioButton;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.main.MainActivity;
 
 /**
  * 汽车智能动力电池
  */
-public class BateryActivity extends BaseActivity {
+public class BatteryActivity extends BaseActivity {
 
     private VoltageFragment voltageFragment;
     private StartTestFragment startTestFragment;
@@ -32,27 +32,35 @@ public class BateryActivity extends BaseActivity {
     private int selectedIndex;
     private MyButtonListener myButtonListener;
 
-    private boolean isConnSuccessful;
+    private BleManager bleManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_batery);
-        isConnSuccessful = getIntent().getBooleanExtra(MainActivity.CONNECTED_STATUS, false);
-        initView();
-        addListener();
         registerBoradcastReceiver();
+        initBle();
+        initViews();
+        addListener();
     }
 
-    private void initView() {
+    private void initBle() {
+        bleManager = BleManager.getInstance(this);
+        if (!bleManager.isSupportBle()) {
+            showToast(getResources().getString(R.string.ble_not_supported));
+        }
+        bleManager.startScan(this, GlobalConsts.BATTERY);
+    }
+
+    private void initViews() {
         btnAry[0] = (RadioButton) findViewById(R.id.radio1);
         btnAry[1] = (RadioButton) findViewById(R.id.radio2);
         btnAry[2] = (RadioButton) findViewById(R.id.radio3);
         btnAry[3] = (RadioButton) findViewById(R.id.radio4);
-        voltageFragment = VoltageFragment.newInstance(isConnSuccessful);
-        startTestFragment = StartTestFragment.newInstance(isConnSuccessful);
-        chargeFragment = ChargeFragment.newInstance(isConnSuccessful);
-        drivingFragment = DrivingFragment.newInstance(isConnSuccessful);
+        voltageFragment = VoltageFragment.newInstance(false);
+        startTestFragment = StartTestFragment.newInstance(false);
+        chargeFragment = ChargeFragment.newInstance(false);
+        drivingFragment = DrivingFragment.newInstance(false);
         fragmentAry = new Fragment[]{voltageFragment, startTestFragment, chargeFragment, drivingFragment};
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -74,6 +82,7 @@ public class BateryActivity extends BaseActivity {
     public void registerBoradcastReceiver() {
         IntentFilter myIntentFilter = new IntentFilter();
         myIntentFilter.addAction(GlobalConsts.ACTION_CONNECT_CHANGE);
+        myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_BLE_OVER);
         registerReceiver(mBroadcastReceiver, myIntentFilter);
     }
 
@@ -85,10 +94,15 @@ public class BateryActivity extends BaseActivity {
                 int status = intent.getIntExtra("CONNECT_STATUC", 0);
                 if (status == 0) {
                     //断开连接
-                    isConnSuccessful = false;
+                    BleManager.isConnSuccessful = false;
                 } else {
                     //已连接
-                    isConnSuccessful = true;
+                    BleManager.isConnSuccessful = true;
+                }
+            }else if(action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)){
+                int status = intent.getIntExtra(BleManager.SCAN_BLE_STATUS, 0);
+                if(status == 0){
+                    showToastCenter("未能检测到该设备，请稍后重试");
                 }
             }
         }
@@ -130,7 +144,7 @@ public class BateryActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MainActivity.disconnect();
+        bleManager.disconnect();
         unregisterReceiver(mBroadcastReceiver);
     }
 

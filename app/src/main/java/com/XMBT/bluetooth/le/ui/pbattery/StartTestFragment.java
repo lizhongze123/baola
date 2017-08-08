@@ -17,9 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.main.MainActivity;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.DensityUtils;
 import com.XMBT.bluetooth.le.view.LineChart.ItemBean;
@@ -50,8 +50,6 @@ public class StartTestFragment extends Fragment {
     private TextView tvLeftStandard;
 
     public final static String EXTRA_DATA = "EXTRA_DATA";
-    public final static String EXTRA_UUID = "EXTRA_UUID";
-    public final static String EXTRA_STATUS = "EXTRA_STATUS";
     /**
      * 收到的数据
      */
@@ -77,15 +75,10 @@ public class StartTestFragment extends Fragment {
      */
     private List<Integer> voltageList;
 
-    private boolean isConnSuccessful = false;
-
     private List<ItemBean> mItems;
 
     public static StartTestFragment newInstance(Boolean isConnSuccessful) {
         StartTestFragment itemFragement = new StartTestFragment();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(MainActivity.CONNECTED_STATUS, isConnSuccessful);
-        itemFragement.setArguments(bundle);
         return itemFragement;
     }
 
@@ -93,10 +86,6 @@ public class StartTestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = View.inflate(getActivity(), R.layout.fragment_starttest, null);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            isConnSuccessful = arguments.getBoolean(MainActivity.CONNECTED_STATUS);
-        }
         initViews();
         return view;
     }
@@ -107,6 +96,16 @@ public class StartTestFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
+            }
+        });
+        titleBar.setRightOnClicker(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (BleManager.isConnSuccessful) {
+                    BleManager.getInstance(getContext()).disconnect();
+                } else {
+                    BleManager.getInstance(getContext()).startScan(getContext(), GlobalConsts.BATTERY);
+                }
             }
         });
     }
@@ -128,7 +127,7 @@ public class StartTestFragment extends Fragment {
         rl.setMarginStart(DensityUtils.dip2px(getActivity(), margin));
         tvLeftStandard.setLayoutParams(rl);
 
-        connectChanged(isConnSuccessful);
+        connectChanged(BleManager.isConnSuccessful);
         registerBoradcastReceiver();
     }
 

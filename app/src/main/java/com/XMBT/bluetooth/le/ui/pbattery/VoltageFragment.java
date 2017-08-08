@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.base.BaseFragment;
 import com.XMBT.bluetooth.le.bean.RecordBean;
+import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.db.DBManger;
-import com.XMBT.bluetooth.le.ui.main.MainActivity;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.ToastUtils;
@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * 汽车智能动力电池--电压测试Fragment
  */
-public class VoltageFragment extends Fragment {
+public class VoltageFragment extends BaseFragment {
 
     private View view;
 
@@ -65,10 +65,6 @@ public class VoltageFragment extends Fragment {
      * 记录折线图x=0的title，删除数据用
      */
     private String tag;
-    /**
-     * 是否连接
-     */
-    private boolean isConnSuccessful = false;
     /**
      * 是否启动车了？
      */
@@ -104,9 +100,6 @@ public class VoltageFragment extends Fragment {
 
     public static VoltageFragment newInstance(Boolean isConnSuccessful) {
         VoltageFragment itemFragement = new VoltageFragment();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(MainActivity.CONNECTED_STATUS, isConnSuccessful);
-        itemFragement.setArguments(bundle);
         return itemFragement;
     }
 
@@ -114,10 +107,6 @@ public class VoltageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = View.inflate(getActivity(), R.layout.voltage_fragment, null);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            isConnSuccessful = arguments.getBoolean(MainActivity.CONNECTED_STATUS);
-        }
         initViews();
         return view;
     }
@@ -128,6 +117,16 @@ public class VoltageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
+            }
+        });
+        titleBar.setRightOnClicker(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(BleManager.isConnSuccessful){
+                    BleManager.getInstance(getContext()).disconnect();
+                }else{
+                    BleManager.getInstance(getContext()).startScan(getContext(), GlobalConsts.BATTERY);
+                }
             }
         });
     }
@@ -157,7 +156,7 @@ public class VoltageFragment extends Fragment {
         loadingView = (LoadingView) view.findViewById(R.id.loadingView);
         persentTv = (TextView) view.findViewById(R.id.textView10);
 
-        connectChanged(isConnSuccessful);
+        connectChanged(BleManager.isConnSuccessful);
         registerBoradcastReceiver();
     }
 
@@ -304,6 +303,11 @@ public class VoltageFragment extends Fragment {
             } else {
                 titleBar.setTvRight("未连接");
                 titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
+                mItems.clear();
+                loadingView.setProgress(0);
+                loadingView.setPercentText(0+"V");
+                persentTv.setText("0%");
+                statusIv.setVisibility(View.INVISIBLE);
             }
         }
     }

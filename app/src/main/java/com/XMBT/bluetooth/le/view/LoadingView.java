@@ -226,7 +226,6 @@ public class LoadingView extends View {
 
     private void drawInnerCircle(Canvas canvas) {
         canvas.drawCircle(xOrigin, yOrigin, circleRadius, cirPaint);
-        cirPaint.setColor(Color.BLACK);
     }
 
     /**

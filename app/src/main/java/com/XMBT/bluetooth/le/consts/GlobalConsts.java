@@ -30,4 +30,7 @@ public class GlobalConsts {
     public static final String ACTION_NOTIFI = "XM_NOTIFI";
     public static final String ACTION_NAME_RSSI = "XM_RSSI";
 
+    public static final String ACTION_SCAN_BLE_OVER = "action_scan_ble_over";
+
+
 }
