@@ -76,6 +76,12 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
         xBanner.setData(imgurls, null);
         xBanner.setmAdapter(this);
         adapter = new DeviceListAdapter(this, yunCheDeviceEntities);
+        adapter.setOnDeleteListener(new DeviceListAdapter.OnDeleteListener() {
+            @Override
+            public void onDelete(int pos) {
+                deleteDevice(pos);
+            }
+        });
         listView.setAdapter(adapter);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -91,6 +97,11 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
                 startActivity(intent);
             }
         });
+    }
+
+    private void deleteDevice(int pos) {
+        yunCheDeviceEntities.remove(pos);
+        adapter.notifyDataSetChanged();
     }
 
     private void login() {
@@ -178,6 +189,9 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
                     @Override
                     public void onFinish() {
                         dismissLoadingDialog();
+                        if(swipe.isRefreshing()){
+                            swipe.setRefreshing(false);
+                        }
                     }
                 });
     }

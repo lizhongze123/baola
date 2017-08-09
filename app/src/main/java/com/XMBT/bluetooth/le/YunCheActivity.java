@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.YuCheEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.map.BaiduMapActivity;
@@ -34,7 +35,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class YunCheActivity extends Activity implements XBanner.XBannerAdapter {
+public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapter {
     private GridView gridView;
     private XBanner xBanner;
     private List<Integer> imgurls = new ArrayList<>();
