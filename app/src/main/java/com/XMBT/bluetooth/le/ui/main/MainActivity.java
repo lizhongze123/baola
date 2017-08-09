@@ -15,7 +15,7 @@ import com.XMBT.bluetooth.le.YunCheListActivity;
 import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.AddDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.ui.gbattery.EmergencyActivity;
+import com.XMBT.bluetooth.le.ui.start.EmergencyActivity;
 import com.XMBT.bluetooth.le.ui.light.LightFunctionActivity;
 import com.XMBT.bluetooth.le.ui.pbattery.BatteryActivity;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;

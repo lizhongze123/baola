@@ -140,7 +140,7 @@ public class SampleGattAttributes {
     /**
      * 实时温度
      */
-    public static String REAL_TEMPERATURE = "04BB47";
+    public static String REAL_TEMPERATURE = "04B847";
     /**
      * 使用天数
      */

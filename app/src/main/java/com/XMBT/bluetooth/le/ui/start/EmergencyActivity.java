@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le.ui.gbattery;
+package com.XMBT.bluetooth.le.ui.start;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,7 +17,9 @@ import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
+import com.XMBT.bluetooth.le.ui.light.LightFunctionActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
+import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.ChargingProgess;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.bumptech.glide.Glide;
@@ -34,8 +36,6 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     private XBanner xBanner;
     private List<String> bannerUrls = new ArrayList<>();
 
-    private boolean isConnSuccessful;
-
     private TitleBar titleBar;
 
     public final static String EXTRA_DATA = "EXTRA_DATA";
@@ -48,17 +48,28 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     private float temf, volf;
     private ChargingProgess chargingprigressView;
 
+    private BleManager bleManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency);
+        StatusBarHelper.setStatusBarColor(this, R.color.title_color);
+        initBle();
         initDatas();
         initView();
         registerBoradcastReceiver();
     }
 
+    private void initBle() {
+        bleManager = BleManager.getInstance(this);
+        if (!bleManager.isSupportBle()) {
+            showToast(getResources().getString(R.string.ble_not_supported));
+        }
+        bleManager.startScan(this,GlobalConsts.POWER);
+    }
+
     private void initDatas() {
-        isConnSuccessful = getIntent().getBooleanExtra(BleManager.CONNECTED_STATUS, false);
         bannerUrls.add(GlobalConsts.BANNER_URL0);
         bannerUrls.add(GlobalConsts.BANNER_URL1);
         bannerUrls.add(GlobalConsts.BANNER_URL2);
@@ -72,6 +83,16 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        titleBar.setRightOnClicker(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(BleManager.isConnSuccessful){
+                    BleManager.getInstance(EmergencyActivity.this).disconnect();
+                }else{
+                    BleManager.getInstance(EmergencyActivity.this).startScan(EmergencyActivity.this, GlobalConsts.POWER);
+                }
             }
         });
     }
@@ -98,7 +119,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         cbWarninglight.setOnClickListener(this);
         cbUsb.setOnClickListener(this);
 
-        connectChanged(isConnSuccessful);
+        connectChanged(BleManager.isConnSuccessful);
     }
 
     @Override
@@ -121,6 +142,9 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         } else {
             titleBar.setTvRight("未连接");
             titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
+            chargingprigressView.setDCAnimation(0);
+            tvVoltage.setText("电池电压:"+ 0 + "V");
+            tvTemperature.setText("电池温度:" + 0 + "℃");
         }
     }
 
@@ -147,10 +171,10 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             int vol10 = Integer.parseInt(voltageStr, 16);
                             volf = vol10 / 10f;
                             if (volf < 10.5) {
-                                tvVoltage.setText(volf + "V  \n电池电压");
+                                tvVoltage.setText("电池电压:"+volf + "V");
                                 tvVoltage.setTextColor(getResources().getColor(android.R.color.holo_red_light));
                             } else {
-                                tvVoltage.setText(volf + "V  \n电池电压");
+                                tvVoltage.setText("电池电压:"+volf + "V");
                             }
                         }
                         if (substr.equals(SampleGattAttributes.BATTERY_INDICATOR)) {
@@ -228,14 +252,17 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
 
 
                 }
-            }
-
-            if (action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)) {
+            } else if (action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)) {
                 int status = intent.getIntExtra(BluetoothLeClass.CONNECT_STATUS, BluetoothLeClass.STATE_DISCONNECTED);
                 if (status == BluetoothLeClass.STATE_DISCONNECTED) {
                     connectChanged(false);
                 } else {
                     connectChanged(true);
+                }
+            }else if(action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)){
+                int status = intent.getIntExtra(BleManager.SCAN_BLE_STATUS, 0);
+                if(status == 0){
+                    showToastCenter("未能检测到该设备，请稍后重试");
                 }
             }
         }

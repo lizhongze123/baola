@@ -72,7 +72,7 @@
         <activity
             android:name=".ui.light.LightFunctionActivity" />
         <activity android:name=".ui.pbattery.BatteryActivity" />
-        <activity android:name=".ui.gbattery.EmergencyActivity" />
+        <activity android:name=".ui.start.EmergencyActivity" />
         <activity android:name=".ui.misc.LoginActivity" />
         <activity android:name=".ui.misc.RegisterActivity" />
         <activity android:name=".ui.misc.ForgetPassWordActivity" />

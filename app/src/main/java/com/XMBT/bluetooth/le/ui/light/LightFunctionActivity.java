@@ -455,6 +455,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         myIntentFilter.addAction(GlobalConsts.ACTION_NAME_RSSI);
         myIntentFilter.addAction(GlobalConsts.ACTION_CONNECT_CHANGE);
         myIntentFilter.addAction(GlobalConsts.ACTION_NOTIFI);
+        myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_BLE_OVER);
         registerReceiver(mBroadcastReceiver, myIntentFilter);
     }
 
@@ -545,6 +546,11 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     connectChanged(false);
                 } else {
                     connectChanged(true);
+                }
+            }else if(action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)){
+                int status = intent.getIntExtra(BleManager.SCAN_BLE_STATUS, 0);
+                if(status == 0){
+                    showToastCenter("未能检测到该设备，请稍后重试");
                 }
             }
         }

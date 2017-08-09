@@ -15,7 +15,7 @@ public class GlobalConsts {
      * 设备
      */
     public static final String LIGHTING = "Pourio"; //照明系统
-    public static final String POWER = "TM Power"; //启动电源
+    public static final String POWER = "BCM90"; //启动电源
     public static final String BATTERY = "XM-Battery";//动力电池
     public static final String GPS_BATTERY = "GPS"; //gps智能电池
 

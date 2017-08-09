@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.XMBT.bluetooth.le.ui.gbattery.EmergencyActivity">
+    tools:context="com.XMBT.bluetooth.le.ui.start.EmergencyActivity">
 
     <com.XMBT.bluetooth.le.view.TitleBar
         android:id="@+id/titleBar"
@@ -44,6 +44,7 @@
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:background="@android:color/white">
+
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -51,28 +52,28 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="8dp"
                     android:background="@drawable/label_shape">
-                    <RelativeLayout
+
+                    <LinearLayout
+                        android:layout_centerInParent="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true">
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tv_voltage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="电池电压:12.V"
-                            android:gravity="center"
+                            android:text="电池电压:0V"
                             android:textColor="@android:color/white"/>
 
                         <TextView
                             android:id="@+id/tv_temperature"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="电池温度:40 ℃"
-                            android:layout_below="@+id/tv_voltage"
+                            android:text="电池温度:0 ℃"
                             android:textColor="#ffffff"/>
 
-                    </RelativeLayout>
+                    </LinearLayout>
                 </RelativeLayout>
 
                 <RelativeLayout

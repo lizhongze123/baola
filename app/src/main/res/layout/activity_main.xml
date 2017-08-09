@@ -12,7 +12,7 @@
         app:title_background="@color/title_bg"
         app:title_text="设备"
         app:title_textColor="@color/white"
-        app:right_button_image="@android:drawable/ic_menu_add"/>
+        app:right_button_image="@drawable/add"/>
 
 
     <RelativeLayout
