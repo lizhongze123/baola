@@ -78,8 +78,8 @@
         <activity android:name=".ui.misc.ForgetPassWordActivity" />
         <activity android:name=".YunCheActivity" />
         <activity android:name=".map.BaiduMapActivity" />
-        <activity android:name=".YunCheListActivity" />
-        <activity android:name=".ui.AddYuncheActivity" />
+        <activity android:name=".ui.gbattery.YunCheListActivity" />
+        <activity android:name=".ui.gbattery.AddYuncheActivity" />
         <activity
             android:name=".map.BNDemoGuideActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"

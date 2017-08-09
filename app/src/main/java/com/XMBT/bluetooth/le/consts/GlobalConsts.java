@@ -3,7 +3,12 @@ package com.XMBT.bluetooth.le.consts;
 
 public class GlobalConsts {
 
+    public static boolean isLogin = false;
+
     public static final String URL = "http://app.ycqpmall.com/";
+    public static final String GET_DATE = URL + "GetDateServices.asmx/GetDate";
+    public static final String LOGIN = URL + "GetDateServices.asmx/loginSystem";
+
 
     public static final String BANNER_URL0 = "http://www.ycqpmall.com/gg/new1.jpg";
     public static final String BANNER_URL1 = "http://www.ycqpmall.com/gg/new2.jpg";

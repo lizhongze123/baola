@@ -2,13 +2,21 @@ package com.XMBT.bluetooth.le.bean;
 
 import java.io.Serializable;
 
-/**
- * Created by haowenlee on 2017/2/1.
- */
 public class User implements Serializable {
-    String id;
-    String mds;
-    String grade;
+
+    /**
+     * {"id":"5b872734-750f-4823-a049-5b70fc3277e2",
+     * "success":"true",
+     * "mds":"47e9d7761b184466af313939e37f35c8",
+     * "LoginType":"ENTERPRISE",
+     * "grade":8,
+     * "msg":"登录成功",
+     * "errorCode":200}
+     */
+
+    public String id;
+    public String mds;
+    public String grade;
 
     public User() {
     }
@@ -19,27 +27,4 @@ public class User implements Serializable {
         this.mds = mds;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getMds() {
-        return mds;
-    }
-
-    public void setMds(String mds) {
-        this.mds = mds;
-    }
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
 }

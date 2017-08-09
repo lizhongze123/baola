@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.XMBT.bluetooth.le.R;
-import com.XMBT.bluetooth.le.YunCheListActivity;
+import com.XMBT.bluetooth.le.ui.gbattery.YunCheListActivity;
 import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.AddDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;

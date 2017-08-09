@@ -350,7 +350,7 @@ public class BaiduMapActivity extends Activity {
                 .params("method", "getUserAndGpsInfoByIDsUtcNew")
                 .params("school_id", id)
                 .params("custid", id)
-                .params("userIDs", device.getId())
+                .params("userIDs", device.id)
                 .params("mapType", "BAIDU")
                 .params("option", "cn")
                 .params("mds", mds)
@@ -427,7 +427,7 @@ public class BaiduMapActivity extends Activity {
     private void setMarker() {
         LocalEntity localEntity = null;
         for (int i = 0; i < localEntities.size(); i++) {
-            if (localEntities.get(i).getUser_name().equals(device.getFullname())) {
+            if (localEntities.get(i).getUser_name().equals(device.fullname)) {
                 localEntity = localEntities.get(i);
                 break;
             }

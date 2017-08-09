@@ -121,7 +121,7 @@ public class YunCheActivity extends Activity implements XBanner.XBannerAdapter {
         OkGo.post(GlobalConsts.URL + "GetDateServices.asmx/GetDate")
                 .tag(this)
                 .params("method", "GetPowerVAndBetteryV")
-                .params("macid", device.getId())
+                .params("macid", device.id)
                 .params("mds", mds)
                 .execute(new StringCallback() {
                     @Override

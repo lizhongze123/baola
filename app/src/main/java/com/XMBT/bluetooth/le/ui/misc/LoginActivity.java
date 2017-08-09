@@ -1,18 +1,19 @@
 package com.XMBT.bluetooth.le.ui.misc;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.User;
+import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.utils.LogUtils;
+import com.XMBT.bluetooth.le.utils.StatusBarHelper;
+import com.XMBT.bluetooth.le.view.TitleBar;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
@@ -27,18 +28,27 @@ import java.io.ObjectOutputStream;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends BaseActivity {
+
     private EditText phoneEt, passwordEt;
+    private TitleBar titleBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
+        StatusBarHelper.setStatusBarColor(this, R.color.title_color);
         initView();
     }
 
     private void initView() {
+        titleBar = (TitleBar) findViewById(R.id.titleBar);
+        titleBar.setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         phoneEt = (EditText) findViewById(R.id.phoneEt);
         passwordEt = (EditText) findViewById(R.id.passwordEt);
     }
@@ -65,7 +75,8 @@ public class LoginActivity extends Activity {
                     sb.append("密码不能为空");
                 }
                 if (sb.toString().equals("")) {
-                    OkGo.post(GlobalConsts.URL + "GetDateServices.asmx/loginSystem")
+                    showLoadingDialog("加载中，请稍候");
+                    OkGo.post(GlobalConsts.LOGIN)
                             .tag(this)
                             .params("LoginName", phoneEt.getText().toString())
                             .params("LoginPassword", passwordEt.getText().toString())
@@ -73,22 +84,29 @@ public class LoginActivity extends Activity {
                             .params("ISMD5", "0")
                             .params("timeZone", "8")
                             .params("apply", "APP")
-                            .params("loginUrl", "http://app.ycqpmall.com/")
+                            .params("loginUrl", GlobalConsts.URL)
                             .execute(new StringCallback() {
+                                @Override
+                                public void onAfter(String s, Exception e) {
+                                    super.onAfter(s, e);
+                                    dismissLoadingDialog();
+                                }
+
                                 @Override
                                 public void onSuccess(String s, Call call, Response response) {
                                     try {
+                                        LogUtils.e(s);
                                         JSONObject jsonObject = new JSONObject(s);
                                         String success = jsonObject.getString("success");
                                         if (success.equals("false")) {
                                             String msg = jsonObject.getString("msg");
-                                            Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                            showToast(msg);
                                         } else {
                                             String id = jsonObject.getString("id");
                                             String mds = jsonObject.getString("mds");
                                             String grade = jsonObject.getString("grade");
                                             User user = new User(id, mds, grade);
-                                            SharedPreferences preferences = getSharedPreferences("userInfo", MODE_PRIVATE);
+
                                             // 创建字节输出流
                                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                             try {
@@ -99,15 +117,17 @@ public class LoginActivity extends Activity {
                                                 // 将字节流编码成base64的字符窜
                                                 String oAuth_Base64 = new String(Base64.encodeBase64(baos
                                                         .toByteArray()));
-                                                SharedPreferences.Editor editor = preferences.edit();
-                                                editor.putString("product", oAuth_Base64);
-                                                editor.putString("mds", mds);
-                                                editor.putString("id", id);
-                                                editor.commit();
-                                                Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+
+                                                UserSp.getInstance(LoginActivity.this).setProduct(oAuth_Base64);
+                                                UserSp.getInstance(LoginActivity.this).setMds(mds);
+                                                UserSp.getInstance(LoginActivity.this).setId(id);
+
+                                                showToast("登陆成功");
+                                                GlobalConsts.isLogin = true;
+                                                setResult(RESULT_OK);
                                                 finish();
                                             } catch (IOException e) {
-                                                // TODO Auto-generated
+
                                             }
                                         }
                                     } catch (JSONException e) {
@@ -117,7 +137,7 @@ public class LoginActivity extends Activity {
                             });
 
                 } else {
-                    Toast.makeText(this, sb.toString(), Toast.LENGTH_SHORT).show();
+                    showToast(sb.toString());
                 }
                 break;
         }

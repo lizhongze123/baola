@@ -11,6 +11,8 @@ import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
+import java.util.logging.Level;
+
 public class MyApplication extends Application {
     @Override
     public void onCreate() {
@@ -25,10 +27,9 @@ public class MyApplication extends Application {
         try {
             //以下都不是必须的，根据需要自行选择,一般来说只需要 debug,缓存相关,cookie相关的 就可以了
             OkGo.getInstance()
-
                     // 打开该调试开关,打印级别INFO,并不是异常,是为了显眼,不需要就不要加入该行
                     // 最后的true表示是否打印okgo的内部异常，一般打开方便调试错误
-                    .debug("OkGo", true)
+                    .debug("OkGo", Level.INFO, true)
 
                     //如果使用默认的 60秒,以下三行也不需要传
                     .setConnectTimeout(OkGo.DEFAULT_MILLISECONDS)  //全局的连接超时时间

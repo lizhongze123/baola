@@ -1,18 +1,44 @@
 package com.XMBT.bluetooth.le;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
-/**
- * Created by haowenlee on 2017/4/10.
- */
 public class YunCheDeviceEntity implements Serializable {
-    private String id;
-    private String fullname;
-    private String macid;
-    private String platenumber;
-    private int equipmentStatus;
-    private int equipmentBatteryVType;
-    private int img;
+
+    /**
+     * {"success":"true",
+     * "errorCode":"200",
+     * "errorDescribe":"",
+     *
+     * "data":[
+     * {"Id":"c8c8388a-c263-49a3-a401-2d2af5e62f23",
+     * "FullName":"VM02C0681320",
+     * "Macid":"6170681320",
+     * "PlateNumber":null,
+     * "EquipmentStatus":0,
+     * "EquipmentBetteryVType":1}]}
+     */
+
+    @SerializedName("Id")
+    public String id;
+
+    @SerializedName("FullName")
+    public String fullname;
+
+    @SerializedName("Macid")
+    public String macid;
+
+    @SerializedName("PlateNumber")
+    public String platenumber;
+
+    @SerializedName("EquipmentStatus")
+    public int equipmentStatus;
+
+    @SerializedName("EquipmentBetteryVType")
+    public int equipmentBatteryVType;
+
+    public int img;
 
     public YunCheDeviceEntity() {
     }
@@ -27,59 +53,4 @@ public class YunCheDeviceEntity implements Serializable {
         this.img = img;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getMacid() {
-        return macid;
-    }
-
-    public void setMacid(String macid) {
-        this.macid = macid;
-    }
-
-    public String getPlatenumber() {
-        return platenumber;
-    }
-
-    public void setPlatenumber(String platenumber) {
-        this.platenumber = platenumber;
-    }
-
-    public int getEquipmentStatus() {
-        return equipmentStatus;
-    }
-
-    public void setEquipmentStatus(int equipmentStatus) {
-        this.equipmentStatus = equipmentStatus;
-    }
-
-    public int getEquipmentBatteryVType() {
-        return equipmentBatteryVType;
-    }
-
-    public void setEquipmentBatteryVType(int equipmentBatteryVType) {
-        this.equipmentBatteryVType = equipmentBatteryVType;
-    }
-
-    public int getImg() {
-        return img;
-    }
-
-    public void setImg(int img) {
-        this.img = img;
-    }
 }
