@@ -5,32 +5,19 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.XMBT.bluetooth.le.YunCheActivity">
-    <RelativeLayout
+
+    <com.XMBT.bluetooth.le.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/relativeLayout"
-        android:background="@color/title_color">
-        <ImageButton
-            android:id="@+id/backIv"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/common_back"
-            android:layout_centerVertical="true"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:onClick="doClick"
-            android:background="@android:color/transparent"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="云车保姆"
-            android:layout_centerInParent="true"
-            android:textSize="18sp"
-            android:id="@+id/textView"
-            android:textColor="#ffffff"/>
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        app:title_background="@color/title_bg"
+        app:title_text="GPS电池"
+        app:right_button_text="未登录"
+        app:left_button_image="@drawable/common_ic_left_arrow"
+        app:title_textColor="@color/white" />
+
     <ScrollView
-        android:layout_below="@+id/relativeLayout"
+        android:layout_below="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <LinearLayout

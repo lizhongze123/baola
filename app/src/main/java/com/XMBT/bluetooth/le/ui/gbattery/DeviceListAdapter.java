@@ -50,7 +50,7 @@ class DeviceListAdapter extends BaseSwipeAdapter {
     @Override
     public View generateView(final int position, ViewGroup viewGroup) {
         View convertView = View.inflate(mContext, R.layout.yunche_list, null);
-        SwipeLayout swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
+        final SwipeLayout swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
         swipeLayout.addSwipeListener(new SimpleSwipeListener() {
             @Override
             public void onOpen(SwipeLayout layout) {
@@ -68,10 +68,16 @@ class DeviceListAdapter extends BaseSwipeAdapter {
             public void onClick(View view) {
                 // 监听SwipeLayout中的组件的点击事件
                 onDeleteListener.onDelete(position);
+                mItemManger.removeShownLayouts(swipeLayout);
+                mItemManger.closeAllItems();
             }
         });
-
         return convertView;
+    }
+
+    public void onRefreshSwipe(){
+//        mItemManger.removeShownLayouts(swipeLayout);
+        mItemManger.closeAllItems();
     }
 
     @Override

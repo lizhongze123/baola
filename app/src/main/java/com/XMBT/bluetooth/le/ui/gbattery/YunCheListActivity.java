@@ -87,6 +87,7 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
             @Override
             public void onRefresh() {
                 getDevice();
+                adapter.onRefreshSwipe();
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
