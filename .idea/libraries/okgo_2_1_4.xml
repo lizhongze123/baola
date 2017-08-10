@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="okgo-2.1.4">
     <CLASSES>
-      <root url="file://$USER_HOME$/.android/build-cache/69023abe68bcda1c05882ca58604234e6a4e4670/output/res" />
-      <root url="jar://$USER_HOME$/.android/build-cache/69023abe68bcda1c05882ca58604234e6a4e4670/output/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.android/build-cache/c9a7ba46e3f4da2c608ddd44fea70ee2a7c42d8b/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/c9a7ba46e3f4da2c608ddd44fea70ee2a7c42d8b/output/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
