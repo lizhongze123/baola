@@ -32,7 +32,6 @@
             android:layout_height="45dp"
             android:background="@null"
             android:hint="请输入账号"
-            android:text="15625100371"
             android:paddingLeft="10dp"
             android:textSize="14sp" />
 
@@ -45,7 +44,6 @@
             android:id="@+id/passwordEt"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:text="12345678"
             android:background="@null"
             android:hint="请输入密码"
             android:inputType="textPassword"
@@ -87,7 +85,7 @@
         android:layout_below="@+id/button8"
         android:background="@drawable/login_button_shape"
         android:onClick="doClick"
-        android:text="登陆"
+        android:text="登录"
         android:textColor="#ffffff" />
 
 </RelativeLayout>

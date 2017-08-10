@@ -122,7 +122,7 @@ public class LoginActivity extends BaseActivity {
                                                 UserSp.getInstance(LoginActivity.this).setMds(mds);
                                                 UserSp.getInstance(LoginActivity.this).setId(id);
 
-                                                showToast("登陆成功");
+                                                showToast("登录成功");
                                                 GlobalConsts.isLogin = true;
                                                 setResult(RESULT_OK);
                                                 finish();

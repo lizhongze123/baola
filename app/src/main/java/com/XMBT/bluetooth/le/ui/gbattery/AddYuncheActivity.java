@@ -70,7 +70,9 @@ public class AddYuncheActivity extends BaseActivity {
 
                     @Override
                     public void onSuccessResponse(List<String> data) {
-                        showToast("业务逻辑正常");
+                        showToast("绑定设备成功");
+                        setResult(RESULT_OK);
+                        finish();
                     }
 
                     @Override

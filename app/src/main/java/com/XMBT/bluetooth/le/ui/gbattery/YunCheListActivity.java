@@ -1,6 +1,7 @@
 package com.XMBT.bluetooth.le.ui.gbattery;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -79,7 +80,7 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
         adapter.setOnDeleteListener(new DeviceListAdapter.OnDeleteListener() {
             @Override
             public void onDelete(int pos) {
-                deleteDevice(pos);
+                delDevice(pos);
             }
         });
         listView.setAdapter(adapter);
@@ -100,30 +101,33 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
         });
     }
 
-    private void deleteDevice(int pos) {
-        yunCheDeviceEntities.remove(pos);
-        adapter.notifyDataSetChanged();
-    }
-
     private void login() {
         if (GlobalConsts.isLogin) {
             new AlertDialog.Builder(this)
                     .setTitle("提示")
-                    .setMessage("确定退出登陆？")
-                    .setPositiveButton("确定", null)
+                    .setMessage("确定退出登录？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            GlobalConsts.isLogin = false;
+                            loginChanged(GlobalConsts.isLogin);
+                            yunCheDeviceEntities.clear();
+                            adapter.notifyDataSetChanged();
+                        }
+                    })
                     .setNegativeButton("取消", null)
                     .show();
         } else {
-            startActivity(new Intent(YunCheListActivity.this, LoginActivity.class));
+            startActivityForResult(new Intent(YunCheListActivity.this, LoginActivity.class), REQUEST_CODE);
         }
     }
 
     private void loginChanged(boolean isLogin) {
         if (isLogin) {
-            titleBar.setTvRight("已登陆");
+            titleBar.setTvRight("已登录");
             titleBar.setTvRightTextColor(getResources().getColor(R.color.dark_blue));
         } else {
-            titleBar.setTvRight("未登陆");
+            titleBar.setTvRight("未登录");
             titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
         }
     }
@@ -141,7 +145,7 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
                 break;
             case R.id.addBtn:
                 Intent intent = new Intent(YunCheListActivity.this, AddYuncheActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
         }
     }
@@ -162,6 +166,11 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
     }
 
     private void getDevice() {
+        if (!GlobalConsts.isLogin) {
+            showToast("请先登录");
+            swipe.setRefreshing(false);
+            return;
+        }
         String mds = UserSp.getInstance(this).getMds();
         showLoadingDialog("加载中，请稍候");
         OkGo.get(GlobalConsts.GET_DATE)
@@ -190,9 +199,42 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
                     @Override
                     public void onFinish() {
                         dismissLoadingDialog();
-                        if(swipe.isRefreshing()){
+                        if (swipe.isRefreshing()) {
                             swipe.setRefreshing(false);
                         }
+                    }
+                });
+    }
+
+    private void delDevice(final int position) {
+        String mds = UserSp.getInstance(this).getMds();
+        String macId = yunCheDeviceEntities.get(position).macid;
+        showLoadingDialog("加载中，请稍候");
+        OkGo.get(GlobalConsts.GET_DATE)
+                .tag(this)
+                .params("method", "unbundlingDevice")
+                .params("mds", mds)
+                .params("macid", macId)
+                .execute(new ApiResultCallback<List<String>>() {
+
+                    @Override
+                    public void onSuccessResponse(List<String> data) {
+                        yunCheDeviceEntities.remove(position);
+                        adapter.notifyDataSetChanged();
+                        showToast("解绑成功");
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode) {
+                        if (errorCode.equals("-1")) {
+                            showToast("服务器异常");
+                        }
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        dismissLoadingDialog();
                     }
                 });
     }
