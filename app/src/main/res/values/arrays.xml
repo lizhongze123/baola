@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="gps_items">
+        <item>车辆位置</item>
+        <item>历史轨迹</item>
+        <item>设防控制</item>
+        <item>报警中心</item>
+        <item>电子围栏</item>
+        <item>云车社区</item>
+    </string-array>
+
+    <integer-array name="gas_icons">
+        <item>@drawable/main_location</item>
+        <item>@drawable/main_track</item>
+        <item>@drawable/main_control</item>
+        <item>@drawable/main_alarmcenter</item>
+        <item>@drawable/main_aroundnavi</item>
+        <item>@drawable/main_aroundinfo</item>
+    </integer-array>
+
+</resources>

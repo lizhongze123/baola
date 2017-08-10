@@ -2,6 +2,7 @@ package com.XMBT.bluetooth.le;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +21,7 @@ import com.XMBT.bluetooth.le.map.BaiduMapActivity;
 import com.XMBT.bluetooth.le.map.FenceActivity;
 import com.XMBT.bluetooth.le.map.TraceActivity;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
+import com.XMBT.bluetooth.le.view.GridViewForNested;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
@@ -36,7 +39,9 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapter {
-    private GridView gridView;
+
+    private ScrollView scrollView;
+    private GridViewForNested gridView;
     private XBanner xBanner;
     private List<Integer> imgurls = new ArrayList<>();
     YunCheDeviceEntity device;
@@ -48,13 +53,32 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yun_che);
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
-        initView();
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        scrollView.smoothScrollTo(0, 0);
+        initViews();
         Intent intent = getIntent();
         device = (YunCheDeviceEntity) intent.getSerializableExtra("device");
         getVoltage();
     }
 
-    private void initView() {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loginChanged(GlobalConsts.isLogin);
+    }
+
+    private void loginChanged(boolean isLogin) {
+        if (isLogin) {
+            titleBar.setTvRight("已登录");
+            titleBar.setTvRightTextColor(getResources().getColor(R.color.dark_blue));
+        } else {
+            titleBar.setTvRight("未登录");
+            titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
+        }
+    }
+
+    private void initViews() {
         titleBar = (TitleBar) findViewById(R.id.titleBar);
         titleBar.setLeftOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,32 +90,18 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
         dayTv = (TextView) findViewById(R.id.dayTv);
         persentTv = (TextView) findViewById(R.id.persentTv);
         xBanner = (XBanner) findViewById(R.id.xbanner);
-        gridView = (GridView) findViewById(R.id.gridView);
+        gridView = (GridViewForNested) findViewById(R.id.gridView);
+
         List<YuCheEntity> yuCheEntities = new ArrayList<>();
-        YuCheEntity yuCheEntity = new YuCheEntity();
-        yuCheEntity.setPic(R.drawable.main_location);
-        yuCheEntity.setTitle("车辆位置");
-        yuCheEntities.add(yuCheEntity);
-        YuCheEntity yuCheEntity1 = new YuCheEntity();
-        yuCheEntity1.setTitle("历史轨迹");
-        yuCheEntity1.setPic(R.drawable.main_track);
-        yuCheEntities.add(yuCheEntity1);
-        YuCheEntity yuCheEntity2 = new YuCheEntity();
-        yuCheEntity2.setTitle("设防控制");
-        yuCheEntity2.setPic(R.drawable.main_control);
-        yuCheEntities.add(yuCheEntity2);
-        YuCheEntity yuCheEntity3 = new YuCheEntity();
-        yuCheEntity3.setTitle("报警中心");
-        yuCheEntity3.setPic(R.drawable.main_alarmcenter);
-        yuCheEntities.add(yuCheEntity3);
-        YuCheEntity yuCheEntity4 = new YuCheEntity();
-        yuCheEntity4.setTitle("电子围栏");
-        yuCheEntity4.setPic(R.drawable.main_aroundnavi);
-        yuCheEntities.add(yuCheEntity4);
-        YuCheEntity yuCheEntity5 = new YuCheEntity();
-        yuCheEntity5.setTitle("云车社区");
-        yuCheEntity5.setPic(R.drawable.main_aroundinfo);
-        yuCheEntities.add(yuCheEntity5);
+        TypedArray icons = getResources().obtainTypedArray(R.array.gas_icons);
+        String[] items = getResources().getStringArray(R.array.gps_items);
+        for (int i = 0; i < items.length; i++) {
+            YuCheEntity yuCheEntity = new YuCheEntity();
+            yuCheEntity.setTitle(items[i]);
+            yuCheEntity.setPic(icons.getResourceId(i , 0));
+            yuCheEntities.add(yuCheEntity);
+        }
+
         GridAdapter adapter = new GridAdapter(yuCheEntities);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

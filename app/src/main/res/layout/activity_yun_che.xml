@@ -1,136 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.XMBT.bluetooth.le.YunCheActivity">
 
     <com.XMBT.bluetooth.le.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:left_button_image="@drawable/common_ic_left_arrow"
+        app:right_button_text="未登录"
         app:title_background="@color/title_bg"
         app:title_text="GPS电池"
-        app:right_button_text="未登录"
-        app:left_button_image="@drawable/common_ic_left_arrow"
         app:title_textColor="@color/white" />
 
     <ScrollView
-        android:layout_below="@+id/titleBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <LinearLayout
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <com.stx.xhb.xbanner.XBanner
-            android:id="@+id/xbanner"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:pointsPosition="CENTER"
-            app:AutoPlayTime="3000"
-            app:pointsContainerBackground="#44aaaaaa"
-            app:pointNormal="@drawable/shape_noraml"
-            app:pointSelect="@drawable/shape_selected">
-        </com.stx.xhb.xbanner.XBanner>
+        android:layout_below="@+id/titleBar">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:orientation="horizontal"
-            android:background="#ffffff">
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@android:color/holo_blue_dark">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:orientation="vertical">
-                <TextView
-                    android:id="@+id/voltageTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="14.2V"
-                    android:textColor="#ffffff"
-                    android:textSize="18sp"
-                    android:layout_gravity="center_horizontal"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:text="电池电压"
-                        android:textColor="#ffffff"/>
-                </LinearLayout>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_margin="16dp"
-                android:background="@android:color/holo_green_dark">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_centerInParent="true">
-                    <LinearLayout
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.stx.xhb.xbanner.XBanner
+                android:id="@+id/xbanner"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:AutoPlayTime="3000"
+                app:pointNormal="@drawable/shape_noraml"
+                app:pointSelect="@drawable/shape_selected"
+                app:pointsContainerBackground="#44aaaaaa"
+                app:pointsPosition="CENTER"></com.stx.xhb.xbanner.XBanner>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="#ffffff"
+                android:orientation="horizontal">
+
+                <RelativeLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                        android:layout_marginRight="10dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="52天"
-                        android:id="@+id/dayTv"
-                        android:textColor="#ffffff"
-                        android:textSize="18sp"
-                        android:layout_gravity="center_horizontal"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="使用时间"
-                        android:textSize="18sp"
-                        android:textColor="#ffffff"/>
-                </LinearLayout>
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_blue_dark">
+
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
                         android:orientation="vertical">
+
                         <TextView
+                            android:id="@+id/voltageTv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="98.6%"
-                            android:id="@+id/persentTv"
+                            android:layout_gravity="center_horizontal"
+                            tools:text="13.2V"
                             android:textColor="#ffffff"
-                            android:textSize="18sp"
-                            android:layout_gravity="center_horizontal"/>
+                            android:textSize="16sp" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="预计寿命"
-                            android:textSize="18sp"
-                            android:textColor="#ffffff"/>
+                            android:text="电池电压"
+                            android:textColor="#ffffff"
+                            android:textSize="16sp" />
                     </LinearLayout>
-                </LinearLayout>
-            </RelativeLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_green_dark">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/dayTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                tools:text="55天"
+                                android:textColor="#ffffff"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="使用时间"
+                                android:textColor="#ffffff"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/persentTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                tools:text="99.8%"
+                                android:textColor="#ffffff"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="预计寿命"
+                                android:textColor="#ffffff"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <com.XMBT.bluetooth.le.view.GridViewForNested
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:horizontalSpacing="1dp"
+                android:numColumns="3"
+                android:verticalSpacing="2dp"></com.XMBT.bluetooth.le.view.GridViewForNested>
+
         </LinearLayout>
-        <GridView
-            android:id="@+id/gridView"
-            android:numColumns="3"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:horizontalSpacing="1dp"
-            android:verticalSpacing="2dp">
-        </GridView>
-    </LinearLayout>
+
     </ScrollView>
+
 </RelativeLayout>
