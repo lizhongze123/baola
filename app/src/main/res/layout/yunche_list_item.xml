@@ -4,16 +4,16 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="120dp"
-        android:layout_height="110dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="#ffffff"
         android:padding="10dp">
 
         <ImageView
             android:id="@+id/picIv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/main_location" />
 
@@ -24,7 +24,7 @@
             android:layout_below="@+id/picIv"
             android:layout_centerHorizontal="true"
             android:text="车辆位置"
-            android:textSize="15sp" />
+            android:textSize="16sp" />
 
     </RelativeLayout>
 </RelativeLayout>
