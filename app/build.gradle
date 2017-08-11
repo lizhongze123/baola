@@ -43,7 +43,6 @@ android {
 }
 
 dependencies {
-    compile files('src/main/lib/commons-codec-1.4.jar')
     compile 'com.xhb:xbanner:1.2.2'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -51,16 +50,18 @@ dependencies {
     compile 'com.lzy.net:okgo:2.1.4'
     //版本号使用 + 可以自动引用最新版
     compile 'com.prolificinteractive:material-calendarview:1.4.2'
-    compile files('src/main/lib/BaiduLBS_Android.jar')
-    compile files('src/main/lib/BaiduNaviSDK_3.3.0.jar')
-    compile files('src/main/lib/commons-codec-1.4.jar')
     compile 'net.danlew:android.joda:2.9.1'
-    compile files('src/main/lib/BaiduTraceSDK_v3_0_2.jar')
-    compile files('src/main/lib/bos-android-sdk-1.0.2.jar')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.orhanobut:logger:2.1.1'
     compile 'com.android.support:design:25.3.1'
     //  沉浸式状态栏  https://github.com/Zackratos/UltimateBar
     compile 'org.zackratos:ultimatebar:1.0.3'
-    compile files('src/main/lib/AndroidSwipeLayout-v1.1.8.jar')
+    compile files('libs/AndroidSwipeLayout-v1.1.8.jar')
+    compile files('libs/commons-codec-1.4.jar')
+
+    compile files('libs/BaiduLBS_Android.jar')
+    compile files('libs/httpmime-4.1.2.jar')
+
+    compile files('libs/BaiduTraceSDK_v3_0_4.jar')
+    compile files('libs/bos-android-sdk-1.0.2.jar')
 }

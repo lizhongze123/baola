@@ -13,19 +13,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
-import com.XMBT.bluetooth.le.consts.GlobalConsts;
-import com.XMBT.bluetooth.le.bean.LocalEntity;
 import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.bean.LocalEntity;
 import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
+import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.sp.UserSp;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.XMBT.bluetooth.le.view.ZoomControlView;
-import com.baidu.mapapi.SDKInitializer;
+
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -56,23 +56,28 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class BaiduMapActivity extends Activity {
+public class BaiduMapActivity extends BaseActivity {
 
     MapView mMapView = null;
-    YunCheDeviceEntity device;
-    public static List<Activity> activityList = new LinkedList<Activity>();
-    List<LocalEntity> localEntities = new ArrayList<LocalEntity>();
-    public static final String ROUTE_PLAN_NODE = "routePlanNode";
     BaiduMap mBaiduMap;
     ZoomControlView zoomControlView;
+
     private CheckBox checkbox1, checkbox2, checkbox3;
+
+    private YunCheDeviceEntity device;
+    public static List<Activity> activityList = new LinkedList<>();
+    private List<LocalEntity> localEntities = new ArrayList<>();
+    public static final String ROUTE_PLAN_NODE = "routePlanNode";
+
     private String mSDCardPath = null;
+    private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
+
+
     private static final String[] authBaseArr = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_FINE_LOCATION};
     private static final int authBaseRequestCode = 1;
-    private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
-    private static final String[] authComArr = {Manifest.permission.READ_PHONE_STATE};
     private static final int authComRequestCode = 2;
+    private static final String[] authComArr = {Manifest.permission.READ_PHONE_STATE};
     private boolean hasInitSuccess = false;
     private boolean hasRequestComAuth = false;
 
@@ -80,18 +85,44 @@ public class BaiduMapActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityList.add(this);
-        //在使用SDK各组件之前初始化context信息，传入ApplicationContext
-        //注意该方法要再setContentView方法之前实现
-        SDKInitializer.initialize(getApplicationContext());
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
         setContentView(R.layout.activity_baidu_map);
         initView();
+        initMap();
         if (initDirs()) {
             initNavi();
         }
         getLocate();
     }
 
+    private void initView() {
+        TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
+        titleBar.setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        checkbox1 = (CheckBox) findViewById(R.id.checkbox1);
+        checkbox2 = (CheckBox) findViewById(R.id.checkbox2);
+        checkbox3 = (CheckBox) findViewById(R.id.checkbox3);
+    }
+
+    private void initMap() {
+        mMapView = (MapView) findViewById(R.id.bmapView);
+        //这里显示自定义的缩放控件
+        zoomControlView = (ZoomControlView) findViewById(R.id.zoomControlView);
+        zoomControlView.setMapView(mMapView);
+        mMapView.showZoomControls(false); //设置是否显示缩放控件
+        mMapView.showScaleControl(false); //设置是否显示比例尺
+        mMapView.removeViewAt(1); //去掉百度logo
+        mBaiduMap = mMapView.getMap();
+    }
+
+    /**
+     * 创建 BNSDKSimpleDemo 文件夹
+     * @return
+     */
     private boolean initDirs() {
         mSDCardPath = getSdcardDir();
         if (mSDCardPath == null) {
@@ -109,6 +140,10 @@ public class BaiduMapActivity extends Activity {
         return true;
     }
 
+    /**
+     * 获取sd卡路径
+     * @return
+     */
     private String getSdcardDir() {
         if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
             return Environment.getExternalStorageDirectory().toString();
@@ -191,18 +226,16 @@ public class BaiduMapActivity extends Activity {
         return true;
     }
 
+    /**
+     * 初始化百度地图导航
+     */
     private void initNavi() {
-
         BNOuterTTSPlayerCallback ttsCallback = null;
-
         // 申请权限
         if (android.os.Build.VERSION.SDK_INT >= 23) {
-
             if (!hasBasePhoneAuth()) {
-
                 this.requestPermissions(authBaseArr, authBaseRequestCode);
                 return;
-
             }
         }
 
@@ -218,23 +251,23 @@ public class BaiduMapActivity extends Activity {
 
                     @Override
                     public void run() {
-                        Toast.makeText(BaiduMapActivity.this, authinfo, Toast.LENGTH_LONG).show();
+                        showToast(authinfo);
                     }
                 });
             }
 
             public void initSuccess() {
-                Toast.makeText(BaiduMapActivity.this, "百度导航引擎初始化成功", Toast.LENGTH_SHORT).show();
+                showToast("百度导航引擎初始化成功");
                 hasInitSuccess = true;
                 initSetting();
             }
 
             public void initStart() {
-                Toast.makeText(BaiduMapActivity.this, "百度导航引擎初始化开始", Toast.LENGTH_SHORT).show();
+                showToast("百度导航引擎初始化开始");
             }
 
             public void initFailed() {
-                Toast.makeText(BaiduMapActivity.this, "百度导航引擎初始化失败", Toast.LENGTH_SHORT).show();
+                showToast("百度导航引擎初始化失败");
             }
 
         }, null, ttsHandler, ttsPlayStateListener);
@@ -330,25 +363,6 @@ public class BaiduMapActivity extends Activity {
             // TODO Auto-generated method stub
             Toast.makeText(BaiduMapActivity.this, "算路失败", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void initView() {
-        TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
-        titleBar.setLeftOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        checkbox1 = (CheckBox) findViewById(R.id.checkbox1);
-        checkbox2 = (CheckBox) findViewById(R.id.checkbox2);
-        checkbox3 = (CheckBox) findViewById(R.id.checkbox3);
-        //获取地图控件引用
-        mMapView = (MapView) findViewById(R.id.bmapView);
-        zoomControlView = (ZoomControlView) findViewById(R.id.zoomControlView);
-        zoomControlView.setMapView(mMapView);
-        mMapView.showZoomControls(false);
-        mBaiduMap = mMapView.getMap();
     }
 
     private void getLocate() {
