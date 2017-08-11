@@ -31,6 +31,7 @@
         android:layout_height="40dp"
         android:background="@drawable/edit_shape"
         android:layout_margin="16dp"
+        android:text="6170681320"
         android:paddingLeft="10dp"/>
 
     <Button

@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.sp.UserSp;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.XMBT.bluetooth.le.view.dialog.SetDialog;
@@ -59,13 +61,11 @@ public class RefreshActivity extends BaseActivity {
                 if(TextUtils.isEmpty(str)){
                     showToast("请输入刷新时间");
 
-                }else{
-                    if(Integer.valueOf(str) == 0){
-                        showToast("请输入正确的时间");
-                    }else{
-                        setTime(Integer.valueOf(str));
-                        setDialog.dismiss();
-                    }
+                }else if(str.substring(0).equals("0")){
+                    showToast("请输入正确的时间");
+                }else {
+                    setTime(str);
+                    setDialog.dismiss();
                 }
             }
         });
@@ -73,13 +73,13 @@ public class RefreshActivity extends BaseActivity {
         tvLocation = (TextView) findViewById(R.id.tv_location);
     }
 
-    private void setTime(int second) {
+    private void setTime(String second) {
         if(timeType == 0){
-            tvHome.setText("" + second);
+            tvHome.setText(second);
         }else{
-            tvLocation.setText("" + second);
+            tvLocation.setText(second);
         }
-
+        UserSp.getInstance(this).setRefreshTime(GlobalConsts.userName, second);
     }
 
 }

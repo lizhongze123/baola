@@ -4,6 +4,7 @@ package com.XMBT.bluetooth.le.consts;
 public class GlobalConsts {
 
     public static boolean isLogin = false;
+    public static String userName ;
 
     public static final String URL = "http://app.ycqpmall.com/";
     public static final String GET_DATE = URL + "GetDateServices.asmx/GetDate";

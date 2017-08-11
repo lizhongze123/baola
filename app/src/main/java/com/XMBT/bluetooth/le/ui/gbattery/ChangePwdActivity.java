@@ -83,7 +83,7 @@ public class ChangePwdActivity extends BaseActivity {
             return;
         }
         showLoadingDialog("加载中，请稍候");
-        String mds = UserSp.getInstance(this).getMds();
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         OkGo.post(GlobalConsts.GET_DATE)
                 .tag(this)
                 .params("mds", mds)

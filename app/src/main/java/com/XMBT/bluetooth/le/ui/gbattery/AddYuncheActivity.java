@@ -57,8 +57,8 @@ public class AddYuncheActivity extends BaseActivity {
     }
 
     private void addDevice() {
-        String mds = UserSp.getInstance(this).getMds();
-        String id = UserSp.getInstance(this).getId();
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
+        String id = UserSp.getInstance(this).getId(GlobalConsts.userName);
         showLoadingDialog("加载中，请稍候");
         OkGo.post(GlobalConsts.GET_DATE)
                 .tag(this)

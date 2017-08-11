@@ -63,23 +63,6 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
 //        getVoltage();
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loginChanged(GlobalConsts.isLogin);
-    }
-
-    private void loginChanged(boolean isLogin) {
-        if (isLogin) {
-            titleBar.setTvRight("已登录");
-            titleBar.setTvRightTextColor(getResources().getColor(R.color.dark_blue));
-        } else {
-            titleBar.setTvRight("未登录");
-            titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
-        }
-    }
-
     private void initViews() {
         titleBar = (TitleBar) findViewById(R.id.titleBar);
         titleBar.setLeftOnClickListener(new View.OnClickListener() {
@@ -111,11 +94,11 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     Intent intent = new Intent(YunCheActivity.this, BaiduMapActivity.class);
-                    intent.putExtra("device", device);
+                    intent.putExtra(DeviceFragment.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 1) {
                     Intent intent = new Intent(YunCheActivity.this, TraceActivity.class);
-                    intent.putExtra("device", device);
+                    intent.putExtra(DeviceFragment.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 2) {
                     Intent intent = new Intent(YunCheActivity.this, FortificationActivity.class);
@@ -125,7 +108,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                     startActivity(intent);
                 } else if (position == 4) {
                     Intent intent = new Intent(YunCheActivity.this, FenceActivity.class);
-                    intent.putExtra("device", device);
+                    intent.putExtra(DeviceFragment.DATA_DEVICE, device);
                     startActivity(intent);
                 }
             }

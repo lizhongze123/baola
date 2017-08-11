@@ -21,6 +21,9 @@ import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.bean.LocalEntity;
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
+import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.utils.StatusBarHelper;
+import com.XMBT.bluetooth.le.view.TitleBar;
 import com.XMBT.bluetooth.le.view.ZoomControlView;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
@@ -54,6 +57,7 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 public class BaiduMapActivity extends Activity {
+
     MapView mMapView = null;
     YunCheDeviceEntity device;
     public static List<Activity> activityList = new LinkedList<Activity>();
@@ -75,11 +79,11 @@ public class BaiduMapActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         activityList.add(this);
         //在使用SDK各组件之前初始化context信息，传入ApplicationContext
         //注意该方法要再setContentView方法之前实现
         SDKInitializer.initialize(getApplicationContext());
+        StatusBarHelper.setStatusBarColor(this, R.color.title_color);
         setContentView(R.layout.activity_baidu_map);
         initView();
         if (initDirs()) {
@@ -133,6 +137,7 @@ public class BaiduMapActivity extends Activity {
             }
         }
     };
+
     /**
      * 内部TTS播报状态回调接口
      */
@@ -328,6 +333,13 @@ public class BaiduMapActivity extends Activity {
     }
 
     private void initView() {
+        TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
+        titleBar.setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         checkbox1 = (CheckBox) findViewById(R.id.checkbox1);
         checkbox2 = (CheckBox) findViewById(R.id.checkbox2);
         checkbox3 = (CheckBox) findViewById(R.id.checkbox3);
@@ -342,10 +354,10 @@ public class BaiduMapActivity extends Activity {
     private void getLocate() {
         Intent intent = getIntent();
         device = (YunCheDeviceEntity) intent.getSerializableExtra("device");
-        SharedPreferences sp = getSharedPreferences("userInfo", MODE_PRIVATE);
-        String mds = sp.getString("mds", null);
-        String id = sp.getString("id", null);
-        OkGo.get(GlobalConsts.URL + "GetDateServices.asmx/GetDate")
+
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
+        String id = UserSp.getInstance(this).getId(GlobalConsts.userName);
+        OkGo.get(GlobalConsts.GET_DATE)
                 .tag(this)
                 .params("method", "getUserAndGpsInfoByIDsUtcNew")
                 .params("school_id", id)
@@ -541,25 +553,21 @@ public class BaiduMapActivity extends Activity {
 
         @Override
         public void stopTTS() {
-            // TODO Auto-generated method stub
             Log.e("test_TTS", "stopTTS");
         }
 
         @Override
         public void resumeTTS() {
-            // TODO Auto-generated method stub
             Log.e("test_TTS", "resumeTTS");
         }
 
         @Override
         public void releaseTTSPlayer() {
-            // TODO Auto-generated method stub
             Log.e("test_TTS", "releaseTTSPlayer");
         }
 
         @Override
         public int playTTSText(String speech, int bPreempt) {
-            // TODO Auto-generated method stub
             Log.e("test_TTS", "playTTSText" + "_" + speech + "_" + bPreempt);
 
             return 1;
@@ -567,31 +575,26 @@ public class BaiduMapActivity extends Activity {
 
         @Override
         public void phoneHangUp() {
-            // TODO Auto-generated method stub
             Log.e("test_TTS", "phoneHangUp");
         }
 
         @Override
         public void phoneCalling() {
-            // TODO Auto-generated method stub
             Log.e("test_TTS", "phoneCalling");
         }
 
         @Override
         public void pauseTTS() {
-            // TODO Auto-generated method stub
             Log.e("test_TTS", "pauseTTS");
         }
 
         @Override
         public void initTTSPlayer() {
-            // TODO Auto-generated method stub
             Log.e("test_TTS", "initTTSPlayer");
         }
 
         @Override
         public int getTTSState() {
-            // TODO Auto-generated method stub
             Log.e("test_TTS", "getTTSState");
             return 1;
         }
@@ -599,7 +602,6 @@ public class BaiduMapActivity extends Activity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        // TODO Auto-generated method stub
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == authBaseRequestCode) {
             for (int ret : grantResults) {

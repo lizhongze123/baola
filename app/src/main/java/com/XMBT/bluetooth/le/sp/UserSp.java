@@ -13,13 +13,10 @@ public class UserSp {
 
     private Context mContext;
 
-    private String fileName = "userInfo";
-
     private static UserSp instance = null;
 
     public UserSp(Context context) {
         this.mContext = context;
-        sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
     }
 
     public static synchronized UserSp getInstance(Context context) {
@@ -29,31 +26,48 @@ public class UserSp {
         return instance;
     }
 
-    public String getProduct() {
-        String productBase64 = sp.getString("product", "");
+    public String getProduct(String fileName) {
+        sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        String productBase64 = sp.getString("product", null);
         return productBase64;
     }
 
-    public void setProduct(String var) {
+    public void setProduct(String fileName, String var) {
+        sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         sp.edit().putString("product", var).commit();
     }
 
-    public String getMds() {
-        String productBase64 = sp.getString("mds", "");
+    public String getMds(String fileName) {
+        sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        String productBase64 = sp.getString("mds", null);
         return productBase64;
     }
 
-    public void setMds(String var) {
+    public void setMds(String fileName, String var) {
+        sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         sp.edit().putString("mds", var).commit();
     }
 
-    public String getId() {
-        String productBase64 = sp.getString("id", "");
-        return productBase64;
+    public String getId(String fileName) {
+        sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        String id = sp.getString("id", null);
+        return id;
     }
 
-    public void setId(String var) {
+    public void setId(String fileName, String var) {
+        sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         sp.edit().putString("id", var).commit();
+    }
+
+    public void setRefreshTime(String fileName, String var) {
+        sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        sp.edit().putString("refresh", var).commit();
+    }
+
+    public String getRefreshTime(String fileName) {
+        sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        String refresh = sp.getString("refresh", "5");
+        return refresh;
     }
 
 }

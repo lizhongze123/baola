@@ -3,45 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.XMBT.bluetooth.le.map.BaiduMapActivity">
-    <RelativeLayout
+
+    <com.XMBT.bluetooth.le.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/relativeLayout"
-        android:background="@color/title_color">
-        <ImageButton
-            android:id="@+id/backIv"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/common_back"
-            android:layout_centerVertical="true"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:onClick="doClick"
-            android:background="@android:color/transparent"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="车辆位置"
-            android:layout_centerInParent="true"
-            android:textSize="18sp"
-            android:id="@+id/textView"
-            android:textColor="#ffffff"/>
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        app:left_button_image="@drawable/common_ic_left_arrow"
+        app:title_background="@color/title_bg"
+        app:title_text="车辆位置"
+        app:title_textColor="@color/white" />
+
     <com.baidu.mapapi.map.MapView
-        android:layout_below="@+id/relativeLayout"
+        android:layout_below="@+id/titleBar"
         android:id="@+id/bmapView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayout"
+        android:layout_below="@+id/titleBar"
         android:layout_alignParentRight="true"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
         android:orientation="vertical">
+
         <CheckBox
             android:id="@+id/checkbox1"
             android:layout_width="wrap_content"
@@ -49,6 +38,7 @@
             android:background="@drawable/maptype_selector"
             android:button="@null"
             android:onClick="doClick"/>
+
         <CheckBox
             android:id="@+id/checkbox2"
             android:layout_width="wrap_content"
@@ -57,6 +47,7 @@
             android:button="@null"
             android:onClick="doClick"
             android:background="@drawable/map_follow_selector"/>
+
         <Button
             android:id="@+id/button"
             android:layout_width="34dp"
@@ -64,6 +55,7 @@
             android:layout_marginTop="10dp"
             android:onClick="doClick"
             android:background="@drawable/map_p2c"/>
+
         <CheckBox
             android:id="@+id/checkbox3"
             android:layout_width="wrap_content"
@@ -72,7 +64,9 @@
             android:layout_marginTop="10dp"
             android:onClick="doClick"
             android:background="@drawable/map_trafic_selector"/>
+
     </LinearLayout>
+
     <com.XMBT.bluetooth.le.view.ZoomControlView
         android:id="@+id/zoomControlView"
         android:layout_width="wrap_content"
@@ -82,4 +76,5 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="32dp">
     </com.XMBT.bluetooth.le.view.ZoomControlView>
+
 </RelativeLayout>

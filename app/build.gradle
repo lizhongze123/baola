@@ -9,6 +9,22 @@ android {
         targetSdkVersion 24
     }
 
+    signingConfigs {
+        debug {
+            storeFile file("xmkey.jks")
+            storePassword 'xm123456'
+            keyAlias 'xmkey'
+            keyPassword 'xm123456'
+        }
+
+        release {
+            storeFile file('xmkey.jks')
+            storePassword 'xm123456'
+            keyAlias 'xmkey'
+            keyPassword 'xm123456'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false

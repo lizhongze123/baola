@@ -32,6 +32,8 @@ public class DeviceFragment extends BaseFragment implements XBanner.XBannerAdapt
 
     public final int REQUEST_CODE = 0X01;
 
+    public static String DATA_DEVICE = "device";
+
     private XBanner xBanner;
     private ListView listView;
     private List<Integer> imgurls = new ArrayList<>();
@@ -98,7 +100,7 @@ public class DeviceFragment extends BaseFragment implements XBanner.XBannerAdapt
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getContext(), YunCheActivity.class);
-                intent.putExtra("device", yunCheDeviceEntities.get(position));
+                intent.putExtra(DATA_DEVICE, yunCheDeviceEntities.get(position));
                 startActivity(intent);
             }
         });
@@ -110,7 +112,7 @@ public class DeviceFragment extends BaseFragment implements XBanner.XBannerAdapt
     }
 
     private void getDevice() {
-        String mds = UserSp.getInstance(getContext()).getMds();
+        String mds = UserSp.getInstance(getContext()).getMds(GlobalConsts.userName);
         showLoadingDialog("加载中，请稍候");
         OkGo.get(GlobalConsts.GET_DATE)
                 .tag(this)
@@ -146,7 +148,7 @@ public class DeviceFragment extends BaseFragment implements XBanner.XBannerAdapt
     }
 
     private void delDevice(final int position) {
-        String mds = UserSp.getInstance(getContext()).getMds();
+        String mds = UserSp.getInstance(getContext()).getMds(GlobalConsts.userName);
         String macId = yunCheDeviceEntities.get(position).macid;
         showLoadingDialog("加载中，请稍候");
         OkGo.get(GlobalConsts.GET_DATE)

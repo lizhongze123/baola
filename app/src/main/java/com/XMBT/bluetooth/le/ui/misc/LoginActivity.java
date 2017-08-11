@@ -118,10 +118,10 @@ public class LoginActivity extends BaseActivity {
                                                 // 将字节流编码成base64的字符窜
                                                 String oAuth_Base64 = new String(Base64.encodeBase64(baos
                                                         .toByteArray()));
-
-                                                UserSp.getInstance(LoginActivity.this).setProduct(oAuth_Base64);
-                                                UserSp.getInstance(LoginActivity.this).setMds(mds);
-                                                UserSp.getInstance(LoginActivity.this).setId(id);
+                                                GlobalConsts.userName = phoneEt.getText().toString();
+                                                UserSp.getInstance(LoginActivity.this).setProduct(GlobalConsts.userName, oAuth_Base64);
+                                                UserSp.getInstance(LoginActivity.this).setMds(GlobalConsts.userName, mds);
+                                                UserSp.getInstance(LoginActivity.this).setId(GlobalConsts.userName,id);
 
                                                 showToast("登录成功");
                                                 GlobalConsts.isLogin = true;

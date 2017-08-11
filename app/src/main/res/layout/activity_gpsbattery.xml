@@ -52,7 +52,7 @@
                 android:id="@+id/radio4"
                 style="@style/main_tab"
                 android:text="个人中心"
-                android:drawableTop="@drawable/parts_radio_selector"/>
+                android:drawableTop="@drawable/main_me"/>
 
         </RadioGroup>
 
