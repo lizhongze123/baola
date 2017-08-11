@@ -7,13 +7,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="#ffffff"
         android:padding="10dp">
 
         <ImageView
             android:id="@+id/picIv"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/main_location" />
 
@@ -24,7 +23,8 @@
             android:layout_below="@+id/picIv"
             android:layout_centerHorizontal="true"
             android:text="车辆位置"
-            android:textSize="16sp" />
+            android:layout_marginTop="5dp"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 </RelativeLayout>

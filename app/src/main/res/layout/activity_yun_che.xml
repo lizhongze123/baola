@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.XMBT.bluetooth.le.YunCheActivity">
+    tools:context="com.XMBT.bluetooth.le.ui.gbattery.YunCheActivity">
 
     <com.XMBT.bluetooth.le.view.TitleBar
         android:id="@+id/titleBar"
@@ -142,10 +142,11 @@
             <com.XMBT.bluetooth.le.view.GridViewForNested
                 android:id="@+id/gridView"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:horizontalSpacing="1dp"
                 android:numColumns="3"
-                android:verticalSpacing="2dp"></com.XMBT.bluetooth.le.view.GridViewForNested>
+                tools:listitem="@layout/yunche_list_item"
+                android:verticalSpacing="10dp"></com.XMBT.bluetooth.le.view.GridViewForNested>
 
         </LinearLayout>
 

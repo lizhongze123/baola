@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.XMBT.bluetooth.le.WarnCenterActivity">
+    tools:context="com.XMBT.bluetooth.le.ui.gbattery.WarnCenterActivity">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"

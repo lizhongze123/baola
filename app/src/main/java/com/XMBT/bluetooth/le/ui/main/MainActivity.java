@@ -11,10 +11,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.XMBT.bluetooth.le.R;
-import com.XMBT.bluetooth.le.ui.gbattery.YunCheListActivity;
 import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.AddDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.ui.gbattery.GpsBatteryActivity;
+import com.XMBT.bluetooth.le.ui.misc.LoginActivity;
 import com.XMBT.bluetooth.le.ui.start.EmergencyActivity;
 import com.XMBT.bluetooth.le.ui.light.LightFunctionActivity;
 import com.XMBT.bluetooth.le.ui.pbattery.BatteryActivity;
@@ -141,8 +142,12 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         } else if (bleDeviceName.equals(GlobalConsts.BATTERY)) {
             startTheProductActivity(BatteryActivity.class, bluetoothAddress, position);
         } else {
-            Intent intent = new Intent(MainActivity.this, YunCheListActivity.class);
-            startActivity(intent);
+            if (GlobalConsts.isLogin) {
+                startActivity(new Intent(MainActivity.this, GpsBatteryActivity.class));
+            } else {
+                showToast("请先登录");
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            }
         }
     }
 

@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.bean.LocalEntity;
 import com.XMBT.bluetooth.le.R;
-import com.XMBT.bluetooth.le.YunCheDeviceEntity;
+import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.view.ZoomControlView;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;

@@ -3,13 +3,11 @@ package com.XMBT.bluetooth.le.ui.gbattery;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
-import com.XMBT.bluetooth.le.YunCheDeviceEntity;
-import com.XMBT.bluetooth.le.utils.LogUtils;
+import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;

@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le;
+package com.XMBT.bluetooth.le.bean;
 
 import com.google.gson.annotations.SerializedName;
 

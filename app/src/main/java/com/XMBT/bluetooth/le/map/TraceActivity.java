@@ -13,7 +13,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.XMBT.bluetooth.le.R;
-import com.XMBT.bluetooth.le.YunCheDeviceEntity;
+import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.view.DateTimePickDialogUtil;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;

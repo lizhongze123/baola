@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.XMBT.bluetooth.le.ui.pbattery.BatteryActivity">
+
+
+    <com.XMBT.bluetooth.le.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:left_button_image="@drawable/common_ic_left_arrow"
+        app:title_background="@color/title_bg"
+        app:title_text="关于我们"
+        app:title_textColor="@color/white" />
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/logo"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:text="宝力奥"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        tools:text="v1.0"
+        android:textSize="16sp"/>
+
+    <View
+        android:layout_marginTop="30dp"
+        style="@style/separation_line"/>
+
+    <LinearLayout
+        android:id="@+id/ll_update"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/selector_item_default"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="15dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="检查更新"
+            android:textSize="14sp"/>
+
+        <ImageView
+            android:visibility="gone"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/shape_circle_red"/>
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/personnew_more"/>
+
+    </LinearLayout>
+
+
+    <View style="@style/separation_line"/>
+
+
+</LinearLayout>

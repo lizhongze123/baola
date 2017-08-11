@@ -11,7 +11,7 @@ import android.view.Window;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.bean.LocalEntity;
 import com.XMBT.bluetooth.le.R;
-import com.XMBT.bluetooth.le.YunCheDeviceEntity;
+import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;

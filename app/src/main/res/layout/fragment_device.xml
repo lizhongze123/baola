@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.XMBT.bluetooth.le.ui.gbattery.YunCheListActivity">
+    android:orientation="vertical">
 
     <com.XMBT.bluetooth.le.view.TitleBar
         android:id="@+id/titleBar"
@@ -13,7 +12,6 @@
         android:layout_height="wrap_content"
         app:title_background="@color/title_bg"
         app:title_text="GPS电池"
-        app:right_button_text="未登录"
         app:left_button_image="@drawable/common_ic_left_arrow"
         app:title_textColor="@color/white" />
 
@@ -56,8 +54,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
-            android:background="@drawable/add2x"
-            android:onClick="doClick" />
+            android:background="@drawable/add2x" />
 
     </LinearLayout>
 

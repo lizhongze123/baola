@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le;
+package com.XMBT.bluetooth.le.ui.gbattery;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.XMBT.bluetooth.le.R;
 
 public class WarnCenterActivity extends Activity {
     private ExpandableListView listView;

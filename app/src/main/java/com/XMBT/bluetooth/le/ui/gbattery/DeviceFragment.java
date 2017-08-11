@@ -1,24 +1,23 @@
 package com.XMBT.bluetooth.le.ui.gbattery;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.XMBT.bluetooth.le.R;
-import com.XMBT.bluetooth.le.YunCheActivity;
-import com.XMBT.bluetooth.le.YunCheDeviceEntity;
-import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.base.BaseFragment;
+import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.http.ApiResultCallback;
 import com.XMBT.bluetooth.le.sp.UserSp;
 import com.XMBT.bluetooth.le.ui.misc.LoginActivity;
-import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
@@ -27,7 +26,9 @@ import com.stx.xhb.xbanner.XBanner;
 import java.util.ArrayList;
 import java.util.List;
 
-public class YunCheListActivity extends BaseActivity implements XBanner.XBannerAdapter {
+public class DeviceFragment extends BaseFragment implements XBanner.XBannerAdapter, View.OnClickListener {
+
+    private View rootView;
 
     public final int REQUEST_CODE = 0X01;
 
@@ -39,44 +40,46 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
     private SwipeRefreshLayout swipe;
     private TitleBar titleBar;
 
+
+    public static DeviceFragment newInstance() {
+        DeviceFragment itemFragement = new DeviceFragment();
+        return itemFragement;
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_yun_che_list);
-        StatusBarHelper.setStatusBarColor(this, R.color.title_color);
-        initView();
-        if (GlobalConsts.isLogin) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        rootView = View.inflate(getActivity(), R.layout.fragment_device, null);
+        initViews();
+        getDevice();
+        return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK) {
             getDevice();
-        } else {
-            showToast("请先登录");
-            Intent intent = new Intent(YunCheListActivity.this, LoginActivity.class);
-            startActivityForResult(intent, REQUEST_CODE);
         }
     }
 
-    private void initView() {
-        titleBar = (TitleBar) findViewById(R.id.titleBar);
+    private void initViews() {
+        titleBar = (TitleBar) rootView.findViewById(R.id.titleBar);
         titleBar.setLeftOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                getActivity().onBackPressed();
             }
         });
-        titleBar.setRightOnClicker(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
-        loginChanged(GlobalConsts.isLogin);
-        xBanner = (XBanner) findViewById(R.id.xbanner);
-        listView = (ListView) findViewById(R.id.listView);
-        swipe = (SwipeRefreshLayout) findViewById(R.id.swipe);
+        rootView.findViewById(R.id.addBtn).setOnClickListener(this);
+        xBanner = (XBanner) rootView.findViewById(R.id.xbanner);
+        listView = (ListView) rootView.findViewById(R.id.listView);
+        swipe = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         imgurls.add(R.drawable.banner_one);
         imgurls.add(R.drawable.banner_three);
         xBanner.setData(imgurls, null);
         xBanner.setmAdapter(this);
-        adapter = new DeviceListAdapter(this, yunCheDeviceEntities);
+        adapter = new DeviceListAdapter(getContext(), yunCheDeviceEntities);
         adapter.setOnDeleteListener(new DeviceListAdapter.OnDeleteListener() {
             @Override
             public void onDelete(int pos) {
@@ -94,84 +97,20 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(YunCheListActivity.this, YunCheActivity.class);
+                Intent intent = new Intent(getContext(), YunCheActivity.class);
                 intent.putExtra("device", yunCheDeviceEntities.get(position));
                 startActivity(intent);
             }
         });
     }
 
-    private void login() {
-        if (GlobalConsts.isLogin) {
-            new AlertDialog.Builder(this)
-                    .setTitle("提示")
-                    .setMessage("确定退出登录？")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            GlobalConsts.isLogin = false;
-                            loginChanged(GlobalConsts.isLogin);
-                            yunCheDeviceEntities.clear();
-                            adapter.notifyDataSetChanged();
-                        }
-                    })
-                    .setNegativeButton("取消", null)
-                    .show();
-        } else {
-            startActivityForResult(new Intent(YunCheListActivity.this, LoginActivity.class), REQUEST_CODE);
-        }
-    }
-
-    private void loginChanged(boolean isLogin) {
-        if (isLogin) {
-            titleBar.setTvRight("已登录");
-            titleBar.setTvRightTextColor(getResources().getColor(R.color.dark_blue));
-        } else {
-            titleBar.setTvRight("未登录");
-            titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loginChanged(GlobalConsts.isLogin);
-    }
-
-    public void doClick(View view) {
-        switch (view.getId()) {
-            case R.id.backIv:
-                onBackPressed();
-                break;
-            case R.id.addBtn:
-                Intent intent = new Intent(YunCheListActivity.this, AddYuncheActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
-                break;
-        }
-    }
-
     @Override
     public void loadBanner(XBanner banner, View view, int position) {
-        Glide.with(YunCheListActivity.this).load(imgurls.get(position)).into((ImageView) view);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CODE) {
-                getDevice();
-            }
-        }
+        Glide.with(DeviceFragment.this).load(imgurls.get(position)).into((ImageView) view);
     }
 
     private void getDevice() {
-        if (!GlobalConsts.isLogin) {
-            showToast("请先登录");
-            swipe.setRefreshing(false);
-            return;
-        }
-        String mds = UserSp.getInstance(this).getMds();
+        String mds = UserSp.getInstance(getContext()).getMds();
         showLoadingDialog("加载中，请稍候");
         OkGo.get(GlobalConsts.GET_DATE)
                 .tag(this)
@@ -207,7 +146,7 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
     }
 
     private void delDevice(final int position) {
-        String mds = UserSp.getInstance(this).getMds();
+        String mds = UserSp.getInstance(getContext()).getMds();
         String macId = yunCheDeviceEntities.get(position).macid;
         showLoadingDialog("加载中，请稍候");
         OkGo.get(GlobalConsts.GET_DATE)
@@ -237,5 +176,16 @@ public class YunCheListActivity extends BaseActivity implements XBanner.XBannerA
                         dismissLoadingDialog();
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addBtn:
+                Intent intent = new Intent(getContext(), AddYuncheActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+                break;
+        }
+
     }
 }

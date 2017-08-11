@@ -76,9 +76,9 @@
         <activity android:name=".ui.misc.LoginActivity" />
         <activity android:name=".ui.misc.RegisterActivity" />
         <activity android:name=".ui.misc.ForgetPassWordActivity" />
-        <activity android:name=".YunCheActivity" />
+        <activity android:name=".ui.gbattery.YunCheActivity" />
         <activity android:name=".map.BaiduMapActivity" />
-        <activity android:name=".ui.gbattery.YunCheListActivity" />
+        <activity android:name=".ui.gbattery.GpsBatteryActivity" />
         <activity android:name=".ui.gbattery.AddYuncheActivity" />
         <activity
             android:name=".map.BNDemoGuideActivity"
@@ -99,9 +99,12 @@
 
         <activity android:name=".map.TraceActivity" />
         <activity android:name=".FortificationActivity" />
-        <activity android:name=".WarnCenterActivity" />
+        <activity android:name=".ui.gbattery.WarnCenterActivity" />
         <activity android:name=".map.FenceActivity"/>
         <activity android:name=".ui.pbattery.TestActivity"/>
+        <activity android:name=".ui.gbattery.AboutActivity"/>
+        <activity android:name=".ui.gbattery.ChangePwdActivity"/>
+        <activity android:name=".ui.gbattery.RefreshActivity"/>
     </application>
 
 </manifest>

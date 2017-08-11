@@ -11,6 +11,7 @@ import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.User;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.ui.gbattery.GpsBatteryActivity;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
@@ -124,7 +125,7 @@ public class LoginActivity extends BaseActivity {
 
                                                 showToast("登录成功");
                                                 GlobalConsts.isLogin = true;
-                                                setResult(RESULT_OK);
+                                                startActivity(new Intent(LoginActivity.this, GpsBatteryActivity.class));
                                                 finish();
                                             } catch (IOException e) {
 

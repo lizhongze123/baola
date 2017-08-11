@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le;
+package com.XMBT.bluetooth.le.ui.gbattery;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,14 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.XMBT.bluetooth.le.FortificationActivity;
+import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.YuCheEntity;
+import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.map.BaiduMapActivity;
 import com.XMBT.bluetooth.le.map.FenceActivity;
@@ -58,7 +60,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
         initViews();
         Intent intent = getIntent();
         device = (YunCheDeviceEntity) intent.getSerializableExtra("device");
-        getVoltage();
+//        getVoltage();
     }
 
 

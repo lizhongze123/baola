@@ -1,53 +1,59 @@
-package com.XMBT.bluetooth.le;
+package com.XMBT.bluetooth.le.ui.gbattery;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.Window;
 import android.widget.RadioButton;
 
-import com.XMBT.bluetooth.le.ui.FortificationFragment;
+import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.ui.main.ActivityCollector;
+import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 
-public class FortificationActivity extends FragmentActivity {
-    FortificationFragment fortificationFragment;
-    InvisibleFragment invisibleFragment;
-    RadioButton[] btnAry = new RadioButton[2];
-    Fragment[] fragmentAry = null;
-    int currentIndex;
-    int selectedIndex;
-    MyButtonListener myButtonListener;
+/**
+ * 汽车智能动力电池
+ */
+public class GpsBatteryActivity extends BaseActivity {
+
+    private DeviceFragment deviceFragment;
+    private PartsFragment partsFragment;
+    private AdviceFragment adviceFragment;
+    private MeFragment meFragment;
+
+    private RadioButton[] btnAry = new RadioButton[4];
+    private Fragment[] fragmentAry = null;
+    private int currentIndex;
+    private int selectedIndex;
+    private MyButtonListener myButtonListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fortification);
-        setView();
+        setContentView(R.layout.activity_gpsbattery);
+        StatusBarHelper.setStatusBarColor(this, R.color.title_bg);
+        ActivityCollector.addActivity(this);
+        initViews();
         addListener();
     }
 
-    private void setView() {
+
+    private void initViews() {
         btnAry[0] = (RadioButton) findViewById(R.id.radio1);
         btnAry[1] = (RadioButton) findViewById(R.id.radio2);
-        fortificationFragment = new FortificationFragment();
-        invisibleFragment = new InvisibleFragment();
-        fragmentAry = new Fragment[]{fortificationFragment, invisibleFragment};
+        btnAry[2] = (RadioButton) findViewById(R.id.radio3);
+        btnAry[3] = (RadioButton) findViewById(R.id.radio4);
+        deviceFragment = DeviceFragment.newInstance();
+        partsFragment = new PartsFragment();
+        adviceFragment = new AdviceFragment();
+        meFragment = new MeFragment();
+        fragmentAry = new Fragment[]{deviceFragment, partsFragment, adviceFragment, meFragment};
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransation = fragmentManager.beginTransaction();
-        fragmentTransation.add(R.id.fragment_container, fortificationFragment);
-        fragmentTransation.show(fortificationFragment);
-        fragmentTransation.commit();
-    }
-
-    public void doClick(View view) {
-        switch (view.getId()) {
-            case R.id.backIv:
-                onBackPressed();
-                break;
-        }
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, deviceFragment);
+        fragmentTransaction.show(deviceFragment);
+        fragmentTransaction.commit();
     }
 
     private void addListener() {
@@ -56,6 +62,7 @@ public class FortificationActivity extends FragmentActivity {
             btnAry[i].setOnClickListener(myButtonListener);
         }
     }
+
 
     class MyButtonListener implements View.OnClickListener {
 
@@ -67,6 +74,12 @@ public class FortificationActivity extends FragmentActivity {
                     break;
                 case R.id.radio2:
                     selectedIndex = 1;
+                    break;
+                case R.id.radio3:
+                    selectedIndex = 2;
+                    break;
+                case R.id.radio4:
+                    selectedIndex = 3;
                     break;
             }
             if (selectedIndex != currentIndex) {
@@ -83,4 +96,5 @@ public class FortificationActivity extends FragmentActivity {
             }
         }
     }
+
 }
