@@ -22,10 +22,15 @@ import com.XMBT.bluetooth.le.bean.LocalEntity;
 import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.XMBT.bluetooth.le.view.ZoomControlView;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -58,19 +63,31 @@ import okhttp3.Response;
 
 public class BaiduMapActivity extends BaseActivity {
 
+    private String APPID = "9999362";
     MapView mMapView = null;
     BaiduMap mBaiduMap;
     ZoomControlView zoomControlView;
+    public LocationClient mLocationClient = null;
+    public BDLocationListener myListener = new MyLocationListener();
 
     private CheckBox checkbox1, checkbox2, checkbox3;
 
     private YunCheDeviceEntity device;
     public static List<Activity> activityList = new LinkedList<>();
+
+    /**
+     * 保存车辆的位置
+     */
     private List<LocalEntity> localEntities = new ArrayList<>();
+    /**
+     * 当前位置
+     */
+    private BDLocation mLocation;
+
     public static final String ROUTE_PLAN_NODE = "routePlanNode";
 
     private String mSDCardPath = null;
-    private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
+    private static final String APP_FOLDER_NAME = "BAOLIAOSIMPLE";
 
 
     private static final String[] authBaseArr = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -117,10 +134,38 @@ public class BaiduMapActivity extends BaseActivity {
         mMapView.showScaleControl(false); //设置是否显示比例尺
         mMapView.removeViewAt(1); //去掉百度logo
         mBaiduMap = mMapView.getMap();
+
+        mLocationClient = new LocationClient(getApplicationContext()); //声明LocationClient类
+        mLocationClient.registerLocationListener(myListener);    //注册监听函数
+        mLocationClient.setLocOption(setLocOption());
     }
 
+    private LocationClientOption setLocOption() {
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
+        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        int span = Integer.valueOf(UserSp.getInstance(this).getRefreshTime(GlobalConsts.userName)) * 1000;
+        option.setScanSpan(10000);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
+        option.setNeedDeviceDirect(true); //返回的定位结果包含手机机头方向
+        mLocationClient.setLocOption(option);
+        mLocationClient.start(); //启动位置请求
+        mLocationClient.requestLocation();//发送请求
+        return option;
+    }
+
+
     /**
-     * 创建 BNSDKSimpleDemo 文件夹
+     * 创建文件夹
+     *
      * @return
      */
     private boolean initDirs() {
@@ -142,6 +187,7 @@ public class BaiduMapActivity extends BaseActivity {
 
     /**
      * 获取sd卡路径
+     *
      * @return
      */
     private String getSdcardDir() {
@@ -152,6 +198,7 @@ public class BaiduMapActivity extends BaseActivity {
     }
 
     String authinfo = null;
+
     /**
      * 内部TTS播报状态回传handler
      */
@@ -190,7 +237,6 @@ public class BaiduMapActivity extends BaseActivity {
     };
 
     private boolean hasBasePhoneAuth() {
-        // TODO Auto-generated method stub
 
         PackageManager pm = this.getPackageManager();
         for (String auth : authBaseArr) {
@@ -201,22 +247,38 @@ public class BaiduMapActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * 导航设置管理器
+     */
     private void initSetting() {
+        /**
+         * 日夜模式 1：自动模式 2：白天模式 3：夜间模式
+         */
         // BNaviSettingManager.setDayNightMode(BNaviSettingManager.DayNightMode.DAY_NIGHT_MODE_DAY);
+        /**
+         * 设置全程路况显示
+         */
         BNaviSettingManager
                 .setShowTotalRoadConditionBar(BNaviSettingManager.PreViewRoadCondition.ROAD_CONDITION_BAR_SHOW_ON);
+        /**
+         * 设置语音播报模式
+         */
         BNaviSettingManager.setVoiceMode(BNaviSettingManager.VoiceMode.Veteran);
+        /**
+         * 设置省电模式
+         */
         // BNaviSettingManager.setPowerSaveMode(BNaviSettingManager.PowerSaveMode.DISABLE_MODE);
+        /**
+         * 设置实时路况条
+         */
         BNaviSettingManager.setRealRoadCondition(BNaviSettingManager.RealRoadCondition.NAVI_ITS_ON);
         Bundle bundle = new Bundle();
         // 必须设置APPID，否则会静音
-        bundle.putString(BNCommonSettingParam.TTS_APP_ID, "9454455");
+        bundle.putString(BNCommonSettingParam.TTS_APP_ID, APPID);
         BNaviSettingManager.setNaviSdkParam(bundle);
     }
 
     private boolean hasCompletePhoneAuth() {
-        // TODO Auto-generated method stub
-
         PackageManager pm = this.getPackageManager();
         for (String auth : authComArr) {
             if (pm.checkPermission(auth, this.getPackageName()) != PackageManager.PERMISSION_GRANTED) {
@@ -276,10 +338,15 @@ public class BaiduMapActivity extends BaseActivity {
 
     private BNRoutePlanNode.CoordinateType mCoordinateType = null;
 
+    /**
+     * 算路设置起、终点，算路偏好，是否模拟导航等参数，然后在回调函数中设置跳转至诱导。
+     *
+     * @param coType
+     */
     private void routeplanToNavi(BNRoutePlanNode.CoordinateType coType) {
         mCoordinateType = coType;
         if (!hasInitSuccess) {
-            Toast.makeText(BaiduMapActivity.this, "还未初始化!", Toast.LENGTH_SHORT).show();
+            showToast("还未初始化");
         }
         // 权限申请
         if (android.os.Build.VERSION.SDK_INT >= 23) {
@@ -290,7 +357,7 @@ public class BaiduMapActivity extends BaseActivity {
                     this.requestPermissions(authComArr, authComRequestCode);
                     return;
                 } else {
-                    Toast.makeText(BaiduMapActivity.this, "没有完备的权限!", Toast.LENGTH_SHORT).show();
+                    showToast("没有完备的权限");
                 }
             }
 
@@ -314,21 +381,32 @@ public class BaiduMapActivity extends BaseActivity {
                 break;
             }
             case BD09LL: {
-                sNode = new BNRoutePlanNode(116.30784537597782, 40.057009624099436, "百度大厦", null, coType);
-                eNode = new BNRoutePlanNode(116.40386525193937, 39.915160800132085, "北京天安门", null, coType);
+                if (localEntities.size() > 0 && mLocation != null) {
+                    sNode = new BNRoutePlanNode(mLocation.getLongitude(), mLocation.getLatitude(), "", null, coType);
+                    eNode = new BNRoutePlanNode(localEntities.get(0).jingdu, localEntities.get(0).weidu, "", null, coType);
+                }
                 break;
             }
             default:
-                ;
         }
         if (sNode != null && eNode != null) {
-            List<BNRoutePlanNode> list = new ArrayList<BNRoutePlanNode>();
+            //传入的算路节点，顺序是起点、途经点、终点，其中途经点最多三个
+            List<BNRoutePlanNode> list = new ArrayList<>();
             list.add(sNode);
             list.add(eNode);
+            /**
+             * 发起算路操作并在算路成功后通过回调监听器进入导航过程,返回是否执行成功
+             * @param preference 算路偏好 1:推荐 8:少收费 2:高速优先 4:少走高速 16:躲避拥堵
+             *                   true表示真实GPS导航，false表示模拟导航
+             *                   开始导航回调监听器，在该监听器里一般是进入导航过程页面
+             */
             BaiduNaviManager.getInstance().launchNavigator(this, list, 1, true, new DemoRoutePlanListener(sNode));
         }
     }
 
+    /**
+     * 导航回调监听器
+     */
     public class DemoRoutePlanListener implements BaiduNaviManager.RoutePlanListener {
 
         private BNRoutePlanNode mBNRoutePlanNode = null;
@@ -350,6 +428,12 @@ public class BaiduMapActivity extends BaseActivity {
                     return;
                 }
             }
+
+            dismissLoadingDialog();
+
+            /**
+             * 导航activity
+             */
             Intent intent = new Intent(BaiduMapActivity.this, BNDemoGuideActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(ROUTE_PLAN_NODE, (BNRoutePlanNode) mBNRoutePlanNode);
@@ -360,11 +444,13 @@ public class BaiduMapActivity extends BaseActivity {
 
         @Override
         public void onRoutePlanFailed() {
-            // TODO Auto-generated method stub
-            Toast.makeText(BaiduMapActivity.this, "算路失败", Toast.LENGTH_SHORT).show();
+            showToast("算路失败");
         }
     }
 
+    /**
+     * 获取车辆位置
+     */
     private void getLocate() {
         Intent intent = getIntent();
         device = (YunCheDeviceEntity) intent.getSerializableExtra("device");
@@ -383,84 +469,97 @@ public class BaiduMapActivity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(s);
-                            JSONArray arydata = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < arydata.length(); i++) {
-                                JSONObject datajson = arydata.getJSONObject(i);
-                                JSONObject keyjson = datajson.getJSONObject("key");
-                                int sys_time = keyjson.getInt("sys_time");
-                                int user_name = keyjson.getInt("user_name");
-                                int jingdu = keyjson.getInt("jingdu");
-                                int weidu = keyjson.getInt("weidu");
-                                int ljingdu = keyjson.getInt("ljingdu");
-                                int lweidu = keyjson.getInt("lweidu");
-                                int datetime = keyjson.getInt("datetime");
-                                int heart_time = keyjson.getInt("heart_time");
-                                int su = keyjson.getInt("su");
-                                int status = keyjson.getInt("status");
-                                int hangxiang = keyjson.getInt("hangxiang");
-                                int sim_id = keyjson.getInt("sim_id");
-                                int user_id = keyjson.getInt("user_id");
-                                int sale_type = keyjson.getInt("sale_type");
-                                int iconType = keyjson.getInt("iconType");
-                                int server_time = keyjson.getInt("server_time");
-                                int product_type = keyjson.getInt("product_type");
-                                int expire_date = keyjson.getInt("expire_date");
-                                int group_id = keyjson.getInt("group_id");
-                                int statenumber = keyjson.getInt("statenumber");
-                                int eletric = keyjson.getInt("electric");
-                                JSONArray aryrecord = datajson.getJSONArray("records");
-                                for (int j = 0; j < aryrecord.length(); j++) {
-                                    JSONArray aryrecords = aryrecord.getJSONArray(j);
-                                    long sys_timestr = aryrecords.getLong(sys_time);
-                                    String user_namestr = aryrecords.getString(user_name);
-                                    double jingdustr = aryrecords.getDouble(jingdu);
-                                    double weidustr = aryrecords.getDouble(weidu);
-                                    double ljingdustr = aryrecords.getDouble(ljingdu);
-                                    double lweidustr = aryrecords.getDouble(lweidu);
-                                    long datetimestr = aryrecords.getLong(datetime);
-                                    long heart_timestr = aryrecords.getLong(heart_time);
-                                    int sustr = aryrecords.getInt(su);
-                                    String statusstr = aryrecords.getString(status);
-                                    int hangxiangstr = aryrecords.getInt(hangxiang);
-                                    String sim_idstr = aryrecords.getString(sim_id);
-                                    String user_idstr = aryrecords.getString(user_id);
-                                    String sale_typestr = aryrecords.getString(sale_type);
-                                    String iconTypestr = aryrecords.getString(iconType);
-                                    long server_timestr = aryrecords.getLong(server_time);
-                                    String product_typestr = aryrecords.getString(product_type);
-                                    long expire_datestr = aryrecords.getLong(expire_date);
-                                    String group_idstr = aryrecords.getString(group_id);
-                                    String statusnumberstr = aryrecords.getString(statenumber);
-                                    double eletricstr = aryrecords.getDouble(eletric);
-                                    LocalEntity localEntity = new LocalEntity(sys_timestr, user_namestr, jingdustr, weidustr, ljingdustr
-                                            , lweidustr, datetimestr, heart_timestr, sustr, hangxiangstr, sim_idstr, user_idstr, iconTypestr,
-                                            sale_typestr, statusstr, server_timestr, product_typestr, expire_datestr, group_idstr,
-                                            statusnumberstr, eletricstr);
-                                    localEntities.add(localEntity);
-                                }
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        parseJson(s);
                         setMarker();
                     }
                 });
     }
 
+    private void parseJson(String json) {
+        /**
+         "data": [
+         {
+         "key": {},
+         "records": [[]],
+         "groups": []
+         }
+         ]
+         */
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray arydata = jsonObject.getJSONArray("data");
+            for (int i = 0; i < arydata.length(); i++) {
+                JSONObject datajson = arydata.getJSONObject(i);
+                JSONObject keyjson = datajson.getJSONObject("key");
+                int sys_time = keyjson.getInt("sys_time");
+                int user_name = keyjson.getInt("user_name");
+                int jingdu = keyjson.getInt("jingdu");
+                int weidu = keyjson.getInt("weidu");
+                int ljingdu = keyjson.getInt("ljingdu");
+                int lweidu = keyjson.getInt("lweidu");
+                int datetime = keyjson.getInt("datetime");
+                int heart_time = keyjson.getInt("heart_time");
+                int su = keyjson.getInt("su");
+                int status = keyjson.getInt("status");
+                int hangxiang = keyjson.getInt("hangxiang");
+                int sim_id = keyjson.getInt("sim_id");
+                int user_id = keyjson.getInt("user_id");
+                int sale_type = keyjson.getInt("sale_type");
+                int iconType = keyjson.getInt("iconType");
+                int server_time = keyjson.getInt("server_time");
+                int product_type = keyjson.getInt("product_type");
+                int expire_date = keyjson.getInt("expire_date");
+                int group_id = keyjson.getInt("group_id");
+                int statenumber = keyjson.getInt("statenumber");
+                int eletric = keyjson.getInt("electric");
+                JSONArray aryrecord = datajson.getJSONArray("records");
+                for (int j = 0; j < aryrecord.length(); j++) {
+                    JSONArray aryrecords = aryrecord.getJSONArray(j);
+                    long sys_timestr = aryrecords.getLong(sys_time);
+                    String user_namestr = aryrecords.getString(user_name);
+                    double jingdustr = aryrecords.getDouble(jingdu);
+                    double weidustr = aryrecords.getDouble(weidu);
+                    double ljingdustr = aryrecords.getDouble(ljingdu);
+                    double lweidustr = aryrecords.getDouble(lweidu);
+                    long datetimestr = aryrecords.getLong(datetime);
+                    long heart_timestr = aryrecords.getLong(heart_time);
+                    int sustr = aryrecords.getInt(su);
+                    String statusstr = aryrecords.getString(status);
+                    int hangxiangstr = aryrecords.getInt(hangxiang);
+                    String sim_idstr = aryrecords.getString(sim_id);
+                    String user_idstr = aryrecords.getString(user_id);
+                    String sale_typestr = aryrecords.getString(sale_type);
+                    String iconTypestr = aryrecords.getString(iconType);
+                    long server_timestr = aryrecords.getLong(server_time);
+                    String product_typestr = aryrecords.getString(product_type);
+                    long expire_datestr = aryrecords.getLong(expire_date);
+                    String group_idstr = aryrecords.getString(group_id);
+                    String statusnumberstr = aryrecords.getString(statenumber);
+                    double eletricstr = aryrecords.getDouble(eletric);
+                    LocalEntity localEntity = new LocalEntity(sys_timestr, user_namestr, jingdustr, weidustr, ljingdustr
+                            , lweidustr, datetimestr, heart_timestr, sustr, hangxiangstr, sim_idstr, user_idstr, iconTypestr,
+                            sale_typestr, statusstr, server_timestr, product_typestr, expire_datestr, group_idstr,
+                            statusnumberstr, eletricstr);
+                    localEntities.add(localEntity);
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setMarker() {
         LocalEntity localEntity = null;
         for (int i = 0; i < localEntities.size(); i++) {
-            if (localEntities.get(i).getUser_name().equals(device.fullname)) {
+            if (localEntities.get(i).user_name.equals(device.fullname)) {
                 localEntity = localEntities.get(i);
                 break;
             }
         }
 
         //定义Maker坐标点
-        LatLng point = new LatLng(localEntity.getWeidu(), localEntity.getJingdu());
+        LatLng point = new LatLng(localEntity.weidu, localEntity.jingdu);
         //构建Marker图标
         BitmapDescriptor bitmap = BitmapDescriptorFactory
                 .fromResource(R.drawable.map_annotation_image);
@@ -505,7 +604,16 @@ public class BaiduMapActivity extends BaseActivity {
                 }
                 break;
             case R.id.button:
+
+                showLoadingDialog("加载中，请稍候");
+
+                /**
+                 * 判断百度导航是否初始化
+                 */
                 if (BaiduNaviManager.isNaviInited()) {
+                    /**
+                     * 添加起点、终点
+                     */
                     routeplanToNavi(BNRoutePlanNode.CoordinateType.BD09LL);
                 }
                 break;
@@ -547,6 +655,7 @@ public class BaiduMapActivity extends BaseActivity {
         super.onDestroy();
         //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
         mMapView.onDestroy();
+        mLocationClient.stop();
     }
 
     @Override
@@ -637,6 +746,29 @@ public class BaiduMapActivity extends BaseActivity {
         }
 
     }
+
+    class MyLocationListener implements BDLocationListener {
+
+        /**
+         * 接收位置的信息回调方法
+         *
+         * @param location
+         */
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            if (location == null) {
+                return;
+            }
+            showToast("定位成功" + location.getLatitude() + "," + location.getLongitude());
+            mLocation = location;
+        }
+
+        @Override
+        public void onConnectHotSpotMessage(String s, int i) {
+
+        }
+    }
+
 }
 
 

@@ -168,14 +168,14 @@ public class FenceActivity extends Activity {
     private void setMarker() {
         LocalEntity localEntity = null;
         for (int i = 0; i < localEntities.size(); i++) {
-            if (localEntities.get(i).getUser_name().equals(device.fullname)) {
+            if (localEntities.get(i).user_name.equals(device.fullname)) {
                 localEntity = localEntities.get(i);
                 break;
             }
         }
 
         //定义Maker坐标点
-        LatLng point = new LatLng(localEntity.getWeidu(), localEntity.getJingdu());
+        LatLng point = new LatLng(localEntity.weidu, localEntity.jingdu);
         //构建Marker图标
         BitmapDescriptor bitmap = BitmapDescriptorFactory
                 .fromResource(R.drawable.map_annotation_image);
@@ -209,7 +209,7 @@ public class FenceActivity extends Activity {
         // 监控对象
         String monitoredPerson = "myTrace";
         // 围栏圆心
-        com.baidu.trace.model.LatLng center = new com.baidu.trace.model.LatLng(localEntity.getWeidu(), localEntity.getJingdu());
+        com.baidu.trace.model.LatLng center = new com.baidu.trace.model.LatLng(localEntity.weidu, localEntity.jingdu);
         // 围栏半径（单位 : 米）
         double radius = 800;
         // 去噪精度
@@ -220,7 +220,7 @@ public class FenceActivity extends Activity {
 
         // 创建本地圆形围栏请求实例
         CreateFenceRequest localCircleFenceRequest = CreateFenceRequest.buildLocalCircleRequest(tag, serviceId, fenceName, monitoredPerson, center, radius, denoise, coordType);
-        LatLng circleCenter = new LatLng(localEntity.getWeidu(), localEntity.getJingdu());
+        LatLng circleCenter = new LatLng(localEntity.weidu, localEntity.jingdu);
         OverlayOptions overlayOptions = new CircleOptions().fillColor(0x000000FF).center(circleCenter)
                 .stroke(new Stroke(5, Color.rgb(0x23, 0x19, 0xDC))).radius((int) radius);
         tempOverlays.put(tag, mBaiduMap.addOverlay(overlayOptions));
