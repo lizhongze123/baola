@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -74,7 +75,7 @@ import okhttp3.Response;
 
 public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResultListener {
 
-    private String APPID = "9999362";
+    private String APPID;
     MapView mMapView = null;
     BaiduMap mBaiduMap;
     ZoomControlView zoomControlView;
@@ -299,6 +300,12 @@ public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResul
          */
         BNaviSettingManager.setRealRoadCondition(BNaviSettingManager.RealRoadCondition.NAVI_ITS_ON);
         Bundle bundle = new Bundle();
+        try {
+            ApplicationInfo appInfo = this.getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            APPID = appInfo.metaData.getString("baidu_map_appid");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         // 必须设置APPID，否则会静音
         bundle.putString(BNCommonSettingParam.TTS_APP_ID, APPID);
         BNaviSettingManager.setNaviSdkParam(bundle);
