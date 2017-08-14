@@ -19,5 +19,6 @@
     <color name="dark_gray">#2F2F2F</color>
 
     <color name="transparent">#00000000</color>
+    <color name="transparent2">#88000000</color>
 
 </resources>

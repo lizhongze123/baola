@@ -22,10 +22,19 @@
         android:layout_height="fill_parent"
         android:clickable="true" />
 
+    <TextView
+        android:id="@+id/tv_location"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:background="@color/transparent2"
+        android:layout_below="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/titleBar"
+        android:layout_below="@+id/tv_location"
         android:layout_alignParentRight="true"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"

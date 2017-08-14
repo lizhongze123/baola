@@ -1,6 +1,5 @@
 package com.XMBT.bluetooth.le.base;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,16 +24,28 @@ public class BaseFragment extends Fragment {
         ToastUtils.toastInCenter(getActivity(), tips);
     }
 
-    public void showLoadingDialog(String tips){
-        loadingDialog = new LoadingDialog(getActivity());
-        loadingDialog.setLoadingText(tips);
-        loadingDialog.show();
+    public void showLoadingDialog(final String tips){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loadingDialog = new LoadingDialog(getActivity());
+                loadingDialog.setLoadingText(tips);
+                loadingDialog.show();
+            }
+        });
+
     }
 
     public void dismissLoadingDialog(){
-        if(loadingDialog != null){
-            loadingDialog.dismiss();
-        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(loadingDialog != null){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+
     }
 
 }

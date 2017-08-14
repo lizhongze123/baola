@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 
 import com.XMBT.bluetooth.le.utils.ToastUtils;
 import com.XMBT.bluetooth.le.view.loadingdialog.LoadingDialog;
@@ -20,16 +21,30 @@ public class BaseActivity extends FragmentActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
     }
 
-    public void showLoadingDialog(String tips){
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.setLoadingText(tips);
-        loadingDialog.show();
+    public void showLoadingDialog(final String tips){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loadingDialog = new LoadingDialog(BaseActivity.this);
+                if(TextUtils.isEmpty(tips)){
+                    loadingDialog.setLoadingText("加载中，请稍候");
+                }else{
+                    loadingDialog.setLoadingText(tips);
+                }
+                loadingDialog.show();
+            }
+        });
     }
 
     public void dismissLoadingDialog(){
-        if(loadingDialog != null){
-           loadingDialog.dismiss();
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(loadingDialog != null){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
     }
 
     public void showToast(String tips) {

@@ -12,8 +12,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.XMBT.bluetooth.le.R;
@@ -22,11 +24,11 @@ import com.XMBT.bluetooth.le.bean.LocalEntity;
 import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.XMBT.bluetooth.le.view.ZoomControlView;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -34,6 +36,7 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -41,6 +44,12 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.navisdk.adapter.BNCommonSettingParam;
 import com.baidu.navisdk.adapter.BNOuterTTSPlayerCallback;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
@@ -57,11 +66,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class BaiduMapActivity extends BaseActivity {
+public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResultListener {
 
     private String APPID = "9999362";
     MapView mMapView = null;
@@ -71,6 +82,7 @@ public class BaiduMapActivity extends BaseActivity {
     public BDLocationListener myListener = new MyLocationListener();
 
     private CheckBox checkbox1, checkbox2, checkbox3;
+    private TextView tvLocation;
 
     private YunCheDeviceEntity device;
     public static List<Activity> activityList = new LinkedList<>();
@@ -98,6 +110,8 @@ public class BaiduMapActivity extends BaseActivity {
     private boolean hasInitSuccess = false;
     private boolean hasRequestComAuth = false;
 
+    private Timer timer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +123,6 @@ public class BaiduMapActivity extends BaseActivity {
         if (initDirs()) {
             initNavi();
         }
-        getLocate();
     }
 
     private void initView() {
@@ -123,6 +136,7 @@ public class BaiduMapActivity extends BaseActivity {
         checkbox1 = (CheckBox) findViewById(R.id.checkbox1);
         checkbox2 = (CheckBox) findViewById(R.id.checkbox2);
         checkbox3 = (CheckBox) findViewById(R.id.checkbox3);
+        tvLocation = (TextView) findViewById(R.id.tv_location);
     }
 
     private void initMap() {
@@ -138,15 +152,28 @@ public class BaiduMapActivity extends BaseActivity {
         mLocationClient = new LocationClient(getApplicationContext()); //声明LocationClient类
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
         mLocationClient.setLocOption(setLocOption());
+
+
+        timer = new Timer();
+        int span = Integer.valueOf(UserSp.getInstance(this).getRefreshTime(GlobalConsts.userName)) * 1000;
+        timer.schedule(task, 1000, span);
     }
+
+    /**
+     * 获取车辆位置定时器
+     */
+    TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            getLocate();
+        }
+    };
 
     private LocationClientOption setLocOption() {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
         );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
-        int span = Integer.valueOf(UserSp.getInstance(this).getRefreshTime(GlobalConsts.userName)) * 1000;
-        option.setScanSpan(10000);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
         option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
@@ -158,7 +185,6 @@ public class BaiduMapActivity extends BaseActivity {
         option.setNeedDeviceDirect(true); //返回的定位结果包含手机机头方向
         mLocationClient.setLocOption(option);
         mLocationClient.start(); //启动位置请求
-        mLocationClient.requestLocation();//发送请求
         return option;
     }
 
@@ -404,6 +430,23 @@ public class BaiduMapActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+        //城市->坐标
+    }
+
+    @Override
+    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+        //坐标->坐城市
+        if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+            showToast("抱歉，未能找到结果");
+            return;
+        }
+        if (result.getAddress() != null) {
+            tvLocation.setText(result.getAddress());
+        }
+    }
+
     /**
      * 导航回调监听器
      */
@@ -452,6 +495,7 @@ public class BaiduMapActivity extends BaseActivity {
      * 获取车辆位置
      */
     private void getLocate() {
+        showLoadingDialog(null);
         Intent intent = getIntent();
         device = (YunCheDeviceEntity) intent.getSerializableExtra("device");
 
@@ -469,8 +513,16 @@ public class BaiduMapActivity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
+                        LogUtils.i(s);
                         parseJson(s);
                         setMarker();
+                        reverseGeoCodeOption();
+                    }
+
+                    @Override
+                    public void onAfter(String s, Exception e) {
+                        super.onAfter(s, e);
+                        dismissLoadingDialog();
                     }
                 });
     }
@@ -549,6 +601,23 @@ public class BaiduMapActivity extends BaseActivity {
         }
     }
 
+    private void reverseGeoCodeOption() {
+        LocalEntity localEntity = null;
+        for (int i = 0; i < localEntities.size(); i++) {
+            if (localEntities.get(i).user_name.equals(device.fullname)) {
+                localEntity = localEntities.get(i);
+                break;
+            }
+        }
+        GeoCoder mSearch = null;
+        mSearch = GeoCoder.newInstance();
+        mSearch.setOnGetGeoCodeResultListener(this);
+        LatLng point = new LatLng(localEntity.weidu, localEntity.jingdu);
+        // 反Geo搜索
+        mSearch.reverseGeoCode(new ReverseGeoCodeOption()
+                .location(point));
+    }
+
     private void setMarker() {
         LocalEntity localEntity = null;
         for (int i = 0; i < localEntities.size(); i++) {
@@ -568,13 +637,29 @@ public class BaiduMapActivity extends BaseActivity {
                 .position(point)
                 .icon(bitmap);
         //在地图上添加Marker，并显示
+        mBaiduMap.clear();
         mBaiduMap.addOverlay(option);
+
+        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        View view = inflater.inflate(R.layout.infowindow, null);
+        TextView tvDevice = (TextView) view.findViewById(R.id.tv_device);
+        TextView tvStatus = (TextView) view.findViewById(R.id.tv_status);
+        TextView tvTime = (TextView) view.findViewById(R.id.tv_time);
+        tvDevice.setText(localEntity.user_name);
+        tvTime.setText("时间:" + DateFormatUtils.getDate(localEntity.sys_time, DateFormatUtils.FORMAT_YMDHM));
+        if (localEntity.status.substring(0).equals("1")) {
+            tvStatus.setText("状态:开");
+        } else {
+            tvStatus.setText("状态:关");
+        }
+        InfoWindow infoWindow = new InfoWindow(view, point, -75);
+        mBaiduMap.showInfoWindow(infoWindow);
+
         MapStatus mMapStatus = new MapStatus.Builder()
                 .target(point)
                 .zoom(16)
                 .build();
         //定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
-
         MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
         //改变地图状态
         mBaiduMap.setMapStatus(mMapStatusUpdate);
@@ -606,16 +691,8 @@ public class BaiduMapActivity extends BaseActivity {
             case R.id.button:
 
                 showLoadingDialog("加载中，请稍候");
+                mLocationClient.requestLocation();//发送请求
 
-                /**
-                 * 判断百度导航是否初始化
-                 */
-                if (BaiduNaviManager.isNaviInited()) {
-                    /**
-                     * 添加起点、终点
-                     */
-                    routeplanToNavi(BNRoutePlanNode.CoordinateType.BD09LL);
-                }
                 break;
             case R.id.checkbox2:
                 if (checkbox2.isChecked()) {
@@ -656,6 +733,7 @@ public class BaiduMapActivity extends BaseActivity {
         //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
         mMapView.onDestroy();
         mLocationClient.stop();
+        timer.cancel();
     }
 
     @Override
@@ -761,6 +839,17 @@ public class BaiduMapActivity extends BaseActivity {
             }
             showToast("定位成功" + location.getLatitude() + "," + location.getLongitude());
             mLocation = location;
+
+
+            /**
+             * 判断百度导航是否初始化
+             */
+            if (BaiduNaviManager.isNaviInited()) {
+                /**
+                 * 添加起点、终点
+                 */
+                routeplanToNavi(BNRoutePlanNode.CoordinateType.BD09LL);
+            }
         }
 
         @Override

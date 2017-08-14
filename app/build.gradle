@@ -9,6 +9,11 @@ android {
         targetSdkVersion 24
     }
 
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
+
     signingConfigs {
         debug {
             storeFile file("xmkey.jks")

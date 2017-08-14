@@ -66,7 +66,7 @@ public class UserSp {
 
     public String getRefreshTime(String fileName) {
         sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-        String refresh = sp.getString("refresh", "5");
+        String refresh = sp.getString("refresh", "10");
         return refresh;
     }
 
