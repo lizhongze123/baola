@@ -51,6 +51,10 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="Iozzpkb9rfLCWys0zGdeT3zrgVCUDUkD" />
 
+        <meta-data
+            android:name="com.baidu.appid"
+            android:value="9999362"/>
+
         <activity
             android:name=".ui.main.MainActivity"
             android:label="@string/app_name" />

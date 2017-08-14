@@ -31,14 +31,10 @@ android {
     }
 
     buildTypes {
-
         release {
-            resValue "string", "baidu_map_appid", '9999362'
-
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
-        debug.initWith(release)
     }
 //    sourceSets {
 //        main {

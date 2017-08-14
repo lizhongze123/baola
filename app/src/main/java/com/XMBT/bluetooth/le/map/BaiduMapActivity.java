@@ -301,8 +301,8 @@ public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResul
         BNaviSettingManager.setRealRoadCondition(BNaviSettingManager.RealRoadCondition.NAVI_ITS_ON);
         Bundle bundle = new Bundle();
         try {
-            ApplicationInfo appInfo = this.getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
-            APPID = appInfo.metaData.getString("baidu_map_appid");
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            APPID = appInfo.metaData.getInt("com.baidu.appid")+"";
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
