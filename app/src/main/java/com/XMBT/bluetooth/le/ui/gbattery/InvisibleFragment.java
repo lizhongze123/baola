@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le;
+package com.XMBT.bluetooth.le.ui.gbattery;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,11 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by haowenlee on 2017/6/4.
- */
-public class InvisibleFragment extends Fragment {
-    View view;
+import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.base.BaseFragment;
+
+public class InvisibleFragment extends BaseFragment {
+
+    private View view;
 
     @Nullable
     @Override

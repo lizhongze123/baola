@@ -1,49 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.XMBT.bluetooth.le.map.TraceActivity">
+
+    <com.XMBT.bluetooth.le.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:left_button_image="@drawable/common_ic_left_arrow"
+        app:title_background="@color/title_bg"
+        app:right_button_text="时间"
+        app:right_button_textColor="@color/white"
+        app:title_text="GPS电池"
+        app:title_textColor="@color/white" />
+    
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/relativeLayout"
-        android:background="@color/title_color">
-        <ImageButton
-            android:id="@+id/backIv"
+        android:layout_height="match_parent">
+
+
+        <com.baidu.mapapi.map.MapView
+            android:id="@+id/mapView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clickable="true" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/common_back"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:onClick="doClick"
-            android:background="@android:color/transparent"/>
-        <TextView
-            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:rotation="90"
+            android:translationX="90dp"
+            android:layout_alignParentRight="true">
+
+
+            <TextView
+                android:id="@+id/run_speed"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="2dp"
+                android:gravity="center"
+                android:rotation="-90"
+                android:text="1.0x"
+                android:textColor="@color/gray_33"
+                android:textSize="12sp"/>
+
+            <SeekBar
+                android:id="@+id/verticalSeekBar"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:max="90"
+                android:progressBackgroundTint="@color/black"
+                android:progressTint="@color/black"
+                android:thumb="@drawable/seekbar_thumb"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="2dp"
+                android:gravity="center"
+                android:rotation="-90"
+                android:text="10.0x"
+                android:textColor="@color/gray_33"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_pro"
+            android:padding="10dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="历史轨迹"
-            android:layout_centerInParent="true"
-            android:textSize="18sp"
-            android:id="@+id/textView"
-            android:textColor="#ffffff"/>
-        <Button
-            android:id="@+id/dateBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="请选择时间"
-            android:textSize="14sp"
-            android:textColor="#ffffff"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:layout_marginRight="16dp"
-            android:onClick="doClick"/>
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_go_play"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_play"/>
+
+                <ImageView
+                    android:id="@+id/iv_go_pause"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icon_pause"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+
+            <com.XMBT.bluetooth.le.map.MySeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:max="100"
+                android:progressBackgroundTint="#7F7F7F"
+                android:progressTint="#7F7F7F"
+                android:thumb="@drawable/seekbar_thumb"/>
+
+        </LinearLayout>
+
     </RelativeLayout>
-    <com.baidu.mapapi.map.MapView
-        android:layout_below="@+id/relativeLayout"
-        android:id="@+id/bmapView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:clickable="true" />
-</RelativeLayout>
+
+</LinearLayout>

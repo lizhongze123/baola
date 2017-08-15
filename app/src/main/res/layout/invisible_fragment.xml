@@ -3,51 +3,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/relativeLayout"
         android:background="#ffffff">
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/transparent2"
             android:padding="5dp"
-            android:text="车辆隐身后，系统将不再记录所有行程数据以及车辆信息"/>
+            android:text="车辆隐身后，系统将不再记录所有行程数据以及车辆信息"
+            android:textColor="@color/white" />
     </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayout"
-        android:layout_above="@+id/radioGroup2">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:id="@+id/linearLayout2">
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:enabled="false"
-                android:background="@drawable/invisible_selector"/>
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:enabled="false"
-                android:background="@drawable/invisible1_selector"/>
-        </LinearLayout>
+        android:layout_above="@+id/radioGroup2"
+        android:layout_below="@+id/linearLayout">
 
-        <Switch
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/switch1"
-            android:layout_below="@+id/linearLayout2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"/>
+            android:layout_centerInParent="true">
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/invisible_selector"
+                    android:button="@null"
+                    android:enabled="false" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/invisible1_selector"
+                    android:button="@null"
+                    android:enabled="false" />
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 </LinearLayout>

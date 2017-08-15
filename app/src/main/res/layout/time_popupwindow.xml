@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:alpha="0.9"
+    android:background="@drawable/shape_time_popup"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btn_today"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="@drawable/shape_btn_time"
+            android:text="今天" />
+
+        <Button
+            android:id="@+id/btn_yesterday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_btn_time"
+            android:text="昨天" />
+
+        <Button
+            android:id="@+id/btn_tdby"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_btn_time"
+            android:layout_weight="1.0"
+            android:text="前天" />
+
+        <Button
+            android:id="@+id/btn_hour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_btn_time"
+            android:layout_weight="1.0"
+            android:text="前一个小时" />
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btn_All"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_btn_time"
+            android:layout_weight="1.0"
+            android:text="全部位置" />
+
+        <Button
+            android:id="@+id/btn_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_btn_time"
+            android:layout_weight="1.0"
+            android:text="自定义时间" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_customTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:paddingLeft="5.0dip"
+            android:paddingRight="5.0dip" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5.0dip"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="开始时间："
+                    android:textColor="@color/black" />
+
+                <TextView
+                    style="\@style/edit_normal_single"
+                    android:id="@+id/tv_startTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5.0dip"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="结束时间："
+                    android:textColor="@color/black" />
+
+                <TextView
+                    style="\@style/edit_normal_single"
+                    android:id="@+id/tv_endTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:id="@+id/btn_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/shape_btn_time"
+                android:text="查询" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

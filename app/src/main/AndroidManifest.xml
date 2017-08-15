@@ -102,7 +102,7 @@
             android:process=":remote" />
 
         <activity android:name=".map.TraceActivity" />
-        <activity android:name=".FortificationActivity" />
+        <activity android:name=".ui.gbattery.FortificationActivity" />
         <activity android:name=".ui.gbattery.WarnCenterActivity" />
         <activity android:name=".map.FenceActivity"/>
         <activity android:name=".ui.pbattery.TestActivity"/>

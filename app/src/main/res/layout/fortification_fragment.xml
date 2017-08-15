@@ -3,50 +3,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/relativeLayout"
         android:background="#ffffff">
+
         <TextView
-            android:layout_width="wrap_content"
+            android:background="@color/transparent2"
+            android:textColor="@color/white"
+            android:padding="5dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="设防功能：以其当前的位置为中心设防，如果车辆在设防后移动超过指定的距离，产生设防警报"/>
+            android:text="设防功能：以其当前的位置为中心设防，如果车辆在设防后移动超过指定的距离，产生设防警报" />
     </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayout"
-        android:layout_above="@+id/radioGroup2">
+        android:layout_above="@+id/radioGroup2"
+        android:layout_below="@+id/linearLayout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
         <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:id="@+id/linearLayout2">
+            android:orientation="vertical">
+
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/fortification_selector"
                 android:button="@null"
-                android:enabled="false"
-                android:background="@drawable/fortification_selector"/>
+                android:enabled="false" />
+
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/fortification1_selector"
                 android:button="@null"
-                android:enabled="false"
-                android:background="@drawable/fortification1_selector"/>
+                android:enabled="false" />
         </LinearLayout>
 
         <Switch
+            android:id="@+id/switchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/switch1"
-            android:layout_below="@+id/linearLayout2"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"/>
+            android:layout_below="@+id/linearLayout2"
+            android:layout_marginTop="16dp" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 </LinearLayout>

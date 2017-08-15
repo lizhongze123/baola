@@ -13,7 +13,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.XMBT.bluetooth.le.FortificationActivity;
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.YuCheEntity;

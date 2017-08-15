@@ -1,4 +1,4 @@
-package com.XMBT.bluetooth.le;
+package com.XMBT.bluetooth.le.ui.gbattery;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,27 +9,41 @@ import android.view.View;
 import android.view.Window;
 import android.widget.RadioButton;
 
-import com.XMBT.bluetooth.le.ui.FortificationFragment;
+import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.utils.StatusBarHelper;
+import com.XMBT.bluetooth.le.view.TitleBar;
 
-public class FortificationActivity extends FragmentActivity {
-    FortificationFragment fortificationFragment;
-    InvisibleFragment invisibleFragment;
-    RadioButton[] btnAry = new RadioButton[2];
-    Fragment[] fragmentAry = null;
-    int currentIndex;
-    int selectedIndex;
-    MyButtonListener myButtonListener;
+/**
+ * 设防控制
+ */
+public class FortificationActivity extends BaseActivity {
+
+    private FortificationFragment fortificationFragment;
+    private InvisibleFragment invisibleFragment;
+    private RadioButton[] btnAry = new RadioButton[2];
+    private Fragment[] fragmentAry = null;
+    private int currentIndex;
+    private int selectedIndex;
+    private MyButtonListener myButtonListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fortification);
-        setView();
+        StatusBarHelper.setStatusBarColor(this, R.color.title_color);
+        initViews();
         addListener();
     }
 
-    private void setView() {
+    private void initViews() {
+        TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
+        titleBar.setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         btnAry[0] = (RadioButton) findViewById(R.id.radio1);
         btnAry[1] = (RadioButton) findViewById(R.id.radio2);
         fortificationFragment = new FortificationFragment();
@@ -40,14 +54,6 @@ public class FortificationActivity extends FragmentActivity {
         fragmentTransation.add(R.id.fragment_container, fortificationFragment);
         fragmentTransation.show(fortificationFragment);
         fragmentTransation.commit();
-    }
-
-    public void doClick(View view) {
-        switch (view.getId()) {
-            case R.id.backIv:
-                onBackPressed();
-                break;
-        }
     }
 
     private void addListener() {
