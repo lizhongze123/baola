@@ -110,6 +110,9 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                     Intent intent = new Intent(YunCheActivity.this, FenceActivity.class);
                     intent.putExtra(DeviceFragment.DATA_DEVICE, device);
                     startActivity(intent);
+                } else if (position == 5) {
+                    Intent intent = new Intent(YunCheActivity.this, ForumActivity.class);
+                    startActivity(intent);
                 }
             }
         });
