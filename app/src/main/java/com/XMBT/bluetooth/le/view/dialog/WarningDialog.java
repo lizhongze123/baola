@@ -30,7 +30,7 @@ public class WarningDialog {
             builder.setPositiveButton(okText, onClickListener);
         }
         if (!TextUtils.isEmpty(cancelText)) {
-            builder.setNegativeButton(cancelText, null);
+            builder.setNegativeButton(cancelText, onClickListener);
         }
         builder.setTitle(title);
         return builder.create();

@@ -96,7 +96,7 @@ public class LoginActivity extends BaseActivity {
                                 @Override
                                 public void onSuccess(String s, Call call, Response response) {
                                     try {
-                                        LogUtils.e(s);
+                                        LogUtils.d(s);
                                         JSONObject jsonObject = new JSONObject(s);
                                         String success = jsonObject.getString("success");
                                         if (success.equals("false")) {

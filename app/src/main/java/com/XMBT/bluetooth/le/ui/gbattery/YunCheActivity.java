@@ -45,7 +45,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
     private GridViewForNested gridView;
     private XBanner xBanner;
     private List<Integer> imgurls = new ArrayList<>();
-    YunCheDeviceEntity device;
+    private YunCheDeviceEntity device;
     private TextView voltageTv, dayTv, persentTv;
     private TitleBar titleBar;
 
@@ -101,6 +101,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                     startActivity(intent);
                 } else if (position == 2) {
                     Intent intent = new Intent(YunCheActivity.this, FortificationActivity.class);
+                    intent.putExtra(DeviceFragment.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 3) {
                     Intent intent = new Intent(YunCheActivity.this, WarnCenterActivity.class);

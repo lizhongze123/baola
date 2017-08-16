@@ -3,6 +3,7 @@ package com.XMBT.bluetooth.le.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 
 import com.XMBT.bluetooth.le.utils.ToastUtils;
 import com.XMBT.bluetooth.le.view.loadingdialog.LoadingDialog;
@@ -29,7 +30,11 @@ public class BaseFragment extends Fragment {
             @Override
             public void run() {
                 loadingDialog = new LoadingDialog(getActivity());
-                loadingDialog.setLoadingText(tips);
+                if(TextUtils.isEmpty(tips)){
+                    loadingDialog.setLoadingText("加载中，请稍候");
+                }else{
+                    loadingDialog.setLoadingText(tips);
+                }
                 loadingDialog.show();
             }
         });

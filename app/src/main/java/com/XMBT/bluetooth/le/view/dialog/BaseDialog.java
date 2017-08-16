@@ -53,7 +53,7 @@ public class BaseDialog extends Dialog {
 
         public Builder(Context context) {
             this.context = context;
-            viewMap = new HashMap<String, View>();
+            viewMap = new HashMap<>();
         }
 
         public Context getContext() {
@@ -181,7 +181,7 @@ public class BaseDialog extends Dialog {
                     });
                 }
                 if (!TextUtils.isEmpty(positionText) && !TextUtils.isEmpty(negativeText)) {
-                    btn_negative.setBackgroundResource(R.drawable.common_selector_dialog_press_negative);
+//                    btn_negative.setBackgroundResource(R.drawable.common_selector_dialog_press_negative);
                     btn_positive.setBackgroundResource(R.drawable.common_selector_dialog_press_position);
                 } else {
                     btn_negative.setBackgroundResource(R.drawable.common_selector_dialog_press_one_negative);

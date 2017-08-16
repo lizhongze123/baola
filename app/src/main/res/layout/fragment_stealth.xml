@@ -39,22 +39,17 @@
                 android:orientation="vertical">
 
                 <CheckBox
+                    android:id="@+id/cb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/invisible_selector"
                     android:button="@null"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    android:background="@drawable/selector_stealth" />
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/invisible1_selector"
-                    android:button="@null"
-                    android:enabled="false" />
             </LinearLayout>
 
             <Switch
-                android:id="@+id/switch1"
+                android:id="@+id/switchButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linearLayout2"

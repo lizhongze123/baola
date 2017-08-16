@@ -2,17 +2,27 @@ package com.XMBT.bluetooth.le.ui.gbattery;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.Window;
 import android.widget.RadioButton;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
+import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * 设防控制
@@ -20,20 +30,26 @@ import com.XMBT.bluetooth.le.view.TitleBar;
 public class FortificationActivity extends BaseActivity {
 
     private FortificationFragment fortificationFragment;
-    private InvisibleFragment invisibleFragment;
+    private StealthFragment stealthFragment;
     private RadioButton[] btnAry = new RadioButton[2];
     private Fragment[] fragmentAry = null;
     private int currentIndex;
     private int selectedIndex;
     private MyButtonListener myButtonListener;
+    private YunCheDeviceEntity device;
+    private String defenceStatus;
+    private String gpsOnOff;
+    public static final String STATUS = "status";
+    public static final String ON = "1";
+    public static final String Off = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fortification);
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
-        initViews();
-        addListener();
+        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        getStatus();
     }
 
     private void initViews() {
@@ -46,9 +62,9 @@ public class FortificationActivity extends BaseActivity {
         });
         btnAry[0] = (RadioButton) findViewById(R.id.radio1);
         btnAry[1] = (RadioButton) findViewById(R.id.radio2);
-        fortificationFragment = new FortificationFragment();
-        invisibleFragment = new InvisibleFragment();
-        fragmentAry = new Fragment[]{fortificationFragment, invisibleFragment};
+        fortificationFragment = FortificationFragment.newInstance(device, defenceStatus);
+        stealthFragment = StealthFragment.newInstance(device, gpsOnOff);
+        fragmentAry = new Fragment[]{fortificationFragment, stealthFragment};
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransation = fragmentManager.beginTransaction();
         fragmentTransation.add(R.id.fragment_container, fortificationFragment);
@@ -88,5 +104,49 @@ public class FortificationActivity extends BaseActivity {
                 currentIndex = selectedIndex;
             }
         }
+    }
+
+    public void getStatus() {
+        showLoadingDialog(null);
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
+        OkGo.post(GlobalConsts.GET_DATE)
+                .tag(this)
+                .params("method", "getUserStatus")
+                .params("mds", mds)
+                .params("macid", device.macid)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        try {
+                            LogUtils.d(s);
+                            JSONObject jsonObject = new JSONObject(s);
+                            String success = jsonObject.getString("success");
+                            if (success.equals("false")) {
+                                String msg = jsonObject.getString("msg");
+                                showToast(msg);
+                            }else{
+                                JSONObject rowsObj = jsonObject.getJSONObject("rows");
+                                defenceStatus = rowsObj.getString("defenceStatus");
+                                gpsOnOff = rowsObj.getString("gpsOnOff");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        initViews();
+                                        addListener();
+                                    }
+                                });
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onAfter(String s, Exception e) {
+                        dismissLoadingDialog();
+                    }
+                });
+
     }
 }
