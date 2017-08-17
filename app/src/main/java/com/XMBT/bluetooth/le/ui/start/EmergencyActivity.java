@@ -132,6 +132,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         myIntentFilter.addAction(GlobalConsts.ACTION_NAME_RSSI);
         myIntentFilter.addAction(GlobalConsts.ACTION_CONNECT_CHANGE);
         myIntentFilter.addAction(GlobalConsts.ACTION_NOTIFI);
+        myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_BLE_OVER);
         registerReceiver(mBroadcastReceiver, myIntentFilter);
     }
 
@@ -142,7 +143,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         } else {
             titleBar.setTvRight("未连接");
             titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
-            chargingprigressView.setDCAnimation(0);
+            chargingprigressView.setProgress(0);
             tvVoltage.setText("电池电压:"+ 0 + "V");
             tvTemperature.setText("电池温度:" + 0 + "℃");
         }
@@ -273,6 +274,11 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     public void onClick(View v) {
         String newValue;
         byte[] dataToWrite;
+
+        if(!BleManager.isConnSuccessful){
+            showToast("设备未连接");
+            return;
+        }
 
         switch (v.getId()) {
             case R.id.cb_floodlight:

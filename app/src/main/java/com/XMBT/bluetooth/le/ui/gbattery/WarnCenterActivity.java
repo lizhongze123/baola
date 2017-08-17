@@ -1,21 +1,54 @@
 package com.XMBT.bluetooth.le.ui.gbattery;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.bean.LocalEntity;
+import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
+import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.utils.LogUtils;
+import com.XMBT.bluetooth.le.utils.StatusBarHelper;
+import com.XMBT.bluetooth.le.view.TitleBar;
+import com.baidu.tts.auth.AuthInfo;
+import com.baidu.tts.client.SpeechError;
+import com.baidu.tts.client.SpeechSynthesizer;
+import com.baidu.tts.client.SpeechSynthesizerListener;
+import com.baidu.tts.client.TtsMode;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 
-public class WarnCenterActivity extends Activity {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Locale;
+
+import okhttp3.Call;
+import okhttp3.Response;
+
+/**
+ * 报警中心
+ */
+public class WarnCenterActivity extends BaseActivity {
+
     private ExpandableListView listView;
     private MyListAdapter adapter;
+    private YunCheDeviceEntity device;
+
+    private String dataString = "10,9,8,29,3";
+    private String[] groupInt = new String[]{"10", "9", "8", "29", "3"};
     private String[] groupStrings = new String[]
             {"位移报警", "震动报警", "低电报警", "高压报警", "围栏报警"};
     private String[][] childStrings = new String[][]
@@ -27,19 +60,82 @@ public class WarnCenterActivity extends Activity {
                     {"暂无报警信息"}
             };
 
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            adapter.notifyDataSetChanged();
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_warn_center);
-        initView();
+        StatusBarHelper.setStatusBarColor(this, R.color.title_color);
+        initViews();
+        getData();
     }
 
-    private void initView() {
+    private void initViews() {
+        TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
+        titleBar.setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         listView = (ExpandableListView) findViewById(R.id.expand);
         listView.setGroupIndicator(null);//将控件默认的左边箭头去掉，
         adapter = new MyListAdapter();
         listView.setAdapter(adapter);
+    }
+
+    public void getData() {
+        showLoadingDialog(null);
+        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
+        OkGo.get(GlobalConsts.GET_DATE)
+                .tag(this)
+                .params("method", "getAlarmCount")
+                .params("macid", device.macid)
+                .params("classify", dataString)
+                .params("mds", mds)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        LogUtils.d(s);
+                        parseJson(s);
+                    }
+
+                    @Override
+                    public void onAfter(String s, Exception e) {
+                        dismissLoadingDialog();
+                    }
+                });
+    }
+
+    private void parseJson(String json) {
+        /**
+         {"success":"true","row":{"29":"0","8":"0","9":"0","10":"0","3":"0"}}
+         */
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            String success = jsonObject.getString("success");
+            if (success.equals("false")) {
+                String msg = jsonObject.getString("msg");
+                showToast(msg);
+            } else {
+                JSONObject datajson  = jsonObject.getJSONObject("row");
+                for (int i = 0; i < groupInt.length; i++) {
+                    childStrings[i][0] = datajson.getString(groupInt[i]);
+                }
+                mHandler.sendEmptyMessage(0);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private class MyListAdapter extends BaseExpandableListAdapter {
@@ -131,11 +227,4 @@ public class WarnCenterActivity extends Activity {
         }
     }
 
-    public void doClick(View view) {
-        switch (view.getId()) {
-            case R.id.backIv:
-                onBackPressed();
-                break;
-        }
-    }
 }

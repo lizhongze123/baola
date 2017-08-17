@@ -250,6 +250,9 @@ public class ChargingProgess extends View {
      * @param canvas
      */
     private void drawDCAniamtion(Canvas canvas) {
+        if(getProgress() == 0){
+            return;
+        }
         int j = getProgress() / item_count;
         //已经充好的进度
         if(getProgress() != 4){

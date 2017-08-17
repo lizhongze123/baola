@@ -58,7 +58,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
         scrollView.smoothScrollTo(0, 0);
         initViews();
         Intent intent = getIntent();
-        device = (YunCheDeviceEntity) intent.getSerializableExtra("device");
+        device = (YunCheDeviceEntity) intent.getSerializableExtra(DeviceFragment.DATA_DEVICE);
 //        getVoltage();
     }
 
@@ -105,6 +105,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                     startActivity(intent);
                 } else if (position == 3) {
                     Intent intent = new Intent(YunCheActivity.this, WarnCenterActivity.class);
+                    intent.putExtra(DeviceFragment.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 4) {
                     Intent intent = new Intent(YunCheActivity.this, FenceActivity.class);
@@ -163,14 +164,6 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
     @Override
     public void loadBanner(XBanner banner, View view, int position) {
         Glide.with(YunCheActivity.this).load(imgurls.get(position)).into((ImageView) view);
-    }
-
-    public void doClick(View view) {
-        switch (view.getId()) {
-            case R.id.backIv:
-                onBackPressed();
-                break;
-        }
     }
 
     class GridAdapter extends BaseAdapter {

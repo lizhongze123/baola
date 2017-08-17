@@ -302,7 +302,7 @@ public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResul
         Bundle bundle = new Bundle();
         try {
             ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
-            APPID = appInfo.metaData.getInt("com.baidu.appid")+"";
+            APPID = appInfo.metaData.getInt("com.baidu.appid") + "";
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -674,9 +674,6 @@ public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResul
 
     public void doClick(View view) {
         switch (view.getId()) {
-            case R.id.backIv:
-                onBackPressed();
-                break;
             case R.id.checkbox1:
                 if (checkbox1.isChecked()) {
                     //卫星地图

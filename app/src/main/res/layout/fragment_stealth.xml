@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/ll_stealth"
     android:orientation="vertical">
 
     <LinearLayout
@@ -39,7 +40,7 @@
                 android:orientation="vertical">
 
                 <CheckBox
-                    android:id="@+id/cb"
+                    android:id="@+id/cb_stealth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@null"
@@ -49,7 +50,7 @@
             </LinearLayout>
 
             <Switch
-                android:id="@+id/switchButton"
+                android:id="@+id/sw_stealth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linearLayout2"

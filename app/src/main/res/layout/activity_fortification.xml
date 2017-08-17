@@ -15,15 +15,23 @@
         app:title_text="设防控制"
         app:title_textColor="@color/white" />
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/radioGroup2"
         android:layout_below="@+id/titleBar"
-        android:orientation="vertical"></FrameLayout>
+        android:orientation="horizontal"
+        android:layout_above="@+id/view">
+
+        <include layout="@layout/fragment_fortification"/>
+
+
+        <include layout="@layout/fragment_stealth"/>
+
+
+    </LinearLayout>
 
     <View
+        android:id="@+id/view"
         android:layout_above="@+id/radioGroup2"
         style="@style/separation_line"/>
 
