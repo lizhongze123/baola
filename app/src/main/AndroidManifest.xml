@@ -50,23 +50,15 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="Iozzpkb9rfLCWys0zGdeT3zrgVCUDUkD" />
-        <!-- 百度导航appid -->
-        <meta-data
-            android:name="com.baidu.appid"
-            android:value="9999362"/>
 
         <!-- 百度语音appid -->
         <meta-data
             android:name="com.baidu.tts.APP_ID"
-            android:value="10016837"/>
-        <!-- 百度语音api_key -->
-        <meta-data
-            android:name="com.baidu.tts.API_KEY"
-            android:value="Rc5G2mi2K8ZVyWYb0L1lVhcb"/>
+            android:value="10019850"/>
         <!-- 百度语音secret_key-->
         <meta-data
             android:name="com.baidu.tts.SECRET_KEY"
-            android:value="q7I7LeOVFlhmBaEGjWeWb5yEtkV6Khiq"/>
+            android:value="e7831b7f1b204824d26078e8ec0d571a"/>
 
         <activity
             android:name=".ui.main.MainActivity"

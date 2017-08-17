@@ -93,10 +93,6 @@ dependencies {
     compile 'org.zackratos:ultimatebar:1.0.3'
     compile files('libs/AndroidSwipeLayout-v1.1.8.jar')
     compile files('libs/commons-codec-1.4.jar')
-    compile files('libs/BaiduLBS_Android.jar')
-    compile files('libs/httpmime-4.1.2.jar')
+    //基础包
     compile files('libs/BaiduTraceSDK_v3_0_4.jar')
-    //鹰眼的图像存储功能
-    compile files('libs/bos-android-sdk-1.0.2.jar')
-    compile files('libs/com.baidu.tts_2.3.0.jar')
 }

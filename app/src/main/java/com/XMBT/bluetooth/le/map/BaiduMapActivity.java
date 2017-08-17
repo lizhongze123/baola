@@ -185,7 +185,8 @@ public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResul
         option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
         option.setNeedDeviceDirect(true); //返回的定位结果包含手机机头方向
         mLocationClient.setLocOption(option);
-        mLocationClient.start(); //启动位置请求
+        mLocationClient.requestLocation();//发送请求
+        mLocationClient.start();//启动位置请求
         return option;
     }
 
@@ -302,7 +303,7 @@ public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResul
         Bundle bundle = new Bundle();
         try {
             ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
-            APPID = appInfo.metaData.getInt("com.baidu.appid") + "";
+            APPID = appInfo.metaData.getInt("com.baidu.tts.APP_ID") + "";
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -369,7 +370,7 @@ public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResul
 
     }
 
-    private BNRoutePlanNode.CoordinateType mCoordinateType = null;
+    private BNRoutePlanNode.CoordinateType mCoordinateType = BNRoutePlanNode.CoordinateType.BD09LL;
 
     /**
      * 算路设置起、终点，算路偏好，是否模拟导航等参数，然后在回调函数中设置跳转至诱导。
@@ -693,10 +694,14 @@ public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResul
                 }
                 break;
             case R.id.button:
-
                 showLoadingDialog("加载中，请稍候");
-                mLocationClient.requestLocation();//发送请求
-
+                    /**
+                      * 判断百度导航是否初始化
+                      */
+                if (BaiduNaviManager.isNaviInited()) {
+                     // 添加起点、终点
+                    routeplanToNavi(mCoordinateType);
+                }
                 break;
             case R.id.checkbox2:
                 if (checkbox2.isChecked()) {
@@ -844,22 +849,8 @@ public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResul
             showToast("定位成功" + location.getLatitude() + "," + location.getLongitude());
             mLocation = location;
 
-
-            /**
-             * 判断百度导航是否初始化
-             */
-            if (BaiduNaviManager.isNaviInited()) {
-                /**
-                 * 添加起点、终点
-                 */
-                routeplanToNavi(BNRoutePlanNode.CoordinateType.BD09LL);
-            }
         }
 
-        @Override
-        public void onConnectHotSpotMessage(String s, int i) {
-
-        }
     }
 
 }
