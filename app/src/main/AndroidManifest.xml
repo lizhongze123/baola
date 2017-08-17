@@ -129,6 +129,7 @@
         <activity android:name=".ui.gbattery.ChangePwdActivity"/>
         <activity android:name=".ui.gbattery.RefreshActivity"/>
         <activity android:name=".ui.gbattery.ForumActivity"/>
+        <activity android:name=".map.DemoActivity"/>
     </application>
 
 </manifest>
