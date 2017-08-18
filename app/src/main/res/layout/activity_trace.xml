@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.XMBT.bluetooth.le.map.TraceActivity">
+    tools:context="com.XMBT.bluetooth.le.map.TraceDemoActivity">
 
     <com.XMBT.bluetooth.le.view.TitleBar
         android:id="@+id/titleBar"

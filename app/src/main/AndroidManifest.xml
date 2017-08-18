@@ -112,7 +112,7 @@
             android:process=":remote">
         </service>
 
-        <activity android:name=".map.TraceActivity" />
+        <activity android:name=".map.TraceDemoActivity" />
         <activity android:name=".ui.gbattery.FortificationActivity" />
         <activity android:name=".ui.gbattery.WarnCenterActivity" />
         <activity android:name=".map.FenceActivity"/>
@@ -121,7 +121,7 @@
         <activity android:name=".ui.gbattery.ChangePwdActivity"/>
         <activity android:name=".ui.gbattery.RefreshActivity"/>
         <activity android:name=".ui.gbattery.ForumActivity"/>
-        <activity android:name=".map.DemoActivity"/>
+        <activity android:name=".map.TraceActivity"/>
     </application>
 
 </manifest>

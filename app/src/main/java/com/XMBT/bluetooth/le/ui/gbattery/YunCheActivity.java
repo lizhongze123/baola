@@ -19,9 +19,8 @@ import com.XMBT.bluetooth.le.bean.YuCheEntity;
 import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.map.BaiduMapActivity;
-import com.XMBT.bluetooth.le.map.DemoActivity;
-import com.XMBT.bluetooth.le.map.FenceActivity;
 import com.XMBT.bluetooth.le.map.TraceActivity;
+import com.XMBT.bluetooth.le.map.FenceActivity;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.GridViewForNested;
 import com.XMBT.bluetooth.le.view.TitleBar;
@@ -97,7 +96,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                     intent.putExtra(DeviceFragment.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 1) {
-                    Intent intent = new Intent(YunCheActivity.this, DemoActivity.class);
+                    Intent intent = new Intent(YunCheActivity.this, TraceActivity.class);
                     intent.putExtra(DeviceFragment.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 2) {
