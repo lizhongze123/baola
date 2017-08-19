@@ -14,6 +14,8 @@
         app:left_button_image="@drawable/common_ic_left_arrow"
         app:title_background="@color/title_bg"
         app:title_text="电子围栏"
+        app:right_button_text="确定"
+        app:right_button_textColor="@color/white"
         app:title_textColor="@color/white" />
 
     <RelativeLayout
@@ -33,6 +35,58 @@
             android:background="@color/transparent2"
             android:padding="5dp"
             android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btn_loc"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_above="@+id/ll_seekbar"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/icon_myloc"/>
+
+        <LinearLayout
+            android:id="@+id/ll_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/run_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="2dp"
+                android:gravity="center"
+                android:text="200m"
+                android:textColor="@color/gray_33"
+                android:textSize="12sp"/>
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:progressBackgroundTint="@color/black"
+                android:max="800"
+                android:progressTint="@color/black"
+                android:thumb="@drawable/seekbar_thumb"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="2dp"
+                android:gravity="center"
+                android:text="1000m"
+                android:textColor="@color/gray_33"
+                android:textSize="12sp" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

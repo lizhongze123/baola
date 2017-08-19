@@ -2,8 +2,11 @@ package com.XMBT.bluetooth.le.map;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
@@ -22,6 +25,7 @@ import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.CircleOptions;
 import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -74,22 +78,52 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
     private List<LocalEntity> localEntities = new ArrayList<>();
     private Map<Integer, Overlay> tempOverlays = new HashMap<>();
     private TextView tvLocation;
+    private SeekBar seekBar;
+    private TextView run_speed;
+    private TitleBar titleBar;
+    private LatLng currentCenter;
+    private Overlay fenceOverlay;
+    /**
+     * 车辆一开始的围栏
+     */
+    private FenceBean carFenceBean;
+    /**
+     * 设置新的围栏
+     */
+    private FenceBean newFenceBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fence);
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
+        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
         initView();
         getLocate();
+        getFenStatus();
     }
 
     private void initView() {
-        TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
+        titleBar = (TitleBar) findViewById(R.id.titleBar);
         titleBar.setLeftOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        titleBar.setRightOnClicker(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //提交围栏数据
+                saveFenceData();
+            }
+        });
+        findViewById(R.id.btn_loc).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //回到车辆位置
+                setMarker();
+                setFence(carFenceBean);
             }
         });
         //获取地图控件引用
@@ -98,14 +132,115 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
         mMapView.removeViewAt(1); //去掉百度logo
         mMapView.showScaleControl(false); //设置是否显示比例尺
         mBaiduMap = mMapView.getMap();
+        mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                newFenceBean = new FenceBean();
+                newFenceBean.defenceLat = latLng.latitude + "";
+                newFenceBean.defenceLon = latLng.longitude + "";
+                newFenceBean.defenceRad = (200 +seekBar.getProgress()) + "";
+                newFenceBean.defenceStatus = "0";
+                setFence(newFenceBean);
+            }
+
+            @Override
+            public boolean onMapPoiClick(MapPoi mapPoi) {
+                return false;
+            }
+        });
         tvLocation = (TextView) findViewById(R.id.tv_location);
+        run_speed = (TextView) findViewById(R.id.run_speed);
+        seekBar = (SeekBar) findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
     }
+
+    private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        /**
+         * 进度改变
+         */
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            run_speed.setText((200 + progress)+ "m");
+        }
+
+        /**
+         * 开始拖动
+         */
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+
+        /**
+         * 停止拖动
+         */
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            if(currentCenter != null){
+                newFenceBean = new FenceBean();
+                newFenceBean.defenceLat = currentCenter.latitude + "";
+                newFenceBean.defenceLon = currentCenter.longitude + "";
+                newFenceBean.defenceRad = (200 + seekBar.getProgress()) + "";
+                newFenceBean.defenceStatus = "0";
+                setFence(newFenceBean);
+            }
+        }
+    };
+
+
+    /**
+     * 保存围栏大小
+     */
+    private void saveFenceData() {
+        if(newFenceBean == null){
+            showToast("请设置新的电子围栏");
+            return;
+        }
+        showLoadingDialog(null);
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
+        String id = UserSp.getInstance(this).getId(GlobalConsts.userName);
+
+        OkGo.get(GlobalConsts.GET_DATE)
+                .tag(this)
+                .params("method", "SetGpsUserDefence")
+                .params("macid", device.macid)
+                .params("defenceLat", newFenceBean.defenceLat)
+                .params("defencelon", newFenceBean.defenceLon)
+                .params("defenceRad", newFenceBean.defenceRad)
+                .params("defenceStatus", newFenceBean.defenceStatus)
+                .params("language", "cn")
+                .params("mapType", "BAIDU")
+                .params("mds", mds)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        LogUtils.d(s);
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            String success = jsonObject.getString("success");
+                            if (success.equals("false")) {
+                                String msg = jsonObject.getString("msg");
+                                showToast(msg);
+                            }else{
+                                showToast("设置成功");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onAfter(String s, Exception e) {
+                        dismissLoadingDialog();
+                    }
+                });
+    }
+
 
     /**
      * 获取最新位置
      */
     private void getLocate() {
-        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
         String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         String id = UserSp.getInstance(this).getId(GlobalConsts.userName);
 
@@ -125,6 +260,49 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
                         parseJson(s);
                         setMarker();
                         reverseGeoCodeOption();
+                    }
+                });
+    }
+
+    /**
+     * 获取围栏状态
+     */
+    public void getFenStatus() {
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
+
+        OkGo.post(GlobalConsts.GET_DATE)
+                .tag(this)
+                .params("method", "GetGpsUserDefence")
+                .params("macid", device.macid)
+                .params("language", "cn")
+                .params("mapType", "BAIDU")
+                .params("mds", mds)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        LogUtils.d(s);
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject dataObj = jsonObject.getJSONObject("data");
+                            if (dataObj != null) {
+                                carFenceBean = new FenceBean();
+                                carFenceBean.defenceLat = dataObj.getString("DefenceLat");
+                                carFenceBean.defenceLon = dataObj.getString("DefenceLon");
+                                carFenceBean.defenceRad = dataObj.getString("DefenceRad");
+                                carFenceBean.defenceStatus = dataObj.getString("DefenceStatus");
+                                setFence(carFenceBean);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        seekBar.setProgress((int) (Double.valueOf(carFenceBean.defenceRad) - 200));
+                                    }
+                                });
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
                     }
                 });
     }
@@ -204,6 +382,7 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
     }
 
     private void setMarker() {
+
         LocalEntity localEntity = null;
         for (int i = 0; i < localEntities.size(); i++) {
             if (localEntities.get(i).user_name.equals(device.fullname)) {
@@ -248,7 +427,7 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
         MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
         //改变地图状态
         mBaiduMap.setMapStatus(mMapStatusUpdate);
-        setFence(localEntity);
+
     }
 
     private void reverseGeoCodeOption() {
@@ -270,9 +449,26 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
 
     /**
      * 设置围栏
-     * @param localEntity
+     *
+     * @param
      */
-    private void setFence(LocalEntity localEntity) {
+    private void setFence(FenceBean bean) {
+        double lat;
+        double lng;
+        if(bean == null){
+            return;
+        }
+        if (TextUtils.isEmpty(bean.defenceLat) || TextUtils.isEmpty(bean.defenceLon)) {
+            return;
+        }
+
+        if(fenceOverlay != null){
+            fenceOverlay.remove();
+        }
+
+        lat = Double.valueOf(bean.defenceLat);
+        lng = Double.valueOf(bean.defenceLon);
+
         // 请求标识
         int tag = 3;
         // 轨迹服务ID
@@ -283,9 +479,9 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
         // 监控对象
         String monitoredPerson = "myTrace";
         // 围栏圆心
-        com.baidu.trace.model.LatLng center = new com.baidu.trace.model.LatLng(localEntity.weidu, localEntity.jingdu);
+        com.baidu.trace.model.LatLng center = new com.baidu.trace.model.LatLng(lat, lng);
         // 围栏半径（单位 : 米）
-        double radius = 800;
+        double radius = Double.valueOf(bean.defenceRad);
         // 去噪精度
         int denoise = 200;
         // 坐标类型
@@ -294,11 +490,12 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
 
         // 创建本地圆形围栏请求实例
         CreateFenceRequest localCircleFenceRequest = CreateFenceRequest.buildLocalCircleRequest(tag, serviceId, fenceName, monitoredPerson, center, radius, denoise, coordType);
-        LatLng circleCenter = new LatLng(localEntity.weidu, localEntity.jingdu);
+        currentCenter = new LatLng(lat, lng);
 
-        OverlayOptions overlayOptions = new CircleOptions().fillColor(0x558B33BB).center(circleCenter)
-                .stroke(new Stroke(3, 0xAA000000)).radius((int) radius);
-        tempOverlays.put(tag, mBaiduMap.addOverlay(overlayOptions));
+        OverlayOptions overlayOptions = new CircleOptions().fillColor(0x338B33BB).center(currentCenter)
+                .radius((int) radius);
+        fenceOverlay = mBaiduMap.addOverlay(overlayOptions);
+        tempOverlays.put(tag, fenceOverlay);
 
         // 初始化围栏监听器
         OnFenceListener mFenceListener = new OnFenceListener() {
@@ -358,4 +555,6 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
             tvLocation.setText(result.getAddress());
         }
     }
+
+
 }
