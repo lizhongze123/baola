@@ -21,6 +21,8 @@ import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.map.BaiduMapActivity;
 import com.XMBT.bluetooth.le.map.TraceActivity;
 import com.XMBT.bluetooth.le.map.FenceActivity;
+import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.GridViewForNested;
 import com.XMBT.bluetooth.le.view.TitleBar;
@@ -59,7 +61,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
         initViews();
         Intent intent = getIntent();
         device = (YunCheDeviceEntity) intent.getSerializableExtra(DeviceFragment.DATA_DEVICE);
-//        getVoltage();
+        getVoltage();
     }
 
     private void initViews() {
@@ -123,9 +125,11 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
         xBanner.setmAdapter(this);
     }
 
+    /**
+     * 获取电池电压及使用时间
+     */
     private void getVoltage() {
-        SharedPreferences sp = getSharedPreferences("userInfo", MODE_PRIVATE);
-        String mds = sp.getString("mds", null);
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         OkGo.post(GlobalConsts.URL + "GetDateServices.asmx/GetDate")
                 .tag(this)
                 .params("method", "GetPowerVAndBetteryV")
@@ -135,6 +139,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         try {
+                            LogUtils.d(s);
                             JSONObject jsonObject = new JSONObject(s);
                             String errorCode = jsonObject.getString("errorCode");
                             if (errorCode.equals("200")) {
@@ -143,7 +148,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                                     JSONObject datajson = dataary.getJSONObject(i);
                                     double ServiceTime = datajson.getDouble("ServiceTime");
                                     if (ServiceTime == -1000) {
-                                        Toast.makeText(YunCheActivity.this, "设备未启用", Toast.LENGTH_SHORT).show();
+                                        showToast("设备未启用");
                                         return;
                                     }
                                     double power = datajson.getDouble("PowerV");
@@ -153,6 +158,8 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                                     dayTv.setText(String.valueOf(Bettery) + "天");
                                     persentTv.setText(String.valueOf(RemnanLife) + "%");
                                 }
+                            }else{
+                                showToast("没有此设备相关信息");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
