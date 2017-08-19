@@ -130,10 +130,10 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
      */
     private void getVoltage() {
         String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
-        OkGo.post(GlobalConsts.URL + "GetDateServices.asmx/GetDate")
+        OkGo.get(GlobalConsts.URL + "GetDateServices.asmx/GetDate")
                 .tag(this)
                 .params("method", "GetPowerVAndBetteryV")
-                .params("macid", device.id)
+                .params("macid", device.macid)
                 .params("mds", mds)
                 .execute(new StringCallback() {
                     @Override
@@ -153,7 +153,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                                     }
                                     double power = datajson.getDouble("PowerV");
                                     double RemnanLife = datajson.getDouble("RemnantLife");
-                                    double Bettery = datajson.getDouble("Bettery");
+                                    int Bettery = (int) datajson.getDouble("Bettery");
                                     voltageTv.setText(String.valueOf(power) + "V");
                                     dayTv.setText(String.valueOf(Bettery) + "天");
                                     persentTv.setText(String.valueOf(RemnanLife) + "%");
