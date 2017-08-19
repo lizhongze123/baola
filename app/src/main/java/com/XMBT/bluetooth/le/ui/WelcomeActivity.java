@@ -19,6 +19,7 @@ import com.XMBT.bluetooth.le.utils.ToastUtils;
 
 
 public class WelcomeActivity extends BaseActivity {
+
     Handler mhandler = new Handler();
 
     @Override
