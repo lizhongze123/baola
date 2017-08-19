@@ -88,7 +88,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         initPopWindow();
         initView();
         cbAuto.setChecked(flag);
-        if(BleManager.isConnSuccessful){
+        if (BleManager.isConnSuccessful) {
             startTimer1();
             readDangwei();
         }
@@ -100,7 +100,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         if (!bleManager.isSupportBle()) {
             showToast(getResources().getString(R.string.ble_not_supported));
         }
-        bleManager.startScan(this,GlobalConsts.LIGHTING);
+        bleManager.startScan(this, GlobalConsts.LIGHTING);
     }
 
     private void initDatas() {
@@ -209,9 +209,9 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         titleBar.setRightOnClicker(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(BleManager.isConnSuccessful){
+                if (BleManager.isConnSuccessful) {
                     BleManager.getInstance(LightFunctionActivity.this).disconnect();
-                }else{
+                } else {
                     BleManager.getInstance(LightFunctionActivity.this).startScan(LightFunctionActivity.this, GlobalConsts.LIGHTING);
                 }
             }
@@ -360,86 +360,121 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 popupWindow.dismiss();
                 break;
             case R.id.cb_manual:
-                if (cbManual.isChecked()) {
-                    newValue = SampleGattAttributes.WRITE_OPEN_LIGHT;
-                } else {
-                    newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
-                }
-                dataToWrite = HexUtil.hexStringToBytes(newValue);
-                bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
-                break;
-            case R.id.cb_city:
-                if (cbCity.isChecked()) {
-                    cbHighway.setChecked(false);
-                    seekBar.setProgress(0);
-                    newValue = SampleGattAttributes.MODE_CITY;
+                if (BleManager.isConnSuccessful) {
+                    if (cbManual.isChecked()) {
+                        newValue = SampleGattAttributes.WRITE_OPEN_LIGHT;
+                    } else {
+                        newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
+                    }
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                } else {
+                    showToast("请先连接设备");
+                    resetShift();
+                }
+                break;
+            case R.id.cb_city:
+                if (BleManager.isConnSuccessful) {
+                    if (cbCity.isChecked()) {
+                        cbHighway.setChecked(false);
+                        seekBar.setProgress(0);
+                        newValue = SampleGattAttributes.MODE_CITY;
+                        dataToWrite = HexUtil.hexStringToBytes(newValue);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                    }
+                }else{
+                    showToast("请先连接设备");
+                    resetShift();
                 }
                 break;
             case R.id.cb_highway:
-                if (cbHighway.isChecked()) {
-                    cbCity.setChecked(false);
-                    seekBar.setProgress(15);
-                    newValue = SampleGattAttributes.MODE_HIGHWAY;
-                    dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                if(BleManager.isConnSuccessful){
+                    if (cbHighway.isChecked()) {
+                        cbCity.setChecked(false);
+                        seekBar.setProgress(15);
+                        newValue = SampleGattAttributes.MODE_HIGHWAY;
+                        dataToWrite = HexUtil.hexStringToBytes(newValue);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                    }
+                }else{
+                    showToast("请先连接设备");
+                    resetShift();
                 }
                 break;
             case R.id.cb_30:
-                if (cb30.isChecked()) {
-                    cb60.setChecked(false);
-                    cb90.setChecked(false);
-                    cb120.setChecked(false);
-                    newValue = SampleGattAttributes.SHIFT_30;
-                    dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
-                } else {
-                    newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
-                    dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                if(BleManager.isConnSuccessful){
+                    if (cb30.isChecked()) {
+                        cb60.setChecked(false);
+                        cb90.setChecked(false);
+                        cb120.setChecked(false);
+                        newValue = SampleGattAttributes.SHIFT_30;
+                        dataToWrite = HexUtil.hexStringToBytes(newValue);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                    } else {
+                        newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
+                        dataToWrite = HexUtil.hexStringToBytes(newValue);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                    }
+                }else{
+                    showToast("请先连接设备");
+                    resetShift();
                 }
                 break;
             case R.id.cb_60:
-                if (cb60.isChecked()) {
-                    cb30.setChecked(false);
-                    cb90.setChecked(false);
-                    cb120.setChecked(false);
-                    newValue = SampleGattAttributes.SHIFT_60;
-                    dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
-                } else {
-                    newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
-                    dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                if(BleManager.isConnSuccessful){
+                    if (cb60.isChecked()) {
+                        cb30.setChecked(false);
+                        cb90.setChecked(false);
+                        cb120.setChecked(false);
+                        newValue = SampleGattAttributes.SHIFT_60;
+                        dataToWrite = HexUtil.hexStringToBytes(newValue);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                    } else {
+                        newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
+                        dataToWrite = HexUtil.hexStringToBytes(newValue);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                    }
+                }else{
+                    showToast("请先连接设备");
+                    resetShift();
                 }
                 break;
             case R.id.cb_90:
-                if (cb90.isChecked()) {
-                    cb30.setChecked(false);
-                    cb60.setChecked(false);
-                    cb120.setChecked(false);
-                    newValue = SampleGattAttributes.SHIFT_90;
-                    dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
-                } else {
-                    newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
-                    dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                if(BleManager.isConnSuccessful){
+                    if (cb90.isChecked()) {
+                        cb30.setChecked(false);
+                        cb60.setChecked(false);
+                        cb120.setChecked(false);
+                        newValue = SampleGattAttributes.SHIFT_90;
+                        dataToWrite = HexUtil.hexStringToBytes(newValue);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                    } else {
+                        newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
+                        dataToWrite = HexUtil.hexStringToBytes(newValue);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                    }
+                }else{
+                    showToast("请先连接设备");
+                    resetShift();
                 }
                 break;
             case R.id.cb_120:
-                if (cb120.isChecked()) {
-                    cb30.setChecked(false);
-                    cb60.setChecked(false);
-                    cb90.setChecked(false);
-                    newValue = SampleGattAttributes.SHIFT_120;
-                    dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
-                } else {
-                    newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
-                    dataToWrite = HexUtil.hexStringToBytes(newValue);
-                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                if(BleManager.isConnSuccessful){
+                    if (cb120.isChecked()) {
+                        cb30.setChecked(false);
+                        cb60.setChecked(false);
+                        cb90.setChecked(false);
+                        newValue = SampleGattAttributes.SHIFT_120;
+                        dataToWrite = HexUtil.hexStringToBytes(newValue);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                    } else {
+                        newValue = SampleGattAttributes.WRITE_CLOSE_LIGHT;
+                        dataToWrite = HexUtil.hexStringToBytes(newValue);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
+                    }
+                }else{
+                    showToast("请先连接设备");
+                    resetShift();
                 }
                 break;
         }
@@ -547,9 +582,9 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 } else {
                     connectChanged(true);
                 }
-            }else if(action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)){
+            } else if (action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)) {
                 int status = intent.getIntExtra(BleManager.SCAN_BLE_STATUS, 0);
-                if(status == 0){
+                if (status == 0) {
                     showToastCenter("未能检测到该设备，请稍后重试");
                 }
             }
@@ -563,6 +598,8 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         cb120.setChecked(false);
         cbCity.setChecked(false);
         cbHighway.setChecked(false);
+        cbAuto.setChecked(false);
+        cbManual.setChecked(false);
         seekBar.setProgress(0);
     }
 
