@@ -5,16 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,10 +32,10 @@ import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.utils.Utils;
 import com.XMBT.bluetooth.le.view.TitleBar;
+import com.XMBT.bluetooth.le.view.datePicker.DateTimePicker;
+import com.XMBT.bluetooth.le.view.datePicker.DoubleTimePicker;
 import com.bumptech.glide.Glide;
 import com.stx.xhb.xbanner.XBanner;
-
-import org.zackratos.ultimatebar.UltimateBar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,13 +53,12 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
     private CheckBox cb30, cb60, cb90, cb120;
 
     private SeekBar seekBar;
-    private TimePicker tp0, tp1;
 
     public final static String EXTRA_DATA = "EXTRA_DATA";
     private String strTemp;
 
     private int iStalls = 15;
-    private PopupWindow popupWindow;
+
     private View contentView;
     private Calendar cal;
     private int hour;
@@ -78,6 +72,8 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
 
     private BleManager bleManager;
 
+    private DoubleTimePicker timePicker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +81,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
         initBle();
         initDatas();
-        initPopWindow();
+        initTimePickView();
         initView();
         cbAuto.setChecked(flag);
         if (BleManager.isConnSuccessful) {
@@ -93,6 +89,39 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
             readDangwei();
         }
         registerBoradcastReceiver();
+    }
+
+    Calendar calendar;
+
+    private void initTimePickView() {
+        calendar = Calendar.getInstance();
+        timePicker = new DoubleTimePicker(this, DoubleTimePicker.HOUR_OF_DAY);
+        timePicker.setOnDateTimePickListener(new DoubleTimePicker.OnTwoTimePickListener() {
+            @Override
+            public void onPicked(String hour, String minute, String secHour, String secMinute) {
+                startTime = hour + ":" + minute;
+                endTime = secHour + ":" + secMinute;
+                PreferenceUtils.write(LightFunctionActivity.this, "light_info", "starttime", startTime);
+                PreferenceUtils.write(LightFunctionActivity.this, "light_info", "endtime", endTime);
+                tvAutoInfo.setText(startTime + "开启 " + endTime + "关闭 长按设置时间");
+            }
+        });
+    }
+
+    private void showTimeRangePickView() {
+        startTime = PreferenceUtils.readString(this, "light_info", "starttime");
+        endTime = PreferenceUtils.readString(this, "light_info", "endtime");
+
+        if (startTime == null && endTime == null) {
+            startTime = "17:00";
+            endTime = "23:00";
+        }
+        String[] starttimes = startTime.split(":");
+        String[] endtimes = endTime.split(":");
+        if (timePicker != null && !timePicker.isShowing()) {
+            timePicker.setSelectedItem(Integer.valueOf(starttimes[0]) ,Integer.valueOf(starttimes[1]), Integer.valueOf(endtimes[0]),Integer.valueOf(endtimes[1]));
+            timePicker.show();
+        }
     }
 
     private void initBle() {
@@ -110,13 +139,8 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         bannerUrls.add(GlobalConsts.BANNER_URL3);
         bannerUrls.add(GlobalConsts.BANNER_URL4);
 
-        startTime = PreferenceUtils.readString(this, "light_info", "starttime");
-        endTime = PreferenceUtils.readString(this, "light_info", "endtime");
         flag = PreferenceUtils.readBoolean(this, "light_info", "flag", flag);
-        if (startTime == null && endTime == null) {
-            startTime = "17:00";
-            endTime = "23:00";
-        }
+
     }
 
     /**
@@ -168,36 +192,6 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         }
     }
 
-    private void initPopWindow() {
-        //加载弹出框的布局
-        contentView = LayoutInflater.from(this).inflate(R.layout.pop_item, null);
-        //设置弹出框的宽度和高度
-        popupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setFocusable(true);// 取得焦点
-        //注意  要是点击外部空白处弹框消息  那么必须给弹框设置一个背景色  不然是不起作用的
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        //点击外部消失
-        popupWindow.setOutsideTouchable(true);
-        //设置可以点击
-        popupWindow.setTouchable(true);
-        //进入退出的动画
-        popupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-        cbAuto = (CheckBox) findViewById(R.id.cb_auto);
-        //设置点击返回键dismiss
-        cbAuto.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                    if (popupWindow != null && popupWindow.isShowing()) {
-                        popupWindow.dismiss();
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-    }
-
     private void initTitle() {
         titleBar = (TitleBar) findViewById(R.id.titleBar);
         titleBar.setLeftOnClickListener(new View.OnClickListener() {
@@ -229,10 +223,6 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         cb90 = (CheckBox) findViewById(R.id.cb_90);
         cb120 = (CheckBox) findViewById(R.id.cb_120);
         tvAutoInfo = (TextView) findViewById(R.id.tv_autoInfo);
-        tp0 = (TimePicker) contentView.findViewById(R.id.tp0);
-        tp1 = (TimePicker) contentView.findViewById(R.id.tp1);
-        tp0.setIs24HourView(true);
-        tp1.setIs24HourView(true);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         xBanner.setData(bannerUrls, null);
         xBanner.setmAdapter(this);
@@ -261,50 +251,21 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
 
             }
         });
+        cbAuto = (CheckBox) findViewById(R.id.cb_auto);
         cbAuto.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                //从底部显示
-                popupWindow.showAtLocation(contentView, Gravity.BOTTOM, 0, 0);
-                String[] starttimes = startTime.split(":");
-                String[] endtimes = endTime.split(":");
-                tp0.setCurrentHour(Integer.valueOf(starttimes[0]));
-                tp0.setCurrentMinute(Integer.valueOf(starttimes[1]));
-                tp1.setCurrentHour(Integer.valueOf(endtimes[0]));
-                tp1.setCurrentMinute(Integer.valueOf(endtimes[1]));
+                showTimeRangePickView();
                 return true;
             }
         });
-        tp0.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                if (minute < 10) {
-                    startTime = hourOfDay + ":0" + minute;
-                } else {
-                    startTime = hourOfDay + ":" + minute;
-                }
-                if (hourOfDay < 10) {
-                    startTime = "0" + hourOfDay + ":" + minute;
-                } else {
-                    startTime = hourOfDay + ":" + minute;
-                }
-            }
-        });
-        tp1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                if (minute < 10) {
-                    endTime = hourOfDay + ":0" + minute;
-                } else {
-                    endTime = hourOfDay + ":" + minute;
-                }
-                if (hourOfDay < 10) {
-                    endTime = "0" + hourOfDay + ":" + minute;
-                } else {
-                    endTime = hourOfDay + ":" + minute;
-                }
-            }
-        });
+        startTime = PreferenceUtils.readString(this, "light_info", "starttime");
+        endTime = PreferenceUtils.readString(this, "light_info", "endtime");
+
+        if (startTime == null && endTime == null) {
+            startTime = "17:00";
+            endTime = "23:00";
+        }
         tvAutoInfo.setText(startTime + "开启 " + endTime + "关闭 长按设置时间");
         connectChanged(BleManager.isConnSuccessful);
     }
@@ -353,12 +314,6 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                     PreferenceUtils.write(LightFunctionActivity.this, "light_info", "flag", false);
                 }
                 break;
-            case R.id.confirmBtn:
-                PreferenceUtils.write(LightFunctionActivity.this, "light_info", "starttime", startTime);
-                PreferenceUtils.write(LightFunctionActivity.this, "light_info", "endtime", startTime);
-                tvAutoInfo.setText(startTime + "开启 " + endTime + "关闭 长按设置时间");
-                popupWindow.dismiss();
-                break;
             case R.id.cb_manual:
                 if (BleManager.isConnSuccessful) {
                     if (cbManual.isChecked()) {
@@ -382,13 +337,13 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                         dataToWrite = HexUtil.hexStringToBytes(newValue);
                         bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                     }
-                }else{
+                } else {
                     showToast("请先连接设备");
                     resetShift();
                 }
                 break;
             case R.id.cb_highway:
-                if(BleManager.isConnSuccessful){
+                if (BleManager.isConnSuccessful) {
                     if (cbHighway.isChecked()) {
                         cbCity.setChecked(false);
                         seekBar.setProgress(15);
@@ -396,13 +351,13 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                         dataToWrite = HexUtil.hexStringToBytes(newValue);
                         bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                     }
-                }else{
+                } else {
                     showToast("请先连接设备");
                     resetShift();
                 }
                 break;
             case R.id.cb_30:
-                if(BleManager.isConnSuccessful){
+                if (BleManager.isConnSuccessful) {
                     if (cb30.isChecked()) {
                         cb60.setChecked(false);
                         cb90.setChecked(false);
@@ -415,13 +370,13 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                         dataToWrite = HexUtil.hexStringToBytes(newValue);
                         bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                     }
-                }else{
+                } else {
                     showToast("请先连接设备");
                     resetShift();
                 }
                 break;
             case R.id.cb_60:
-                if(BleManager.isConnSuccessful){
+                if (BleManager.isConnSuccessful) {
                     if (cb60.isChecked()) {
                         cb30.setChecked(false);
                         cb90.setChecked(false);
@@ -434,13 +389,13 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                         dataToWrite = HexUtil.hexStringToBytes(newValue);
                         bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                     }
-                }else{
+                } else {
                     showToast("请先连接设备");
                     resetShift();
                 }
                 break;
             case R.id.cb_90:
-                if(BleManager.isConnSuccessful){
+                if (BleManager.isConnSuccessful) {
                     if (cb90.isChecked()) {
                         cb30.setChecked(false);
                         cb60.setChecked(false);
@@ -453,13 +408,13 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                         dataToWrite = HexUtil.hexStringToBytes(newValue);
                         bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                     }
-                }else{
+                } else {
                     showToast("请先连接设备");
                     resetShift();
                 }
                 break;
             case R.id.cb_120:
-                if(BleManager.isConnSuccessful){
+                if (BleManager.isConnSuccessful) {
                     if (cb120.isChecked()) {
                         cb30.setChecked(false);
                         cb60.setChecked(false);
@@ -472,7 +427,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                         dataToWrite = HexUtil.hexStringToBytes(newValue);
                         bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite);
                     }
-                }else{
+                } else {
                     showToast("请先连接设备");
                     resetShift();
                 }
@@ -612,7 +567,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
     protected void onDestroy() {
         super.onDestroy();
         PreferenceUtils.write(LightFunctionActivity.this, "light_info", "starttime", startTime);
-        PreferenceUtils.write(LightFunctionActivity.this, "light_info", "endtime", startTime);
+        PreferenceUtils.write(LightFunctionActivity.this, "light_info", "endtime", endTime);
 //      editor.putInt("progress",seekBar.getProgress());
         handler1.removeCallbacksAndMessages(null);
         unregisterReceiver(mBroadcastReceiver);
