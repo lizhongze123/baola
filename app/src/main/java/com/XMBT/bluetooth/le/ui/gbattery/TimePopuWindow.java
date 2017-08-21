@@ -22,6 +22,7 @@ import android.widget.TimePicker;
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.DensityUtils;
+import com.XMBT.bluetooth.le.view.datePicker.DateTimePicker;
 
 import java.util.Calendar;
 
@@ -124,11 +125,11 @@ public class TimePopuWindow implements OnClickListener {
     }
 
     private Calendar c = Calendar.getInstance();
-
+    String startTime = "";
+    String endTime = "";
     @Override
     public void onClick(View view) {
-        String startTime = "";
-        String endTime = "";
+
         endTime = DateFormatUtils.getDate() + "";
         switch (view.getId()) {
             case R.id.btn_today:
@@ -156,11 +157,12 @@ public class TimePopuWindow implements OnClickListener {
                 this.listener.onSelect(BUTTON_TYPE_OK, startTime, endTime);
                 break;
             case R.id.btn_custom:
-                if (llCusomTime.getVisibility() == View.GONE) {
-                    llCusomTime.setVisibility(View.VISIBLE);
-                } else {
-                    llCusomTime.setVisibility(View.GONE);
-                }
+//                if (llCusomTime.getVisibility() == View.GONE) {
+//                    llCusomTime.setVisibility(View.VISIBLE);
+//                } else {
+//                    llCusomTime.setVisibility(View.GONE);
+//                }
+                showDateTimeDialog();
                 break;
             case R.id.tv_startTime:
                 selectTime(0);
@@ -170,6 +172,30 @@ public class TimePopuWindow implements OnClickListener {
                 break;
         }
     }
+
+    private void showDateTimeDialog() {
+        Calendar calendar = Calendar.getInstance();
+        DateTimePicker dateTimePicker = new DateTimePicker(context, DateTimePicker.HOUR_OF_DAY);
+        dateTimePicker.setRange(calendar.get(Calendar.YEAR) - 10, calendar.get(Calendar.YEAR));
+        dateTimePicker.setSelectedItem(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        dateTimePicker.setOnDateTimePickListener(new DateTimePicker.OnTwoYearMonthDayTimePickListener() {
+
+            @Override
+            public void onDateTimePicked(String year, String month, String day, String hour, String minute, String secYear, String secMonth,
+                                         String secDay, String secHour, String secMinute) {
+                    String beginTime = year + "-" + month + "-" + day + " " + hour + ":" + minute ;
+                    String overTime = secYear + "-" + secMonth + "-" + secDay + " " + secHour + ":" + secMinute ;
+
+                    startTime = DateFormatUtils.getTimeMills(beginTime) + "";
+                    endTime = DateFormatUtils.getTimeMills(overTime) + "";
+                    listener.onSelect(BUTTON_TYPE_OK, startTime, endTime);
+
+            }
+        });
+        dateTimePicker.show();
+    }
+
 
     /**
      * @param type 0为开始时间

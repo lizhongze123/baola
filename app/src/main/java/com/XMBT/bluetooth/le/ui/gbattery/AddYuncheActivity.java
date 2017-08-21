@@ -76,7 +76,7 @@ public class AddYuncheActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onFailure(String errorCode) {
+                    public void onFailure(String errorCode, String describe) {
                         if (errorCode.equals("-1")) {
                             showToast("服务器异常");
                         } else {

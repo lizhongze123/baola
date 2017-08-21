@@ -18,6 +18,7 @@ import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.http.ApiResultCallback;
 import com.XMBT.bluetooth.le.sp.UserSp;
 import com.XMBT.bluetooth.le.ui.gbattery.TimePopuWindow;
+import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.baidu.mapapi.map.BaiduMap;
@@ -229,6 +230,7 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
         device = (YunCheDeviceEntity) intent.getSerializableExtra("device");
         String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         String id = UserSp.getInstance(this).getId(GlobalConsts.userName);
+        LogUtils.d(startTime + "//" + endTime);
         OkGo.post(GlobalConsts.GET_DATE)
                 .tag(this)
                 .params("method", "getHistoryMByMUtcNew")
@@ -249,12 +251,8 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
                     }
 
                     @Override
-                    public void onFailure(String errorCode) {
-                        if (errorCode.equals("-1")) {
-                            showToast("服务器异常");
-                        } else {
-                            showToast(errorCode);
-                        }
+                    public void onFailure(String errorCode, String describe) {
+                        showToast(describe);
                     }
 
                     @Override

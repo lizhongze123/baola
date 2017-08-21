@@ -22,7 +22,7 @@ public abstract class ApiResultCallback<T> extends AbsCallback<ApiResponseBean<T
 
     public abstract void onSuccessResponse(T data);
 
-    public abstract void onFailure(String errorCode);
+    public abstract void onFailure(String errorCode, String describe);
 
     public abstract void onFinish();
 
@@ -49,14 +49,14 @@ public abstract class ApiResultCallback<T> extends AbsCallback<ApiResponseBean<T
             onSuccessResponse(t);
         }else{
             //业务错误
-            onFailure(tApiResponseBean.errorCode);
+            onFailure(tApiResponseBean.errorCode, tApiResponseBean.errorDescribe);
         }
         onFinish();
     }
 
     @Override
     public void onError(Call call, Response response, Exception e) {
-        onFailure("-1");
+        onFailure("-1","服务器异常");
         onFinish();
     }
 }

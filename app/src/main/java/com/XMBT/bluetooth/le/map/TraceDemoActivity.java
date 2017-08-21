@@ -331,12 +331,8 @@ public class TraceDemoActivity extends BaseActivity implements View.OnClickListe
                     }
 
                     @Override
-                    public void onFailure(String errorCode) {
-                        if (errorCode.equals("-1")) {
-                            showToast("服务器异常");
-                        } else {
-                            showToast(errorCode);
-                        }
+                    public void onFailure(String errorCode, String describe) {
+                        showToast(describe);
                     }
 
                     @Override
