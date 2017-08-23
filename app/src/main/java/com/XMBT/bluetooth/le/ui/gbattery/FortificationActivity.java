@@ -4,12 +4,9 @@ import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.speech.tts.TextToSpeech;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -26,11 +23,22 @@ import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.XMBT.bluetooth.le.view.dialog.WarningDialog;
+import com.baidu.tts.auth.AuthInfo;
+import com.baidu.tts.client.SpeechError;
+import com.baidu.tts.client.SpeechSynthesizer;
+import com.baidu.tts.client.SpeechSynthesizerListener;
+import com.baidu.tts.client.TtsMode;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -38,7 +46,7 @@ import okhttp3.Response;
 /**
  * 设防控制
  */
-public class FortificationActivity extends BaseActivity  {
+public class FortificationActivity extends BaseActivity implements SpeechSynthesizerListener {
 
     private RadioButton[] btnAry = new RadioButton[2];
     private MyButtonListener myButtonListener;
@@ -54,6 +62,13 @@ public class FortificationActivity extends BaseActivity  {
     private Switch swStealth, swFortification;
     private CheckBox cbStealth, cbFortification;
     private boolean isFirstIn = true;
+
+    private SpeechSynthesizer mSpeechSynthesizer;
+    private String mSampleDirPath;
+    private static final String SAMPLE_DIR_NAME = "baiduTTS";
+    private static final String SPEECH_FEMALE_MODEL_NAME = "bd_etts_speech_female.dat";
+    private static final String SPEECH_MALE_MODEL_NAME = "bd_etts_speech_male.dat";
+    private static final String TEXT_MODEL_NAME = "bd_etts_text.dat";
 
 
     Handler mhandler = new Handler() {
@@ -78,9 +93,119 @@ public class FortificationActivity extends BaseActivity  {
         setContentView(R.layout.activity_fortification);
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
         device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        initTTS();
         initViews();
         addListener();
         getStatus();
+    }
+
+    //初始化语音合成
+    private void initTTS() {
+        showLoadingDialog(null);
+
+        if (mSampleDirPath == null) {
+            String sdcardPath = Environment.getExternalStorageDirectory().toString();
+            mSampleDirPath = sdcardPath + "/" + SAMPLE_DIR_NAME;
+        }
+        makeDir(mSampleDirPath);
+        copyFromAssetsToSdcard(false, SPEECH_FEMALE_MODEL_NAME, mSampleDirPath + "/" + SPEECH_FEMALE_MODEL_NAME);
+        copyFromAssetsToSdcard(false, SPEECH_MALE_MODEL_NAME, mSampleDirPath + "/" + SPEECH_MALE_MODEL_NAME);
+        copyFromAssetsToSdcard(false, TEXT_MODEL_NAME, mSampleDirPath + "/" + TEXT_MODEL_NAME);
+
+        String api_key = "", secret_key = "", app_id = "";
+        try {
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            api_key = appInfo.metaData.getString("com.baidu.tts.API_KEY") + "";
+            secret_key = appInfo.metaData.getString("com.baidu.tts.SECRET_KEY") + "";
+            app_id = appInfo.metaData.getInt("com.baidu.tts.APP_ID") + "";
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        this.mSpeechSynthesizer = SpeechSynthesizer.getInstance();
+        this.mSpeechSynthesizer.setContext(this);
+        this.mSpeechSynthesizer.setSpeechSynthesizerListener(this);
+        // 文本模型文件路径 (离线引擎使用)
+        this.mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_TTS_TEXT_MODEL_FILE, mSampleDirPath + "/"
+                + TEXT_MODEL_NAME);
+        // 声学模型文件路径 (离线引擎使用)
+        this.mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE, mSampleDirPath + "/"
+                + SPEECH_FEMALE_MODEL_NAME);
+        // 请替换为语音开发者平台上注册应用得到的App ID (离线授权)
+        this.mSpeechSynthesizer.setAppId(app_id);
+        // 请替换为语音开发者平台注册应用得到的apikey和secretkey (在线授权)
+        this.mSpeechSynthesizer.setApiKey(api_key,
+                secret_key);
+        // 发音人（在线引擎），可用参数为0,1,2,3。。。（服务器端会动态增加，各值含义参考文档，以文档说明为准。0--普通女声，1--普通男声，2--特别男声，3--情感男声。。。）
+        this.mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "0");
+        // 设置Mix模式的合成策略
+        this.mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_MIX_MODE, SpeechSynthesizer.MIX_MODE_DEFAULT);
+
+        // 授权检测接口(只是通过AuthInfo进行检验授权是否成功。)
+        // AuthInfo接口用于测试开发者是否成功申请了在线或者离线授权，如果测试授权成功了，可以删除AuthInfo部分的代码（该接口首次验证时比较耗时），不会影响正常使用（合成使用时SDK内部会自动验证授权）
+        AuthInfo authInfo = this.mSpeechSynthesizer.auth(TtsMode.MIX);
+        // 判断授权信息是否正确，如果正确则初始化语音合成器并开始语音合成，如果失败则做错误处理
+        if (authInfo.isSuccess()) {
+            mSpeechSynthesizer.initTts(TtsMode.MIX);
+            isInitTTS = true;
+        } else {
+            // 授权失败
+            isInitTTS = false;
+            String errorMsg = authInfo.getTtsError().getDetailMessage();
+            LogUtils.e("auth failed errorMsg=" + errorMsg);
+        }
+        dismissLoadingDialog();
+    }
+
+    private void makeDir(String dirPath) {
+        File file = new File(dirPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+    }
+
+    /**
+     * 将sample工程需要的资源文件拷贝到SD卡中使用（授权文件为临时授权文件，请注册正式授权）
+     *
+     * @param isCover 是否覆盖已存在的目标文件
+     * @param source
+     * @param dest
+     */
+    private void copyFromAssetsToSdcard(boolean isCover, String source, String dest) {
+        File file = new File(dest);
+        if (isCover || (!isCover && !file.exists())) {
+            InputStream is = null;
+            FileOutputStream fos = null;
+            try {
+                is = getResources().getAssets().open(source);
+                String path = dest;
+                fos = new FileOutputStream(path);
+                byte[] buffer = new byte[1024];
+                int size = 0;
+                while ((size = is.read(buffer, 0, 1024)) >= 0) {
+                    fos.write(buffer, 0, size);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    if (is != null) {
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void initViews() {
@@ -108,11 +233,15 @@ public class FortificationActivity extends BaseActivity  {
                 if (!isFirstIn) {
                     if (isChecked) {
                         if (device.equipmentStatus == 0) {
-                            if(isInitTTS){
+                            if (isInitTTS) {
+                                mSpeechSynthesizer.speak("设备已离线");
+                                showToast("设备已离线");
                             }
                             swFortification.setChecked(false);
                         } else if (device.equipmentStatus == 1) {
-                            if(isInitTTS){
+                            if (isInitTTS) {
+                                mSpeechSynthesizer.speak("设备未启用");
+                                showToast("设备未启用");
                             }
                             swFortification.setChecked(false);
                         } else if (device.equipmentStatus == 2) {
@@ -160,6 +289,41 @@ public class FortificationActivity extends BaseActivity  {
         for (int i = 0; i < btnAry.length; i++) {
             btnAry[i].setOnClickListener(myButtonListener);
         }
+    }
+
+    @Override
+    public void onSynthesizeStart(String s) {
+        // 监听到合成开始，在此添加相关操作
+    }
+
+    @Override
+    public void onSynthesizeDataArrived(String s, byte[] bytes, int i) {
+        // 监听到合成结束，在此添加相关操作
+    }
+
+    @Override
+    public void onSynthesizeFinish(String s) {
+        // 监听到有合成数据到达，在此添加相关操作
+    }
+
+    @Override
+    public void onSpeechStart(String s) {
+        // 监听到合成并播放开始，在此添加相关操作
+    }
+
+    @Override
+    public void onSpeechProgressChanged(String s, int i) {
+        // 监听到播放进度有变化，在此添加相关操作
+    }
+
+    @Override
+    public void onSpeechFinish(String s) {
+        // 监听到播放结束，在此添加相关操作
+    }
+
+    @Override
+    public void onError(String s, SpeechError speechError) {
+        // 监听到出错，在此添加相关操作
     }
 
     class MyButtonListener implements View.OnClickListener {
@@ -291,7 +455,4 @@ public class FortificationActivity extends BaseActivity  {
 
     private boolean isInitTTS;
 
-    /**
-     *   初始化语音合成客户端并启动
-     */
 }

@@ -95,4 +95,5 @@ dependencies {
     compile files('libs/commons-codec-1.4.jar')
     //基础包
     compile files('libs/BaiduTraceSDK_v3_0_4.jar')
+    compile files('libs/com.baidu.tts_2.3.0.jar')
 }

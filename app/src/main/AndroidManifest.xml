@@ -51,6 +51,9 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="Iozzpkb9rfLCWys0zGdeT3zrgVCUDUkD" />
 
+        <meta-data
+            android:name="com.baidu.tts.API_KEY"
+            android:value="0p8ppAFEqjSdGBaDGySeIKjB"/>
         <!-- 百度语音appid -->
         <meta-data
             android:name="com.baidu.tts.APP_ID"
