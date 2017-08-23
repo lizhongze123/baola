@@ -1,5 +1,6 @@
 package com.XMBT.bluetooth.le.ui.pbattery;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import com.XMBT.bluetooth.le.base.BaseFragment;
 import com.XMBT.bluetooth.le.bean.RecordBean;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
+import com.XMBT.bluetooth.le.ble.MLeScanCallback;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.db.DBManger;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
@@ -125,8 +127,20 @@ public class VoltageFragment extends BaseFragment {
                 if(BleManager.isConnSuccessful){
                     BleManager.getInstance(getContext()).disconnect();
                 }else{
+                    //TODO 弹出搜索到的蓝牙列表
+//                    scanDevice();
                     BleManager.getInstance(getContext()).startScan(getContext(), GlobalConsts.BATTERY);
                 }
+            }
+        });
+    }
+
+    private void scanDevice() {
+        BleManager.getInstance(getContext()).startScan(getContext(),GlobalConsts.BATTERY, new MLeScanCallback(10000){
+
+            @Override
+            public void onDeviceFound(List<BluetoothDevice> devices) {
+
             }
         });
     }

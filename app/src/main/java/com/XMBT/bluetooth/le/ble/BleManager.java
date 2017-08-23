@@ -104,6 +104,22 @@ public class BleManager {
         }
     }
 
+    public void startScan(Context context, String productName, PeriodScanCallback callback) {
+        this.productName = productName;
+        loadingDialog = new LoadingDialog(context);
+        loadingDialog.setLoadingText("正在连接设备并获取服务中");
+        loadingDialog.show();
+
+        mLeDevices = new ArrayList<>();
+        mLeCallback.setBleManager(this).notifyScanStarted();
+        boolean success = mBluetoothAdapter.startLeScan(callback);
+        if (success) {
+
+        } else {
+            mLeCallback.removeHandlerMsg();
+        }
+    }
+
 
     public void stopScan() {
         mLeCallback.removeHandlerMsg();

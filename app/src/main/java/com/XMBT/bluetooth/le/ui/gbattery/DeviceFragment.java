@@ -17,7 +17,6 @@ import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.http.ApiResultCallback;
 import com.XMBT.bluetooth.le.sp.UserSp;
-import com.XMBT.bluetooth.le.ui.misc.LoginActivity;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
