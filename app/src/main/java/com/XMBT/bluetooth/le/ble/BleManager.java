@@ -10,11 +10,13 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 
 import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
 import com.XMBT.bluetooth.le.utils.LogUtils;
+import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.view.loadingdialog.LoadingDialog;
 
 import java.util.ArrayList;
@@ -134,29 +136,17 @@ public class BleManager {
         @Override
         public void onScanTimeout() {
             boolean isHas = false;
-            for (int i = 0; i < mLeDevices.size(); i++) {
-                LogUtils.e("mLeDevices.size()--" + i + "///name is--" + mLeDevices.get(i).name);
-                //如果设备名字相同就连接
-                if (mLeDevices.get(i).name != null && mLeDevices.get(i).name.equals(productName)) {
-                    connectDevice = mLeDevices.get(i);
-                    if (connectDevice != null) {
-                        isHas = true;
-                        //连接ble
-                        isConnSuccessful = mBLE.connect(connectDevice.bluetoothAddress);
-                        LogUtils.e("connect bRet = " + isConnSuccessful);
-                        break;
-                    }
-                }
-            }
-            // 发送广播
-            Intent mIntent = new Intent(GlobalConsts.ACTION_SCAN_BLE_OVER);
-            if (isHas) {
-                mIntent.putExtra(SCAN_BLE_STATUS, SCAN_BLE_SUCCESSFUL);
-            } else {
-                mIntent.putExtra(SCAN_BLE_STATUS, SCAN_BLE_FAILED);
+            LogUtils.d("mLeDevices.size()--" + mLeDevices.size());
 
-            }
-            mContext.sendBroadcast(mIntent);
+            // 发送广播
+//            Intent mIntent = new Intent(GlobalConsts.ACTION_SCAN_BLE_OVER);
+//            if (isHas) {
+//                mIntent.putExtra(SCAN_BLE_STATUS, SCAN_BLE_SUCCESSFUL);
+//            } else {
+//                mIntent.putExtra(SCAN_BLE_STATUS, SCAN_BLE_FAILED);
+//
+//            }
+//            mContext.sendBroadcast(mIntent);
             if (loadingDialog != null) {
                 loadingDialog.dismiss();
             }
@@ -170,6 +160,30 @@ public class BleManager {
 
     };
 
+    public void realConnect(String address){
+        if(!TextUtils.isEmpty(address)){
+            isConnSuccessful = mBLE.connect(address);
+            //连接成功后保存地址在本地
+            if(isConnSuccessful){
+                PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.SP_BLUETOOTH_DEVICE_KEY, address);
+            }
+            LogUtils.e("connect bRet = " + isConnSuccessful);
+        }
+
+//        for (int i = 0; i < mLeDevices.size(); i++) {
+//            //如果设备名字相同就连接
+//            if (mLeDevices.get(i).name != null && mLeDevices.get(i).name.equals(productName)) {
+//                connectDevice = mLeDevices.get(i);
+//                if (connectDevice != null) {
+//                    //连接ble
+//                    isConnSuccessful = mBLE.connect(connectDevice.bluetoothAddress);
+//                    LogUtils.e("connect bRet = " + isConnSuccessful);
+//                    break;
+//                }
+//            }
+//        }
+    }
+
     /**
      * 把扫描出来的设备添加进来，不重复添加
      *
@@ -179,6 +193,9 @@ public class BleManager {
         if (device == null) {
             return;
         }
+        if(mLeDevices.size() == 0){
+            mLeDevices.add(device);
+        }
         for (int i = 0; i < mLeDevices.size(); i++) {
             String btAddress = mLeDevices.get(i).bluetoothAddress;
             if (btAddress.equals(device.bluetoothAddress)) {
@@ -187,7 +204,9 @@ public class BleManager {
                 break;
             }
         }
-        mLeDevices.add(device);
+        Intent mIntent = new Intent(GlobalConsts.ACTION_SCAN_NEW_DEVICE);
+        mIntent.putExtra(SCAN_BLE_STATUS, mLeDevices);
+        mContext.sendBroadcast(mIntent);
     }
 
     /**

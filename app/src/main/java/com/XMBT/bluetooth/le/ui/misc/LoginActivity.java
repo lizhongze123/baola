@@ -94,6 +94,13 @@ public class LoginActivity extends BaseActivity {
                                 }
 
                                 @Override
+                                public void onError(Call call, Response response, Exception e) {
+                                    super.onError(call, response, e);
+                                    showToast("登录失败");
+
+                                }
+
+                                @Override
                                 public void onSuccess(String s, Call call, Response response) {
                                     try {
                                         LogUtils.d(s);

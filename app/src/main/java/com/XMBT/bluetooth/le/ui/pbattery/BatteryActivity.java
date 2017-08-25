@@ -8,14 +8,21 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioButton;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
+import com.XMBT.bluetooth.le.view.ListDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 汽车智能动力电池
@@ -41,9 +48,9 @@ public class BatteryActivity extends BaseActivity {
         setContentView(R.layout.activity_batery);
         StatusBarHelper.setStatusBarColor(this, R.color.black);
         registerBoradcastReceiver();
-        initBle();
         initViews();
         addListener();
+        initBle();
     }
 
     private void initBle() {
@@ -51,7 +58,13 @@ public class BatteryActivity extends BaseActivity {
         if (!bleManager.isSupportBle()) {
             showToast(getResources().getString(R.string.ble_not_supported));
         }
-        bleManager.startScan(this, GlobalConsts.BATTERY);
+        //如果有连接过，下一次自动连接
+        String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.SP_BLUETOOTH_DEVICE_KEY, "");
+        if(!TextUtils.isEmpty(address)){
+            bleManager.realConnect(address);
+        }else{
+            bleManager.startScan(this, GlobalConsts.BATTERY);
+        }
     }
 
     private void initViews() {
@@ -101,9 +114,9 @@ public class BatteryActivity extends BaseActivity {
                     //已连接
                     BleManager.isConnSuccessful = true;
                 }
-            }else if(action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)){
+            } else if (action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)) {
                 int status = intent.getIntExtra(BleManager.SCAN_BLE_STATUS, 0);
-                if(status == 0){
+                if (status == 0) {
                     showToastCenter("未能检测到该设备，请稍后重试");
                 }
             }
@@ -149,5 +162,7 @@ public class BatteryActivity extends BaseActivity {
         bleManager.disconnect();
         unregisterReceiver(mBroadcastReceiver);
     }
+
+
 
 }

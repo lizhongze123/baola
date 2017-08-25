@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
@@ -24,6 +25,7 @@ import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.DensityUtils;
 import com.XMBT.bluetooth.le.view.LineChart.ItemBean;
 import com.XMBT.bluetooth.le.view.LineChart.LineView2;
+import com.XMBT.bluetooth.le.view.ListDialog;
 import com.XMBT.bluetooth.le.view.TitleBar;
 
 import java.sql.Time;
@@ -173,10 +175,31 @@ public class StartTestFragment extends Fragment {
                 } else {
                     connectChanged(true);
                 }
+            }else if(action.equals(GlobalConsts.ACTION_SCAN_NEW_DEVICE)){
+                if(isVisible){
+                    ArrayList<iBeaconClass.iBeacon> mLeDevices;
+                    mLeDevices = (ArrayList<iBeaconClass.iBeacon>) intent.getSerializableExtra(BleManager.SCAN_BLE_STATUS);
+                    showPopupWindow(getContext(), view, mLeDevices);
+                }
             }
         }
     };
 
+    private ListDialog dialog;
+
+    public void showPopupWindow(Context context, View view, ArrayList<iBeaconClass.iBeacon> mLeDevices) {
+        if(dialog == null){
+            dialog = new ListDialog(context, new ListDialog.ItemClickCallback() {
+                @Override
+                public void callback(iBeaconClass.iBeacon bean, int position) {
+                    //点击设备连接
+                    BleManager.getInstance(getContext()).realConnect(bean.bluetoothAddress);
+                }
+            });
+        }
+        dialog.changeData(mLeDevices);
+        dialog.show(view);
+    }
 
     /**
      * @param ii 放大100倍
@@ -238,6 +261,7 @@ public class StartTestFragment extends Fragment {
         myIntentFilter.addAction(GlobalConsts.ACTION_NAME_RSSI);
         myIntentFilter.addAction(GlobalConsts.ACTION_CONNECT_CHANGE);
         myIntentFilter.addAction(GlobalConsts.ACTION_NOTIFI);
+        myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_NEW_DEVICE);
         getActivity().registerReceiver(mBroadcastReceiver, myIntentFilter);
     }
 
@@ -245,6 +269,20 @@ public class StartTestFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         getActivity().unregisterReceiver(mBroadcastReceiver);
+    }
+
+
+    protected boolean isVisible;
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden){
+            //不可见
+            isVisible = false;
+        }else{
+            isVisible = true;
+        }
     }
 
 }

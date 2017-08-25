@@ -39,5 +39,13 @@ public class GlobalConsts {
 
     public static final String ACTION_SCAN_BLE_OVER = "action_scan_ble_over";
 
+    public static final String ACTION_SCAN_NEW_DEVICE = "action_scan_new_device";
+
+
+    /**
+     * 连接成功的蓝牙地址的sp文件名
+     */
+    public static final String SP_BLUETOOTH_DEVICE = "baoliao";
+    public static final String SP_BLUETOOTH_DEVICE_KEY = "device_key";
 
 }

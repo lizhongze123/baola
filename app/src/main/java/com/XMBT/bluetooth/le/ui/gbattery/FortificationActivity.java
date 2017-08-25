@@ -53,8 +53,8 @@ public class FortificationActivity extends BaseActivity implements SpeechSynthes
     private YunCheDeviceEntity device;
     private String defenceStatus = "";
     private String gpsOnOff = "";
-    public final String ON = "1";
-    public final String OFF = "0";
+    public static final String ON = "1";
+    public static final String OFF = "0";
     public final String SAFFON = "saffon";
     public final String SAFFOFF = "saffoff";
 
@@ -69,6 +69,8 @@ public class FortificationActivity extends BaseActivity implements SpeechSynthes
     private static final String SPEECH_FEMALE_MODEL_NAME = "bd_etts_speech_female.dat";
     private static final String SPEECH_MALE_MODEL_NAME = "bd_etts_speech_male.dat";
     private static final String TEXT_MODEL_NAME = "bd_etts_text.dat";
+
+    private boolean isInitTTS;
 
 
     Handler mhandler = new Handler() {
@@ -453,6 +455,9 @@ public class FortificationActivity extends BaseActivity implements SpeechSynthes
 
     }
 
-    private boolean isInitTTS;
-
+    @Override
+    protected void onDestroy() {
+        this.mSpeechSynthesizer.release();
+        super.onDestroy();
+    }
 }

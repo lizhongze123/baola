@@ -1,6 +1,5 @@
 package com.XMBT.bluetooth.le.ui.pbattery;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,9 +17,9 @@ import android.widget.TextView;
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseFragment;
 import com.XMBT.bluetooth.le.bean.RecordBean;
+import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
-import com.XMBT.bluetooth.le.ble.MLeScanCallback;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.db.DBManger;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
@@ -28,6 +27,7 @@ import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.ToastUtils;
 import com.XMBT.bluetooth.le.view.LineChart.ItemBean;
 import com.XMBT.bluetooth.le.view.LineChart.LineView;
+import com.XMBT.bluetooth.le.view.ListDialog;
 import com.XMBT.bluetooth.le.view.LoadingView;
 import com.XMBT.bluetooth.le.view.TitleBar;
 
@@ -127,20 +127,8 @@ public class VoltageFragment extends BaseFragment {
                 if(BleManager.isConnSuccessful){
                     BleManager.getInstance(getContext()).disconnect();
                 }else{
-                    //TODO 弹出搜索到的蓝牙列表
-//                    scanDevice();
                     BleManager.getInstance(getContext()).startScan(getContext(), GlobalConsts.BATTERY);
                 }
-            }
-        });
-    }
-
-    private void scanDevice() {
-        BleManager.getInstance(getContext()).startScan(getContext(),GlobalConsts.BATTERY, new MLeScanCallback(10000){
-
-            @Override
-            public void onDeviceFound(List<BluetoothDevice> devices) {
-
             }
         });
     }
@@ -305,9 +293,31 @@ public class VoltageFragment extends BaseFragment {
                 } else {
                     connectChanged(true);
                 }
+            }else if(action.equals(GlobalConsts.ACTION_SCAN_NEW_DEVICE)){
+                if(isVisible){
+                    ArrayList<iBeaconClass.iBeacon> mLeDevices;
+                    mLeDevices = (ArrayList<iBeaconClass.iBeacon>) intent.getSerializableExtra(BleManager.SCAN_BLE_STATUS);
+                    showPopupWindow(getContext(), view, mLeDevices);
+                }
             }
         }
     };
+
+    private ListDialog dialog;
+
+    public void showPopupWindow(Context context, View view, ArrayList<iBeaconClass.iBeacon> mLeDevices) {
+        if(dialog == null){
+            dialog = new ListDialog(context, new ListDialog.ItemClickCallback() {
+                @Override
+                public void callback(iBeaconClass.iBeacon bean, int position) {
+                    //点击设备连接
+                    BleManager.getInstance(getContext()).realConnect(bean.bluetoothAddress);
+                }
+            });
+        }
+        dialog.changeData(mLeDevices);
+        dialog.show(view);
+    }
 
     private void connectChanged(boolean isConnected) {
         if (isAdded()) {
@@ -334,6 +344,7 @@ public class VoltageFragment extends BaseFragment {
         myIntentFilter.addAction(GlobalConsts.ACTION_NAME_RSSI);
         myIntentFilter.addAction(GlobalConsts.ACTION_CONNECT_CHANGE);
         myIntentFilter.addAction(GlobalConsts.ACTION_NOTIFI);
+        myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_NEW_DEVICE);
         getActivity().registerReceiver(mBroadcastReceiver, myIntentFilter);
     }
 
@@ -383,5 +394,18 @@ public class VoltageFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         getActivity().unregisterReceiver(mBroadcastReceiver);
+    }
+
+    protected boolean isVisible;
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden){
+            //不可见
+            isVisible = false;
+        }else{
+            isVisible = true;
+        }
     }
 }
