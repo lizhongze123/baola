@@ -234,6 +234,7 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
         device = (YunCheDeviceEntity) intent.getSerializableExtra("device");
         String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         String id = UserSp.getInstance(this).getId(GlobalConsts.userName);
+        String pwd = UserSp.getInstance(this).getPwd(GlobalConsts.userName);
         LogUtils.d("开始-"+startTime + "//"+endTime);
         OkGo.post(GlobalConsts.GET_DATE)
                 .tag(this)
@@ -246,7 +247,7 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
                 .params("mapType", "BAIDU")
                 .params("from", startTime)
                 .params("to", endTime)
-                .params("pwd", "yejinhui620057")
+                .params("pwd", pwd)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
