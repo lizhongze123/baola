@@ -129,7 +129,7 @@ public class LoginActivity extends BaseActivity {
                                                 UserSp.getInstance(LoginActivity.this).setProduct(GlobalConsts.userName, oAuth_Base64);
                                                 UserSp.getInstance(LoginActivity.this).setMds(GlobalConsts.userName, mds);
                                                 UserSp.getInstance(LoginActivity.this).setId(GlobalConsts.userName,id);
-
+                                                UserSp.getInstance(LoginActivity.this).setPwd(GlobalConsts.userName, passwordEt.getText().toString());
                                                 showToast("登录成功");
                                                 GlobalConsts.isLogin = true;
                                                 startActivity(new Intent(LoginActivity.this, GpsBatteryActivity.class));

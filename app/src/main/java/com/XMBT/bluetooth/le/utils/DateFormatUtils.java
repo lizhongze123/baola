@@ -69,12 +69,12 @@ public class DateFormatUtils {
     }
 
     /**
-     * 获取当前的前x天的时间，并格式化
+     * 获取当前的前x天的时间00:00，并格式化
      *
      * @param customDay x天
      * @return
      */
-    public static String getBeforeDay(int customDay, int type) {
+    public static String getBeforeDayStart(int customDay, int type) {
 
         String date = null;
         Calendar cl = Calendar.getInstance();
@@ -83,6 +83,33 @@ public class DateFormatUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         date = sdf.format(cl.getTime());
         date = date + " 00:00";
+        if (type == MILLISECOND) {
+            try {
+                return new SimpleDateFormat(FORMAT_YMDHM).parse(date).getTime() + "";
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            return date;
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前的前x天的时间23:59，并格式化
+     *
+     * @param customDay x天
+     * @return
+     */
+    public static String getBeforeDayEnd(int customDay, int type) {
+
+        String date = null;
+        Calendar cl = Calendar.getInstance();
+        int day = cl.get(Calendar.DAY_OF_MONTH) - customDay;
+        cl.set(Calendar.DAY_OF_MONTH, day);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        date = sdf.format(cl.getTime());
+        date = date + " 23:59";
         if (type == MILLISECOND) {
             try {
                 return new SimpleDateFormat(FORMAT_YMDHM).parse(date).getTime() + "";

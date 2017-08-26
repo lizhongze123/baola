@@ -21,6 +21,7 @@ import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.map.BaiduMapActivity;
 import com.XMBT.bluetooth.le.map.TraceActivity;
 import com.XMBT.bluetooth.le.map.FenceActivity;
+import com.XMBT.bluetooth.le.map.TraceDemoActivity;
 import com.XMBT.bluetooth.le.sp.UserSp;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;

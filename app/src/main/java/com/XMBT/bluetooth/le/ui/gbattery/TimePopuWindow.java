@@ -93,11 +93,11 @@ public class TimePopuWindow implements OnClickListener {
         llCusomTime = (LinearLayout) popupWindow_view.findViewById(R.id.ll_customTime);
 
         tvStartTime = (TextView) popupWindow_view.findViewById(R.id.tv_startTime);
-        tvStartTime.setText(DateFormatUtils.getBeforeDay(3, DateFormatUtils.DATE));
+        tvStartTime.setText(DateFormatUtils.getBeforeDayStart(3, DateFormatUtils.DATE));
         tvStartTime.setOnClickListener(this);
         tvEndTime = (TextView) popupWindow_view.findViewById(R.id.tv_endTime);
         tvEndTime.setOnClickListener(this);
-        tvEndTime.setText(DateFormatUtils.getBeforeDay(0, DateFormatUtils.DATE));
+        tvEndTime.setText(DateFormatUtils.getBeforeDayStart(0, DateFormatUtils.DATE));
     }
 
     /**
@@ -130,22 +130,25 @@ public class TimePopuWindow implements OnClickListener {
     @Override
     public void onClick(View view) {
 
-        endTime = DateFormatUtils.getDate() + "";
         switch (view.getId()) {
             case R.id.btn_today:
-                startTime = DateFormatUtils.getBeforeDay(0, DateFormatUtils.MILLISECOND);
+                startTime = DateFormatUtils.getBeforeDayStart(0, DateFormatUtils.MILLISECOND);
+                endTime = DateFormatUtils.getDate() + "";
                 this.listener.onSelect(BUTTON_TYPE_TODAY, startTime, endTime);
                 break;
             case R.id.btn_yesterday:
-                startTime = DateFormatUtils.getBeforeDay(1, DateFormatUtils.MILLISECOND);
+                startTime = DateFormatUtils.getBeforeDayStart(1, DateFormatUtils.MILLISECOND);
+                endTime = DateFormatUtils.getBeforeDayEnd(1, DateFormatUtils.MILLISECOND);
                 this.listener.onSelect(BUTTON_TYPE_YESTERDAY, startTime, endTime);
                 break;
             case R.id.btn_tdby:
-                startTime = DateFormatUtils.getBeforeDay(2, DateFormatUtils.MILLISECOND);
+                startTime = DateFormatUtils.getBeforeDayStart(2, DateFormatUtils.MILLISECOND);
+                endTime = DateFormatUtils.getBeforeDayEnd(2, DateFormatUtils.MILLISECOND);
                 this.listener.onSelect(BUTTON_TYPE_TDBY, startTime, endTime);
                 break;
             case R.id.btn_hour:
                 startTime = DateFormatUtils.getBeforeHour(1, DateFormatUtils.MILLISECOND);
+                endTime = DateFormatUtils.getDate() + "";
                 this.listener.onSelect(BUTTON_TYPE_TDBY, startTime, endTime);
                 break;
             case R.id.btn_All:

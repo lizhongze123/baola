@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -33,9 +34,16 @@ import com.baidu.mapapi.map.Polyline;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by lzz on 2017/8/17.
@@ -62,8 +70,8 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
     private YunCheDeviceEntity device;
 
     // 通过设置间隔时间和距离可以控制速度和图标移动的距离
-    private int TIME_INTERVAL = 500;
-    private int default_INTERVAL = 500;
+    private int TIME_INTERVAL = 1000;
+    private int default_INTERVAL = 1000;
     private double DISTANCE = 0.01;
 
     private TrackThread trackThread;
@@ -75,7 +83,8 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
     /**
      * 轨迹点集合
      */
-    private List<LatLng> polylines = new ArrayList<>();
+    private List<PointBean> polylines = new ArrayList<>();
+    private List<LatLng> polylines2 = new ArrayList<>();
     /**
      * 轨迹的第一个点
      */
@@ -112,7 +121,7 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
     private void reset() {
         OverlayOptions markerOptions;
         markerOptions = new MarkerOptions().flat(true).anchor(0.5f, 0.5f).icon(BitmapDescriptorFactory
-                .fromResource(R.drawable.icon_car_loc)).position(polylines.get(0)).rotate((float) getAngle(0));
+                .fromResource(R.drawable.icon_car_loc)).position(polylines2.get(0)).rotate((float) getAngle(0));
         mMoveMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
     }
 
@@ -122,7 +131,7 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
         setContentView(R.layout.activity_trace);
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
         initViews();
-//        initRoadData();
+
     }
 
     private void initViews() {
@@ -140,9 +149,10 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
             }
         });
         mMapView = (MapView) findViewById(R.id.mapView);
-        mBaiduMap = mMapView.getMap();
         mMapView.showZoomControls(false); //设置是否显示缩放控件
+        mMapView.showScaleControl(false); //设置是否显示比例尺
         mMapView.removeViewAt(1); //去掉百度logo
+        mBaiduMap = mMapView.getMap();
 
         ivPause = (ImageView) findViewById(R.id.iv_go_pause);
         ivPlay = (ImageView) findViewById(R.id.iv_go_play);
@@ -181,7 +191,7 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
         for (double i = 0; i < Math.PI * 2; i = i + deltaAngle) {
             float latitude = (float) (-Math.cos(i) * radius + centerLatitude);
             float longtitude = (float) (Math.sin(i) * radius + centerLontitude);
-            polylines.add(new LatLng(latitude, longtitude));
+            polylines2.add(new LatLng(latitude, longtitude));
             if (i > Math.PI) {
                 deltaAngle = Math.PI / 180 * 30;
             }
@@ -190,30 +200,24 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
         float latitude = (float) (-Math.cos(0) * radius + centerLatitude);
         float longtitude = (float) (Math.sin(0) * radius + centerLontitude);
         //第一个点
-        polylines.add(new LatLng(latitude, longtitude));
-        firstPoint = polylines.get(0);
+        polylines2.add(new LatLng(latitude, longtitude));
+        firstPoint = polylines2.get(0);
 
-        polylineOptions = new PolylineOptions().points(polylines).width(10).color(Color.RED);
+        polylineOptions = new PolylineOptions().points(polylines2).width(10).color(Color.RED);
 
         mVirtureRoad = (Polyline) mBaiduMap.addOverlay(polylineOptions);
 
         reset();
     }
 
-    private void drawTrace(List<PointBean> list) {
+    private void drawTrace(List<LatLng> list) {
         if (list.size() >= 2) {
-            List<LatLng> latLngs = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++) {
-                double lng = list.get(i).getLongitude();
-                double lat = list.get(i).getLatitude();
-                LatLng tem = new LatLng(lat, lng);
-                latLngs.add(tem);
-            }
+            firstPoint = polylines2.get(0);
             OverlayOptions polylineOptions;
-            polylineOptions = new PolylineOptions().points(polylines).width(10).color(Color.RED);
+            polylineOptions = new PolylineOptions().points(polylines2).width(5).color(Color.RED);
             mVirtureRoad = (Polyline) mBaiduMap.addOverlay(polylineOptions);
             reset();
-            MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(latLngs.get(0), 17.0f);
+            MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(polylines2.get(0), 17.0f);
             mBaiduMap.animateMapStatus(u);
         }
     }
@@ -230,7 +234,7 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
         device = (YunCheDeviceEntity) intent.getSerializableExtra("device");
         String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         String id = UserSp.getInstance(this).getId(GlobalConsts.userName);
-        LogUtils.d(startTime + "//" + endTime);
+        LogUtils.d("开始-"+startTime + "//"+endTime);
         OkGo.post(GlobalConsts.GET_DATE)
                 .tag(this)
                 .params("method", "getHistoryMByMUtcNew")
@@ -242,24 +246,53 @@ public class TraceActivity extends BaseActivity implements View.OnClickListener 
                 .params("mapType", "BAIDU")
                 .params("from", startTime)
                 .params("to", endTime)
-                .execute(new ApiResultCallback<List<PointBean>>() {
-
+                .params("pwd", "yejinhui620057")
+                .execute(new StringCallback() {
                     @Override
-                    public void onSuccessResponse(List<PointBean> data) {
-                        showToast("查询成功" + data.size());
-                        drawTrace(data);
+                    public void onSuccess(String s, Call call, Response response) {
+                        LogUtils.d(s);
+                        parseJson(s);
+                        showToast("查询成功");
                     }
 
                     @Override
-                    public void onFailure(String errorCode, String describe) {
-                        showToast(describe);
-                    }
-
-                    @Override
-                    public void onFinish() {
+                    public void onAfter(String s, Exception e) {
+                        super.onAfter(s, e);
                         dismissLoadingDialog();
                     }
                 });
+    }
+
+    private void parseJson(String json) {
+        try{
+            JSONObject jsonObject = new JSONObject(json);
+            String success = jsonObject.getString("success");
+            if (success.equals("false")) {
+                String msg = jsonObject.getString("msg");
+                showToast(msg);
+            }else {
+                JSONArray dataArray = jsonObject.getJSONArray("data");
+                JSONObject pointObj = dataArray.getJSONObject(0);
+                //113.2367822,23.1342726,1503651089000,6.41,0,,0;
+                String str = pointObj.getString("Point");
+                if(!TextUtils.isEmpty(str)){
+                    String [] temp = null;
+                    temp = str.split(";");
+                    polylines.clear();
+                    polylines2.clear();
+                    for(int i =0;i<temp.length;i++){
+                        PointBean bean = new PointBean();
+                        bean.setPoint(temp[i]);
+                        polylines.add(bean);
+                        LatLng latLng = new LatLng(bean.getLatitude(),bean.getLongitude());
+                        polylines2.add(latLng);
+                    }
+                    drawTrace(polylines2);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

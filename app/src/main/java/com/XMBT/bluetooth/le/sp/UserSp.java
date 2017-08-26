@@ -59,6 +59,17 @@ public class UserSp {
         sp.edit().putString("id", var).commit();
     }
 
+    public String getPwd(String fileName) {
+        sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        String pwd = sp.getString("pwd", null);
+        return pwd;
+    }
+
+    public void setPwd(String fileName, String var) {
+        sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        sp.edit().putString("pwd", var).commit();
+    }
+
     public void setRefreshTime(String fileName, String var) {
         sp = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         sp.edit().putString("refresh", var).commit();

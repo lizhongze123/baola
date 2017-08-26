@@ -3,6 +3,7 @@ package com.XMBT.bluetooth.le.view;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,14 +19,10 @@ import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.bean.iBeaconClass;
-import com.XMBT.bluetooth.le.utils.DensityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by lzz on 2017/8/25.
- */
 
 public class ListDialog extends PopupWindow{
 
@@ -139,7 +136,11 @@ public class ListDialog extends PopupWindow{
             }else{
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.tvName.setText(dataList.get(position).name);
+            if(TextUtils.isEmpty(dataList.get(position).name)){
+                viewHolder.tvName.setText("未知设备");
+            }else{
+                viewHolder.tvName.setText(dataList.get(position).name);
+            }
             viewHolder.tvAddress.setText(dataList.get(position).bluetoothAddress);
             return convertView;
         }
