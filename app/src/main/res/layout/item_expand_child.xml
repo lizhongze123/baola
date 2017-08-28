@@ -12,7 +12,7 @@
         android:src="@drawable/alarm_detail" />
 
     <TextView
-        android:id="@+id/label_expand_child"
+        android:id="@+id/tv_info"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_toEndOf="@+id/imageView"

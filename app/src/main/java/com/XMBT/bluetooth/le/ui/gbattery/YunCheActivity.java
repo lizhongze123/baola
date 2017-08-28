@@ -67,7 +67,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
         Intent intent = getIntent();
         device = (YunCheDeviceEntity) intent.getSerializableExtra(DeviceFragment.DATA_DEVICE);
         timer = new Timer();
-        timer.schedule(task, 0, 10000);
+//        timer.schedule(task, 0, 10000);
         getStatus();
     }
 
@@ -120,7 +120,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                     intent.putExtra(DeviceFragment.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 3) {
-                    Intent intent = new Intent(YunCheActivity.this, WarnCenterActivity.class);
+                    Intent intent = new Intent(YunCheActivity.this, WarnCenterActivity2.class);
                     intent.putExtra(DeviceFragment.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 4) {

@@ -25,11 +25,16 @@ import com.lzy.okgo.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import okhttp3.Call;
 import okhttp3.Response;
 
 /**
  * 报警中心
+ * 进来先取报警数量
+ * 点击后取报警
  */
 public class WarnCenterActivity extends BaseActivity {
 
@@ -38,18 +43,18 @@ public class WarnCenterActivity extends BaseActivity {
     private YunCheDeviceEntity device;
 
     private String dataString = "10,9,8,29,3";
-    private String[] groupInt = new String[]{"10", "9", "8", "29", "3"};
+    private String[] groupInt = new String[]{"10","3"};
     private String[] groupStrings = new String[]
-            {"位移报警", "震动报警", "低电报警", "高压报警", "围栏报警"};
+            {"位移报警", "围栏报警"};
     private String[][] childStrings = new String[][]
             {
-                    {"暂无报警信息"},
-                    {"暂无报警信息"},
-                    {"暂无报警信息"},
                     {"暂无报警信息"},
                     {"暂无报警信息"}
             };
 
+
+
+    private Map<String, String> alarmCount = new HashMap();
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -64,7 +69,7 @@ public class WarnCenterActivity extends BaseActivity {
         setContentView(R.layout.activity_warn_center);
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
         initViews();
-        getData();
+        getAlarmCount();
     }
 
     private void initViews() {
@@ -81,7 +86,8 @@ public class WarnCenterActivity extends BaseActivity {
         listView.setAdapter(adapter);
     }
 
-    public void getData() {
+    /**取报警数量*/
+    public void getAlarmCount() {
         showLoadingDialog(null);
         device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
         String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
@@ -90,6 +96,34 @@ public class WarnCenterActivity extends BaseActivity {
                 .params("method", "getAlarmCount")
                 .params("macid", device.macid)
                 .params("classify", dataString)
+                .params("mds", mds)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        LogUtils.d(s);
+                        parseJson(s);
+                    }
+
+                    @Override
+                    public void onAfter(String s, Exception e) {
+                        dismissLoadingDialog();
+                    }
+                });
+    }
+
+    /**
+     * 取报警信息
+     */
+    public void getDetailData(String type) {
+        showLoadingDialog(null);
+        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
+        OkGo.get(GlobalConsts.GET_DATE)
+                .tag(this)
+                .params("method", "GetAlarmList")
+                .params("macid", device.macid)
+                .params("classify", type)
+                .params("mapType", "BAIDU")
                 .params("mds", mds)
                 .execute(new StringCallback() {
                     @Override
@@ -117,9 +151,8 @@ public class WarnCenterActivity extends BaseActivity {
                 showToast(msg);
             } else {
                 JSONObject datajson  = jsonObject.getJSONObject("row");
-                for (int i = 0; i < groupInt.length; i++) {
-                    childStrings[i][0] = datajson.getString(groupInt[i]);
-                }
+                alarmCount.put("10",datajson.getString("10"));//位移报警
+                alarmCount.put("3",datajson.getString("3"));//围栏报警
                 mHandler.sendEmptyMessage(0);
             }
 
@@ -172,6 +205,7 @@ public class WarnCenterActivity extends BaseActivity {
                 convertView = LayoutInflater.from(WarnCenterActivity.this).inflate(R.layout.item_expand_group, parent, false);
                 groupViewHolder = new GroupViewHolder();
                 groupViewHolder.tvTitle = (TextView) convertView.findViewById(R.id.label_expand_group);
+                groupViewHolder.tvCount = (TextView) convertView.findViewById(R.id.iv_count);
                 groupViewHolder.parentImageViw = (ImageView) convertView.findViewById(R.id.arrowIv);
                 convertView.setTag(groupViewHolder);
             } else {
@@ -184,6 +218,10 @@ public class WarnCenterActivity extends BaseActivity {
             } else {
                 groupViewHolder.parentImageViw.setBackgroundResource(R.drawable.arrow_right);
             }
+
+            if(!alarmCount.get(groupInt[groupPosition]).equals(0)){
+                groupViewHolder.tvCount.setText(alarmCount.get(groupInt[groupPosition]));
+            }
             return convertView;
         }
 
@@ -193,7 +231,7 @@ public class WarnCenterActivity extends BaseActivity {
             if (convertView == null) {
                 convertView = LayoutInflater.from(WarnCenterActivity.this).inflate(R.layout.item_expand_child, parent, false);
                 childViewHolder = new ChildViewHolder();
-                childViewHolder.tvTitle = (TextView) convertView.findViewById(R.id.label_expand_child);
+                childViewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tv_info);
                 convertView.setTag(childViewHolder);
             } else {
                 childViewHolder = (ChildViewHolder) convertView.getTag();
@@ -210,6 +248,7 @@ public class WarnCenterActivity extends BaseActivity {
         class GroupViewHolder {
             TextView tvTitle;
             ImageView parentImageViw;
+            TextView tvCount;
         }
 
         class ChildViewHolder {
