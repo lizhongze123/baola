@@ -334,7 +334,7 @@ public class ChargeFragment extends BaseFragment implements View.OnClickListener
                 @Override
                 public void callback(iBeaconClass.iBeacon bean, int position) {
                     //点击设备连接
-                    BleManager.getInstance(getContext()).realConnect(bean.bluetoothAddress);
+                    BleManager.getInstance(getContext()).realConnect(GlobalConsts.BATTERY, bean.bluetoothAddress);
                 }
             });
         }

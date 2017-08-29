@@ -46,6 +46,5 @@ public class GlobalConsts {
      * 连接成功的蓝牙地址的sp文件名
      */
     public static final String SP_BLUETOOTH_DEVICE = "baoliao";
-    public static final String SP_BLUETOOTH_DEVICE_KEY = "device_key";
 
 }

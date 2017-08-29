@@ -160,12 +160,18 @@ public class BleManager {
 
     };
 
-    public void realConnect(String address){
+    public void realConnect(String type, String address){
         if(!TextUtils.isEmpty(address)){
             isConnSuccessful = mBLE.connect(address);
             //连接成功后保存地址在本地
             if(isConnSuccessful){
-                PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.SP_BLUETOOTH_DEVICE_KEY, address);
+
+                if(type.equals(GlobalConsts.BATTERY)){
+                    PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, address);
+                }else if(type.equals(GlobalConsts.POWER)){
+                    PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, address);
+                }
+
             }
             LogUtils.e("connect bRet = " + isConnSuccessful);
         }

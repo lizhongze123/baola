@@ -59,9 +59,9 @@ public class BatteryActivity extends BaseActivity {
             showToast(getResources().getString(R.string.ble_not_supported));
         }
         //如果有连接过，下一次自动连接
-        String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.SP_BLUETOOTH_DEVICE_KEY, "");
+        String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, "");
         if(!TextUtils.isEmpty(address)){
-            bleManager.realConnect(address);
+            bleManager.realConnect(GlobalConsts.BATTERY, address);
         }else{
             bleManager.startScan(this, GlobalConsts.BATTERY);
         }

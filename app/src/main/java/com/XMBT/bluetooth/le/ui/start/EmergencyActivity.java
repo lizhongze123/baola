@@ -13,14 +13,17 @@ import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
 import com.XMBT.bluetooth.le.ui.light.LightFunctionActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
+import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.ChargingProgess;
+import com.XMBT.bluetooth.le.view.ListDialog;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.bumptech.glide.Glide;
 import com.stx.xhb.xbanner.XBanner;
@@ -66,7 +69,14 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         if (!bleManager.isSupportBle()) {
             showToast(getResources().getString(R.string.ble_not_supported));
         }
-        bleManager.startScan(this,GlobalConsts.POWER);
+
+        //如果有连接过，下一次自动连接
+        String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, "");
+        if(!TextUtils.isEmpty(address)){
+            bleManager.realConnect(GlobalConsts.POWER, address);
+        }else{
+            bleManager.startScan(this, GlobalConsts.POWER);
+        }
     }
 
     private void initDatas() {
@@ -88,9 +98,9 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         titleBar.setRightOnClicker(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(BleManager.isConnSuccessful){
+                if (BleManager.isConnSuccessful) {
                     BleManager.getInstance(EmergencyActivity.this).disconnect();
-                }else{
+                } else {
                     BleManager.getInstance(EmergencyActivity.this).startScan(EmergencyActivity.this, GlobalConsts.POWER);
                 }
             }
@@ -133,6 +143,8 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         myIntentFilter.addAction(GlobalConsts.ACTION_CONNECT_CHANGE);
         myIntentFilter.addAction(GlobalConsts.ACTION_NOTIFI);
         myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_BLE_OVER);
+        myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_NEW_DEVICE);
+
         registerReceiver(mBroadcastReceiver, myIntentFilter);
     }
 
@@ -144,7 +156,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
             titleBar.setTvRight("未连接");
             titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
             chargingprigressView.setProgress(0);
-            tvVoltage.setText("电池电压:"+ 0 + "V");
+            tvVoltage.setText("电池电压:" + 0 + "V");
             tvTemperature.setText("电池温度:" + 0 + "℃");
         }
     }
@@ -172,10 +184,10 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             int vol10 = Integer.parseInt(voltageStr, 16);
                             volf = vol10 / 10f;
                             if (volf < 10.5) {
-                                tvVoltage.setText("电池电压:"+volf + "V");
+                                tvVoltage.setText("电池电压:" + volf + "V");
                                 tvVoltage.setTextColor(getResources().getColor(android.R.color.holo_red_light));
                             } else {
-                                tvVoltage.setText("电池电压:"+volf + "V");
+                                tvVoltage.setText("电池电压:" + volf + "V");
                             }
                         }
                         if (substr.equals(SampleGattAttributes.BATTERY_INDICATOR)) {
@@ -260,22 +272,43 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                 } else {
                     connectChanged(true);
                 }
-            }else if(action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)){
+            } else if (action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)) {
                 int status = intent.getIntExtra(BleManager.SCAN_BLE_STATUS, 0);
-                if(status == 0){
+                if (status == 0) {
                     showToastCenter("未能检测到该设备，请稍后重试");
                 }
+            } else if (action.equals(GlobalConsts.ACTION_SCAN_NEW_DEVICE)) {
+                ArrayList<iBeaconClass.iBeacon> mLeDevices;
+                mLeDevices = (ArrayList<iBeaconClass.iBeacon>) intent.getSerializableExtra(BleManager.SCAN_BLE_STATUS);
+                showPopupWindow(EmergencyActivity.this, titleBar, mLeDevices);
+
             }
         }
     };
 
+
+    private ListDialog dialog;
+
+    public void showPopupWindow(Context context, View view, ArrayList<iBeaconClass.iBeacon> mLeDevices) {
+        if (dialog == null) {
+            dialog = new ListDialog(context, new ListDialog.ItemClickCallback() {
+                @Override
+                public void callback(iBeaconClass.iBeacon bean, int position) {
+                    //点击设备连接
+                    BleManager.getInstance(EmergencyActivity.this).realConnect(GlobalConsts.POWER, bean.bluetoothAddress);
+                }
+            });
+        }
+        dialog.changeData(mLeDevices);
+        dialog.show(view);
+    }
 
     @Override
     public void onClick(View v) {
         String newValue;
         byte[] dataToWrite;
 
-        if(!BleManager.isConnSuccessful){
+        if (!BleManager.isConnSuccessful) {
             showToast("设备未连接");
             return;
         }
