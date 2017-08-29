@@ -170,6 +170,8 @@ public class BleManager {
                     PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, address);
                 }else if(type.equals(GlobalConsts.POWER)){
                     PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, address);
+                }else if(type.equals(GlobalConsts.LIGHTING)){
+                    PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.LIGHTING, address);
                 }
 
             }

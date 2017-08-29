@@ -23,14 +23,17 @@ import android.widget.TimePicker;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
+import com.XMBT.bluetooth.le.ui.start.EmergencyActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.utils.Utils;
+import com.XMBT.bluetooth.le.view.ListDialog;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.XMBT.bluetooth.le.view.datePicker.DateTimePicker;
 import com.XMBT.bluetooth.le.view.datePicker.DoubleTimePicker;
@@ -129,7 +132,13 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         if (!bleManager.isSupportBle()) {
             showToast(getResources().getString(R.string.ble_not_supported));
         }
-        bleManager.startScan(this, GlobalConsts.LIGHTING);
+        //如果有连接过，下一次自动连接
+        String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.LIGHTING, "");
+        if(!TextUtils.isEmpty(address)){
+            bleManager.realConnect(GlobalConsts.POWER, address);
+        }else{
+            bleManager.startScan(this, GlobalConsts.POWER);
+        }
     }
 
     private void initDatas() {
@@ -206,7 +215,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 if (BleManager.isConnSuccessful) {
                     BleManager.getInstance(LightFunctionActivity.this).disconnect();
                 } else {
-                    BleManager.getInstance(LightFunctionActivity.this).startScan(LightFunctionActivity.this, GlobalConsts.LIGHTING);
+                    BleManager.getInstance(LightFunctionActivity.this).startScan(LightFunctionActivity.this, GlobalConsts.POWER);
                 }
             }
         });
@@ -446,6 +455,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         myIntentFilter.addAction(GlobalConsts.ACTION_CONNECT_CHANGE);
         myIntentFilter.addAction(GlobalConsts.ACTION_NOTIFI);
         myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_BLE_OVER);
+        myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_NEW_DEVICE);
         registerReceiver(mBroadcastReceiver, myIntentFilter);
     }
 
@@ -542,9 +552,30 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 if (status == 0) {
                     showToastCenter("未能检测到该设备，请稍后重试");
                 }
+            }else if (action.equals(GlobalConsts.ACTION_SCAN_NEW_DEVICE)) {
+                ArrayList<iBeaconClass.iBeacon> mLeDevices;
+                mLeDevices = (ArrayList<iBeaconClass.iBeacon>) intent.getSerializableExtra(BleManager.SCAN_BLE_STATUS);
+                showPopupWindow(LightFunctionActivity.this, titleBar, mLeDevices);
+
             }
         }
     };
+
+    private ListDialog dialog;
+
+    public void showPopupWindow(Context context, View view, ArrayList<iBeaconClass.iBeacon> mLeDevices) {
+        if (dialog == null) {
+            dialog = new ListDialog(context, new ListDialog.ItemClickCallback() {
+                @Override
+                public void callback(iBeaconClass.iBeacon bean, int position) {
+                    //点击设备连接
+                    BleManager.getInstance(LightFunctionActivity.this).realConnect(GlobalConsts.LIGHTING, bean.bluetoothAddress);
+                }
+            });
+        }
+        dialog.changeData(mLeDevices);
+        dialog.show(view);
+    }
 
     private void resetShift() {
         cb30.setChecked(false);
