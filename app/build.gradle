@@ -14,7 +14,7 @@ android {
         targetSdkVersion 24
 
         versionCode 1
-        versionName "1.1"
+        versionName "1.0"
 
 //        multiDexEnabled true
     }
@@ -96,4 +96,7 @@ dependencies {
     //基础包
     compile files('libs/BaiduTraceSDK_v3_0_4.jar')
     compile files('libs/com.baidu.tts_2.3.0.jar')
+
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
+
 }

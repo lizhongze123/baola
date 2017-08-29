@@ -60,24 +60,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/lv_displacement"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:listSelector="#00000000"
-            android:divider="@null">
-
-        </ListView>
-
-        <TextView
-            android:id="@+id/empty_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="暂无报警"
-            android:textSize="20sp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:visibility="gone"/>
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
@@ -89,24 +75,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/lv_fence"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:listSelector="#00000000"
-            android:divider="@null">
+            android:layout_height="match_parent"/>
 
-        </ListView>
 
-        <TextView
-            android:id="@+id/empty_list_view2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="暂无报警"
-            android:textSize="20sp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:visibility="gone"/>
 
     </LinearLayout>
 
