@@ -122,7 +122,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         String[] starttimes = startTime.split(":");
         String[] endtimes = endTime.split(":");
         if (timePicker != null && !timePicker.isShowing()) {
-            timePicker.setSelectedItem(Integer.valueOf(starttimes[0]) ,Integer.valueOf(starttimes[1]), Integer.valueOf(endtimes[0]),Integer.valueOf(endtimes[1]));
+            timePicker.setSelectedItem(Integer.valueOf(starttimes[0]), Integer.valueOf(starttimes[1]), Integer.valueOf(endtimes[0]), Integer.valueOf(endtimes[1]));
             timePicker.show();
         }
     }
@@ -134,10 +134,10 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         }
         //如果有连接过，下一次自动连接
         String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.LIGHTING, "");
-        if(!TextUtils.isEmpty(address)){
-            bleManager.realConnect(GlobalConsts.POWER, address);
-        }else{
-            bleManager.startScan(this, GlobalConsts.POWER);
+        if (!TextUtils.isEmpty(address)) {
+            bleManager.realConnect(GlobalConsts.LIGHTING, address);
+        } else {
+            bleManager.startScan(this, GlobalConsts.LIGHTING);
         }
     }
 
@@ -215,7 +215,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 if (BleManager.isConnSuccessful) {
                     BleManager.getInstance(LightFunctionActivity.this).disconnect();
                 } else {
-                    BleManager.getInstance(LightFunctionActivity.this).startScan(LightFunctionActivity.this, GlobalConsts.POWER);
+                    BleManager.getInstance(LightFunctionActivity.this).startScan(LightFunctionActivity.this, GlobalConsts.LIGHTING);
                 }
             }
         });
@@ -316,11 +316,16 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
 //
 //                    IndexFragment.WriteCharX( IndexFragment.gattCharacteristic_char1,dataToWrite );
 //                }
-                if (cbAuto.isChecked()) {
-                    flag = true;
-                    PreferenceUtils.write(LightFunctionActivity.this, "light_info", "flag", true);
+                if (BleManager.isConnSuccessful) {
+                    if (cbAuto.isChecked()) {
+                        flag = true;
+                        PreferenceUtils.write(LightFunctionActivity.this, "light_info", "flag", true);
+                    } else {
+                        PreferenceUtils.write(LightFunctionActivity.this, "light_info", "flag", false);
+                    }
                 } else {
-                    PreferenceUtils.write(LightFunctionActivity.this, "light_info", "flag", false);
+                    showToast("请先连接设备");
+                    resetShift();
                 }
                 break;
             case R.id.cb_manual:
@@ -552,7 +557,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 if (status == 0) {
                     showToastCenter("未能检测到该设备，请稍后重试");
                 }
-            }else if (action.equals(GlobalConsts.ACTION_SCAN_NEW_DEVICE)) {
+            } else if (action.equals(GlobalConsts.ACTION_SCAN_NEW_DEVICE)) {
                 ArrayList<iBeaconClass.iBeacon> mLeDevices;
                 mLeDevices = (ArrayList<iBeaconClass.iBeacon>) intent.getSerializableExtra(BleManager.SCAN_BLE_STATUS);
                 showPopupWindow(LightFunctionActivity.this, titleBar, mLeDevices);
@@ -569,7 +574,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
                 @Override
                 public void callback(iBeaconClass.iBeacon bean, int position) {
                     //点击设备连接
-                    BleManager.getInstance(LightFunctionActivity.this).realConnect(GlobalConsts.LIGHTING, bean.bluetoothAddress);
+                    BleManager.getInstance(LightFunctionActivity.this).realConnect(bean.name, bean.bluetoothAddress);
                 }
             });
         }
@@ -601,6 +606,7 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         PreferenceUtils.write(LightFunctionActivity.this, "light_info", "endtime", endTime);
 //      editor.putInt("progress",seekBar.getProgress());
         handler1.removeCallbacksAndMessages(null);
+        bleManager.disconnect();
         unregisterReceiver(mBroadcastReceiver);
     }
 

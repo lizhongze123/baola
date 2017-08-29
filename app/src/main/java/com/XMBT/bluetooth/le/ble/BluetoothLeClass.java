@@ -175,6 +175,8 @@ public class BluetoothLeClass extends Service {
                 Intent mIntent = new Intent(GlobalConsts.ACTION_CONNECT_CHANGE);
                 mIntent.putExtra(CONNECT_STATUS, STATE_DISCONNECTED);
                 mContext.sendBroadcast(mIntent);
+
+                BleManager.isConnSuccessful = false;
             }
         }
 

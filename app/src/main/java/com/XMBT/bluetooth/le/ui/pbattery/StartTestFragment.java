@@ -193,7 +193,7 @@ public class StartTestFragment extends Fragment {
                 @Override
                 public void callback(iBeaconClass.iBeacon bean, int position) {
                     //点击设备连接
-                    BleManager.getInstance(getContext()).realConnect(GlobalConsts.BATTERY, bean.bluetoothAddress);
+                    BleManager.getInstance(getContext()).realConnect(bean.name, bean.bluetoothAddress);
                 }
             });
         }

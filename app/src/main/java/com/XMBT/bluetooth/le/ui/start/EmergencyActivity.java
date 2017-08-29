@@ -295,12 +295,19 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                 @Override
                 public void callback(iBeaconClass.iBeacon bean, int position) {
                     //点击设备连接
-                    BleManager.getInstance(EmergencyActivity.this).realConnect(GlobalConsts.POWER, bean.bluetoothAddress);
+                    BleManager.getInstance(EmergencyActivity.this).realConnect(bean.name, bean.bluetoothAddress);
                 }
             });
         }
         dialog.changeData(mLeDevices);
         dialog.show(view);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bleManager.disconnect();
+        unregisterReceiver(mBroadcastReceiver);
     }
 
     @Override
@@ -385,5 +392,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                 }
                 break;
         }
+
+
     }
 }

@@ -162,20 +162,25 @@ public class BleManager {
 
     public void realConnect(String type, String address){
         if(!TextUtils.isEmpty(address)){
-            isConnSuccessful = mBLE.connect(address);
-            //连接成功后保存地址在本地
-            if(isConnSuccessful){
 
-                if(type.equals(GlobalConsts.BATTERY)){
-                    PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, address);
-                }else if(type.equals(GlobalConsts.POWER)){
-                    PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, address);
-                }else if(type.equals(GlobalConsts.LIGHTING)){
-                    PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.LIGHTING, address);
+            if(TextUtils.isEmpty(productName)){
+                isConnSuccessful = mBLE.connect(address);
+            }else if(productName.equals(type)){
+                isConnSuccessful = mBLE.connect(address);
+                //连接成功后保存地址在本地
+                if(isConnSuccessful){
+
+                    if(type.equals(GlobalConsts.BATTERY)){
+                        PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, address);
+                    }else if(type.equals(GlobalConsts.POWER)){
+                        PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, address);
+                    }else if(type.equals(GlobalConsts.LIGHTING)){
+                        PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.LIGHTING, address);
+                    }
+
                 }
-
+                LogUtils.e("connect bRet = " + isConnSuccessful);
             }
-            LogUtils.e("connect bRet = " + isConnSuccessful);
         }
 
 //        for (int i = 0; i < mLeDevices.size(); i++) {
