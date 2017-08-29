@@ -28,7 +28,6 @@ public class ListDialog extends PopupWindow{
 
     private Context mContext;
     private LayoutInflater inflater;
-    private PopupWindow popupWindow;
     private View rootView;
     private ListView lv;
     private ListDialogAdapter mAdapter;
@@ -86,7 +85,13 @@ public class ListDialog extends PopupWindow{
 
     public void show(View view){
         showAtLocation(view, Gravity.CENTER,0,0);
-//      backgroundAlpha(0.5f);
+        backgroundAlpha(0.5f);
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        backgroundAlpha(1.0f);
     }
 
     private void backgroundAlpha(float v) {
