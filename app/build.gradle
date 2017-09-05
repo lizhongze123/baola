@@ -96,7 +96,6 @@ dependencies {
     //基础包
     compile files('libs/BaiduTraceSDK_v3_0_4.jar')
     compile files('libs/com.baidu.tts_2.3.0.jar')
-
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
-
+    compile files('libs/MobCommons-2017.0823.1556.jar')
 }

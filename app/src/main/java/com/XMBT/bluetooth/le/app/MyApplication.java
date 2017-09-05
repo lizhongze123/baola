@@ -7,6 +7,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.cookie.store.PersistentCookieStore;
+import com.mob.MobApplication;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
@@ -14,7 +15,9 @@ import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.util.logging.Level;
 
-public class MyApplication extends Application {
+import cn.sharesdk.framework.ShareSDK;
+
+public class MyApplication extends MobApplication {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -24,7 +27,6 @@ public class MyApplication extends Application {
         //初始化Loggutils
         FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder().tag("lzz").build();
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
-
         OkGo.init(this);
 
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数

@@ -100,13 +100,13 @@ public class ChargingProgess extends View {
         TypedArray array = mContext.obtainStyledAttributes(attrs, R.styleable.charging_progress);
         oritation = array.getInt(R.styleable.charging_progress_cgv_oritation, HORIZONTAL);
         border_width = array.getDimension(R.styleable.charging_progress_cgv_border_width, DensityUtils.dp2px(mContext, 2));
-        item_height = array.getDimension(R.styleable.charging_progress_cgv_item_height, DensityUtils.dp2px(mContext,15));
-        item_width = array.getDimension(R.styleable.charging_progress_cgv_item_width, DensityUtils.dp2px(mContext,8));
+        item_height = array.getDimension(R.styleable.charging_progress_cgv_item_height, DensityUtils.dp2px(mContext, 15));
+        item_width = array.getDimension(R.styleable.charging_progress_cgv_item_width, DensityUtils.dp2px(mContext, 8));
         item_charging_src = array.getColor(R.styleable.charging_progress_cgv_item_charging_src, 0xff33b5e5);
         item_charging_background = array.getColor(R.styleable.charging_progress_cgv_item_charging_background, 0x4009f7f7);
         background = array.getColor(R.styleable.charging_progress_cgv_background, 0x2009f7f7);
         border_color = array.getColor(R.styleable.charging_progress_cgv_border_color, 0xff33b5e5);
-        border_cornor_radius = array.getDimension(R.styleable.charging_progress_cgv_border_cornor_radius, DensityUtils.dp2px(mContext,2));
+        border_cornor_radius = array.getDimension(R.styleable.charging_progress_cgv_border_cornor_radius, DensityUtils.dp2px(mContext, 2));
         duration = array.getInt(R.styleable.charging_progress_cgv_duration, 4 * 1000);
         item_count = array.getInt(R.styleable.charging_progress_cgv_item_count, 4);
 
@@ -222,24 +222,31 @@ public class ChargingProgess extends View {
      */
     public void setDCAnimation(final int progress) {
         chargeType = DC;
-        animatorDC = ValueAnimator.ofFloat(0, 1);
-        animatorDC.setInterpolator(new LinearInterpolator());
-        animatorDC.setDuration(1000);
-        animatorDC.setRepeatCount(-1);
-        animatorDC.setRepeatMode(ValueAnimator.RESTART);
-        animatorDC.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float) animation.getAnimatedValue();
-                if (value > 0.5) {
-                    show = true;
-                } else {
-                    show = false;
+
+
+        if (progress == 2) {
+            animatorDC = ValueAnimator.ofFloat(0, 1);
+            animatorDC.setInterpolator(new LinearInterpolator());
+            animatorDC.setDuration(1000);
+            animatorDC.setRepeatCount(-1);
+            animatorDC.setRepeatMode(ValueAnimator.RESTART);
+            animatorDC.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float value = (float) animation.getAnimatedValue();
+                    if (value > 0.5) {
+                        show = true;
+                    } else {
+                        show = false;
+                    }
+                    setProgress(progress);
                 }
-                setProgress(progress);
-            }
-        });
-        animatorDC.start();
+            });
+            animatorDC.start();
+        }else{
+            setProgress(progress);
+        }
+
 
     }
 
@@ -250,12 +257,12 @@ public class ChargingProgess extends View {
      * @param canvas
      */
     private void drawDCAniamtion(Canvas canvas) {
-        if(getProgress() == 0){
+        if (getProgress() == 0) {
             return;
         }
         int j = getProgress() / item_count;
         //已经充好的进度
-        if(getProgress() != 4){
+        if (getProgress() != 4) {
             for (int i = 1; i <= j; i++) {
                 RectF backRect = new RectF((i + 1) * item_height / 2 + (i - 1) * item_height,
                         mHeight / 4,
@@ -267,16 +274,8 @@ public class ChargingProgess extends View {
             }
         }
 
-
-        //下一个进度，隐藏和显示交替执行动画
-        int i;
-        if(getProgress() != 4){
-            i = j + 1;
-        }else{
-            i = 1;
-        }
-
-        if (i <= 4) {
+        if(getProgress() == 2){
+            int i = 1;
             RectF backRect = new RectF((i + 1) * item_height / 2 + (i - 1) * item_height,
                     mHeight / 4,
                     item_height / 2 + i * (3 * item_height / 2), 3 * mHeight / 4);
@@ -288,6 +287,27 @@ public class ChargingProgess extends View {
             }
             canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
         }
+
+        //下一个进度，隐藏和显示交替执行动画
+//        int i;
+//        if(getProgress() != 4){
+//            i = j + 1;
+//        }else{
+//            i = 1;
+//        }
+//
+//        if (i <= 4) {
+//            RectF backRect = new RectF((i + 1) * item_height / 2 + (i - 1) * item_height,
+//                    mHeight / 4,
+//                    item_height / 2 + i * (3 * item_height / 2), 3 * mHeight / 4);
+//            mPaint.setStyle(Paint.Style.FILL);
+//            if (show) {
+//                mPaint.setColor((item_charging_src));
+//            } else {
+//                mPaint.setColor((item_charging_background));
+//            }
+//            canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
+//        }
     }
 
 

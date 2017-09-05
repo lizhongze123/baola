@@ -28,7 +28,7 @@ public class AdviceFragment extends Fragment {
         webView = (WebView) view.findViewById(R.id.webView);
         ToolsUtil.showProgressDialog(getActivity(), "加载中...");
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("http://wx.vemax.cn/bbs2");
+        webView.loadUrl("http://bbs.ycqpmall.com/portal.php?mod=list&catid=3&mobile=2");
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {

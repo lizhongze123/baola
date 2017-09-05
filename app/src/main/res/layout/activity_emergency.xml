@@ -102,6 +102,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
                 android:background="#ffffff">
 
                 <TextView
@@ -112,6 +113,15 @@
                     android:layout_centerHorizontal="true"/>
 
             </RelativeLayout>
+
+
+            <LinearLayout
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -190,7 +200,7 @@
                     android:textColor="@drawable/on_off_textcolor_selector"/>
 
             </RelativeLayout>
-
+            </LinearLayout>
         </LinearLayout>
 
     </ScrollView>

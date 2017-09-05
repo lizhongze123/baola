@@ -3,6 +3,8 @@ package com.XMBT.bluetooth.le.ui.gbattery;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,8 @@ import android.view.ViewGroup;
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.view.TitleBar;
+
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 
 public class MeFragment extends Fragment implements View.OnClickListener {
@@ -51,6 +55,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getContext(), ChangePwdActivity.class));
                 break;
             case R.id.ll_share:
+                showShare();
                 break;
             case R.id.ll_about:
                 startActivity(new Intent(getContext(), AboutActivity.class));
@@ -77,5 +82,23 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                     .setNegativeButton("取消", null)
                     .show();
         }
+    }
+
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle("宝利奥");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("德国宝利奥汽车智能硬件客户端，App在手，轻松掌控");
+        oks.setTitleUrl("http://a.app.qq.com/o/simple.jsp?pkgname=org.zywx.wbpalmstar.widgetone.uex&from=groupmessage");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        oks.setImageUrl("http://18gps.net/app/chewukong/mobiledownload/images/QRcode.png");
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl("http://a.app.qq.com/o/simple.jsp?pkgname=org.zywx.wbpalmstar.widgetone.uex&from=groupmessage");
+        // 启动分享GUI
+        oks.show(getContext());
     }
 }

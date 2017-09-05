@@ -20,6 +20,7 @@ import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
 import com.XMBT.bluetooth.le.ui.light.LightFunctionActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
+import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.ChargingProgess;
@@ -190,20 +191,28 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                                 tvVoltage.setText("电池电压:" + volf + "V");
                             }
                         }
+                        //电量>=3格时，电源良好
+                        //电量<=2格时，电量不足
+                        //温度大于45°，禁止启动汽车
                         if (substr.equals(SampleGattAttributes.BATTERY_INDICATOR)) {
                             if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FIVE)) {
+                                LogUtils.d("电池电量---18");
                                 chargingprigressView.setDCAnimation(18);
                                 tvStatus.setText("电源良好，允许启动汽车");
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FOUR)) {
+                                LogUtils.d("电池电量---14");
                                 chargingprigressView.setDCAnimation(14);
                                 tvStatus.setText("电源良好，允许启动汽车");
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_THREE)) {
+                                LogUtils.d("电池电量---10");
                                 chargingprigressView.setDCAnimation(10);
                                 tvStatus.setText("电量不足，禁止启动汽车");
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_TWO)) {
+                                LogUtils.d("电池电量---6");
                                 chargingprigressView.setDCAnimation(6);
                                 tvStatus.setText("电量不足，禁止启动汽车");
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_ONE)) {
+                                LogUtils.d("电池电量---2");
                                 chargingprigressView.setDCAnimation(2);
                                 tvStatus.setText("电量不足，禁止启动汽车");
                             }
@@ -310,6 +319,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         unregisterReceiver(mBroadcastReceiver);
     }
 
+
     @Override
     public void onClick(View v) {
         String newValue;
@@ -322,71 +332,88 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
 
         switch (v.getId()) {
             case R.id.cb_floodlight:
+//              点击之后的状态
+
                 if (cbFloodlight.isChecked()) {
-                    if (volf < 10.5 || temf > 55) {
-                        showToast("温度过高，禁止启动");
-                        return;
-                    }
+
                     newValue = SampleGattAttributes.FLOODLIGHT_OPEN;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+
+                    cbFloodlight.setChecked(true);
                     tvFloodlight.setChecked(true);
                     tvFloodlight.setText("照明灯(开启)");
+                    cbWarninglight.setChecked(false);
+                    tvWarninglight.setChecked(false);
+                    tvWarninglight.setText("警示灯(关闭)");
+                    cbUsb.setChecked(true);
                     tvUsb.setChecked(true);
                     tvUsb.setText("USB输出(开启)");
                 } else {
                     newValue = SampleGattAttributes.FLOODLIGHT_CLOSE;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+
+                    cbFloodlight.setChecked(false);
                     tvFloodlight.setChecked(false);
                     tvFloodlight.setText("照明灯(关闭)");
+                    cbUsb.setChecked(false);
                     tvUsb.setChecked(false);
                     tvUsb.setText("USB输出(关闭)");
                 }
                 break;
             case R.id.cb_warninglight:
                 if (cbWarninglight.isChecked()) {
-                    if (volf < 10.5 || temf > 55) {
-                        showToast("温度过高，禁止启动");
-                        return;
-                    }
+
                     newValue = SampleGattAttributes.WARNINGLIGHT_FAST;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+
+                    cbFloodlight.setChecked(false);
+                    tvFloodlight.setChecked(false);
+                    tvFloodlight.setText("照明灯(关闭)");
+                    cbWarninglight.setChecked(true);
                     tvWarninglight.setChecked(true);
                     tvWarninglight.setText("警示灯(开启)");
+                    cbUsb.setChecked(true);
                     tvUsb.setChecked(true);
                     tvUsb.setText("USB输出(开启)");
+                    LogUtils.d(tvFloodlight.isChecked()+"-----");
                 } else {
                     newValue = SampleGattAttributes.WARNINGLIGHT_CLOSE;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+
+
+                    cbWarninglight.setChecked(false);
                     tvWarninglight.setChecked(false);
                     tvWarninglight.setText("警示灯(关闭)");
+                    cbUsb.setChecked(false);
                     tvUsb.setChecked(false);
                     tvUsb.setText("USB输出(关闭)");
                 }
                 break;
             case R.id.cb_usb:
                 if (cbUsb.isChecked()) {
-                    if (volf < 10.5 || temf > 55) {
-                        showToast("温度过高，禁止启动");
-                        return;
-                    }
+
                     newValue = SampleGattAttributes.USB_OPEN;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
 
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+                    cbUsb.setChecked(true);
                     tvUsb.setChecked(true);
                     tvUsb.setText("USB输出(开启)");
                 } else {
                     newValue = SampleGattAttributes.USB_CLOSE;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+                    cbUsb.setChecked(false);
                     tvUsb.setChecked(false);
                     tvUsb.setText("USB输出(关闭)");
+                    cbWarninglight.setChecked(false);
                     tvWarninglight.setChecked(false);
                     tvWarninglight.setText("警示灯(关闭)");
+                    cbFloodlight.setChecked(false);
                     tvFloodlight.setChecked(false);
                     tvFloodlight.setText("照明灯(关闭)");
                 }
