@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
@@ -13,6 +15,7 @@ import com.XMBT.bluetooth.le.bean.LocalEntity;
 import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.ui.gbattery.BatteryUtils;
 import com.XMBT.bluetooth.le.ui.gbattery.DeviceFragment;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.LogUtils;
@@ -89,6 +92,9 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
      */
     private FenceBean newFenceBean;
 
+    private ToggleButton tb;
+    private String defenceStatus = "1";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,7 +142,7 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
                 newFenceBean.defenceLat = latLng.latitude + "";
                 newFenceBean.defenceLon = latLng.longitude + "";
                 newFenceBean.defenceRad = (200 +seekBar.getProgress()) + "";
-                newFenceBean.defenceStatus = "0";
+                newFenceBean.defenceStatus = defenceStatus;
                 setFence(newFenceBean);
             }
 
@@ -149,6 +155,17 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
         run_speed = (TextView) findViewById(R.id.run_speed);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
+        tb = (ToggleButton) findViewById(R.id.tb);
+        tb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    defenceStatus = "1";
+                }else{
+                    defenceStatus = "0";
+                }
+            }
+        });
     }
 
     private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -177,7 +194,7 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
                 newFenceBean.defenceLat = currentCenter.latitude + "";
                 newFenceBean.defenceLon = currentCenter.longitude + "";
                 newFenceBean.defenceRad = (200 + seekBar.getProgress()) + "";
-                newFenceBean.defenceStatus = "0";
+                newFenceBean.defenceStatus = defenceStatus;
                 setFence(newFenceBean);
             }
         }
@@ -218,6 +235,10 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
                                 String msg = jsonObject.getString("msg");
                                 showToast(msg);
                             }else{
+                                BatteryUtils.fenceLat = Double.valueOf(newFenceBean.defenceLat);
+                                BatteryUtils.fenceLng = Double.valueOf(newFenceBean.defenceLon);
+                                BatteryUtils.radius = Double.valueOf(newFenceBean.defenceRad);
+                                BatteryUtils.fenceStatus = newFenceBean.defenceStatus;
                                 showToast("设置成功");
                             }
                         } catch (JSONException e) {
@@ -287,10 +308,17 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
                                 carFenceBean.defenceLon = dataObj.getString("DefenceLon");
                                 carFenceBean.defenceRad = dataObj.getString("DefenceRad");
                                 carFenceBean.defenceStatus = dataObj.getString("DefenceStatus");
+                                BatteryUtils.fenceStatus = dataObj.getString("DefenceStatus");
                                 setFence(carFenceBean);
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        if(carFenceBean.defenceStatus.equals("1")){
+                                            tb.setChecked(true);
+                                        }else{
+                                            tb.setChecked(false);
+                                        }
+
                                         seekBar.setProgress((int) (Double.valueOf(carFenceBean.defenceRad) - 200));
                                     }
                                 });

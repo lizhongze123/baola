@@ -26,6 +26,7 @@
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         android:gravity="center">
 
         <TextView
@@ -146,14 +147,14 @@
         android:layout_height="match_parent"
         android:id="@+id/relativeLayout3"
         android:visibility="gone"
+        android:gravity="center"
         android:layout_below="@+id/relativeLayout">
 
         <RelativeLayout
             android:id="@+id/relativeLayout5"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:layout_marginTop="30dp"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             android:padding="10dp"
             android:background="@drawable/shape_bg_gray">
 
@@ -241,8 +242,7 @@
             android:id="@+id/relativeLayout7"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:layout_marginTop="30dp"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             android:padding="10dp"
             android:layout_below="@+id/relativeLayout5"
             android:background="@drawable/shape_bg_gray">

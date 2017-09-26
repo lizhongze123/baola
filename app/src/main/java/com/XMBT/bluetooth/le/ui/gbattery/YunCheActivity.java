@@ -1,7 +1,6 @@
 package com.XMBT.bluetooth.le.ui.gbattery;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
@@ -19,9 +17,8 @@ import com.XMBT.bluetooth.le.bean.YuCheEntity;
 import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.map.BaiduMapActivity;
-import com.XMBT.bluetooth.le.map.TraceActivity;
 import com.XMBT.bluetooth.le.map.FenceActivity;
-import com.XMBT.bluetooth.le.map.TraceDemoActivity;
+import com.XMBT.bluetooth.le.map.TraceActivity;
 import com.XMBT.bluetooth.le.sp.UserSp;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
@@ -38,8 +35,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -53,8 +48,7 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
     private YunCheDeviceEntity device;
     private TextView voltageTv, dayTv, persentTv;
     private TitleBar titleBar;
-    private Timer timer;
-    private String defenceStatus = "";
+    private DisplacementService mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,20 +57,15 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.smoothScrollTo(0, 0);
-        initViews();
         Intent intent = getIntent();
         device = (YunCheDeviceEntity) intent.getSerializableExtra(DeviceFragment.DATA_DEVICE);
-        timer = new Timer();
-        timer.schedule(task, 0, 10000);
-        getStatus();
+        initViews();
+        //开启服务
+        Intent i = new Intent(this, DisplacementService.class);
+        i.putExtra(DeviceFragment.DATA_DEVICE, device);
+        startService(i);
+        getVoltage();
     }
-
-    TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            getVoltage();
-        }
-    };
 
     private void initViews() {
         titleBar = (TitleBar) findViewById(R.id.titleBar);
@@ -187,88 +176,6 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
                 });
     }
 
-    /**
-     * 获取设防状态
-     */
-    public void getStatus() {
-        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
-        OkGo.post(GlobalConsts.GET_DATE)
-                .tag(this)
-                .params("method", "getUserStatus")
-                .params("mds", mds)
-                .params("macid", device.macid)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        try {
-                            LogUtils.d(s);
-                            JSONObject jsonObject = new JSONObject(s);
-                            String success = jsonObject.getString("success");
-                            if (success.equals("false")) {
-                                String msg = jsonObject.getString("msg");
-                                showToast(msg);
-                            } else {
-                                JSONObject rowsObj = jsonObject.getJSONObject("rows");
-                                defenceStatus = rowsObj.getString("defenceStatus");
-//                                if (defenceStatus == FortificationActivity.ON) {
-                                    //如果设防，取报警
-                                    getAlarm();
-//                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-
-                    @Override
-                    public void onAfter(String s, Exception e) {
-
-                    }
-                });
-
-    }
-
-    /**
-     * 取报警
-     */
-    public void getAlarm() {
-        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
-        OkGo.post(GlobalConsts.GET_DATE)
-                .tag(this)
-                .params("method", "GetAlarmList")
-                .params("mds", mds)
-                .params("macid", device.macid)
-                .params("pageSize", 1)
-                .params("mapType", "BAIDU")
-                .params("classify", "3")
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        try {
-                            LogUtils.d(s);
-                            JSONObject jsonObject = new JSONObject(s);
-                            String success = jsonObject.getString("success");
-                            if (success.equals("false")) {
-                                String msg = jsonObject.getString("msg");
-                                showToast(msg);
-                            } else {
-
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-
-                    @Override
-                    public void onAfter(String s, Exception e) {
-
-                    }
-                });
-
-    }
-
     @Override
     public void loadBanner(XBanner banner, View view, int position) {
         Glide.with(YunCheActivity.this).load(imgurls.get(position)).into((ImageView) view);
@@ -305,5 +212,13 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
             titleTv.setText(yuCheEntities.get(position).getTitle());
             return convertView;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent i = new Intent(this, DisplacementService.class);
+        stopService(i);
+        BatteryUtils.reset();
     }
 }

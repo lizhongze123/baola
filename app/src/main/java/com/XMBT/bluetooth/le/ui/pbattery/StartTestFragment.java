@@ -76,6 +76,10 @@ public class StartTestFragment extends Fragment {
      * 存放启动信号之后两秒内的集合
      */
     private List<Integer> voltageList;
+    /**
+     * 存放启动信号之前的10个电压值
+     */
+    private List<Integer> beforeList = new ArrayList<>();
 
     private List<ItemBean> mItems;
 
@@ -152,18 +156,28 @@ public class StartTestFragment extends Fragment {
                             mItems = new ArrayList<>();
                         } else if (strTemp.substring(0, 2).equals("08")) {
                             //电压命令为：0X08xxyyzzww；其中xxyy为电压值，zzww为电压值反码
+
                             long currentTime = System.currentTimeMillis();
                             if (currentTime < startTime + 2000) {
-                                //取收到启动信号后的两秒内的最小值
+                                //取收到启动信号后的两秒内的数据
                                 String substr = strTemp.substring(3, 5) + strTemp.substring(6, 8);
                                 int voltage10 = Integer.parseInt(substr, 16);
                                 voltageList.add(voltage10);
-                                addBean(currentTime, voltage10);
+//                                addBean(currentTime, voltage10);
                             } else if (startTime != 0 && currentTime > startTime + 2000) {
                                 //接收两秒的数据完毕
                                 Integer ii = Collections.min(voltageList);
                                 setProgress(ii);
+                                voltageList.addAll(0,beforeList);
+                                addBean(currentTime);
                                 lineView.setItems(mItems);
+                            }else{
+                                String substr = strTemp.substring(3, 5) + strTemp.substring(6, 8);
+                                int voltage10 = Integer.parseInt(substr, 16);
+                                if(beforeList.size() == 10){
+                                    beforeList.remove(0);
+                                }
+                                beforeList.add(voltage10);
                             }
                         }
                     }
@@ -242,6 +256,17 @@ public class StartTestFragment extends Fragment {
         final String time0 = sdf.format(new Time(currentTime));
         ItemBean itemBean = new ItemBean(voltage10, time0, currentTime);
         mItems.add(itemBean);
+    }
+
+    private void addBean(long currentTime) {
+
+        for (int i = 0; i < voltageList.size(); i++) {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            final String time0 = sdf.format(new Time(currentTime));
+            ItemBean itemBean = new ItemBean(voltageList.get(i), time0, currentTime);
+            mItems.add(itemBean);
+        }
+
     }
 
     private void connectChanged(boolean isConnected) {

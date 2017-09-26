@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 
@@ -17,6 +19,8 @@ import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
+import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.ListDialog;
@@ -41,6 +45,7 @@ public class BatteryActivity extends BaseActivity {
     private MyButtonListener myButtonListener;
 
     private BleManager bleManager;
+    private final Handler handler1 = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +63,33 @@ public class BatteryActivity extends BaseActivity {
         if (!bleManager.isSupportBle()) {
             showToast(getResources().getString(R.string.ble_not_supported));
         }
-        //如果有连接过，下一次自动连接
-        String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, "");
-        if(!TextUtils.isEmpty(address)){
-            bleManager.realConnect(GlobalConsts.BATTERY, address);
-        }else{
-            bleManager.startScan(this, GlobalConsts.BATTERY);
+        if(!BleManager.isConnSuccessful){
+            //如果有连接过，下一次自动连接
+            String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, "");
+            if(!TextUtils.isEmpty(address)){
+                bleManager.realConnect(GlobalConsts.BATTERY, address);
+            }else{
+                bleManager.startScan(this, GlobalConsts.BATTERY);
+            }
         }
+
+    }
+
+    /**
+     * 连接成功后不断发送命令
+     * 防止蓝牙司机
+     */
+    private void startTimer1() {
+        handler1.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("lzz", "发送防止蓝牙死机命令");
+                String newValue1 = SampleGattAttributes.WRITE_CRASH;
+                byte[] dataToWrite1 = HexUtil.hexStringToBytes(newValue1);
+                bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite1);
+                handler1.postDelayed(this, 2000);
+            }
+        }, 2000);
     }
 
     private void initViews() {
@@ -110,9 +135,12 @@ public class BatteryActivity extends BaseActivity {
                 if (status == 0) {
                     //断开连接
                     BleManager.isConnSuccessful = false;
+                    handler1.removeCallbacksAndMessages(null);
                 } else {
                     //已连接
                     BleManager.isConnSuccessful = true;
+                    startTimer1();
+
                 }
             } else if (action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)) {
                 int status = intent.getIntExtra(BleManager.SCAN_BLE_STATUS, 0);
@@ -159,7 +187,7 @@ public class BatteryActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        bleManager.disconnect();
+//        bleManager.disconnect();
         unregisterReceiver(mBroadcastReceiver);
     }
 

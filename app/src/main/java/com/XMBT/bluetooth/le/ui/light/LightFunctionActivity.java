@@ -128,16 +128,20 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
     }
 
     private void initBle() {
-        bleManager = BleManager.getInstance(this);
-        if (!bleManager.isSupportBle()) {
-            showToast(getResources().getString(R.string.ble_not_supported));
-        }
-        //如果有连接过，下一次自动连接
-        String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.LIGHTING, "");
-        if (!TextUtils.isEmpty(address)) {
-            bleManager.realConnect(GlobalConsts.LIGHTING, address);
-        } else {
-            bleManager.startScan(this, GlobalConsts.LIGHTING);
+        if(BleManager.isConnSuccessful){
+            bleManager.disconnect();
+        }else{
+            bleManager = BleManager.getInstance(this);
+            if (!bleManager.isSupportBle()) {
+                showToast(getResources().getString(R.string.ble_not_supported));
+            }
+            //如果有连接过，下一次自动连接
+            String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.LIGHTING, "");
+            if (!TextUtils.isEmpty(address)) {
+                bleManager.realConnect(GlobalConsts.LIGHTING, address);
+            } else {
+                bleManager.startScan(this, GlobalConsts.LIGHTING);
+            }
         }
     }
 

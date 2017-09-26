@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
 import com.XMBT.bluetooth.le.db.DBManger;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.LogUtils;
@@ -52,6 +54,7 @@ public class VoltageFragment extends BaseFragment {
     private String strTemp;
     private TextView persentTv;
     private LineView myline;
+    private TextView tvUseDay, tvStopDay, tvStartCounts;
 
     static final int rssibufferSize = 10;
     private int[] rssibuffer = new int[rssibufferSize];
@@ -124,9 +127,9 @@ public class VoltageFragment extends BaseFragment {
         titleBar.setRightOnClicker(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(BleManager.isConnSuccessful){
+                if (BleManager.isConnSuccessful) {
                     BleManager.getInstance(getContext()).disconnect();
-                }else{
+                } else {
                     BleManager.getInstance(getContext()).startScan(getContext(), GlobalConsts.BATTERY);
                 }
             }
@@ -158,6 +161,10 @@ public class VoltageFragment extends BaseFragment {
         loadingView = (LoadingView) view.findViewById(R.id.loadingView);
         persentTv = (TextView) view.findViewById(R.id.textView10);
 
+        tvUseDay = (TextView) view.findViewById(R.id.tv_useDay);
+        tvStopDay = (TextView) view.findViewById(R.id.tv_stopDay);
+        tvStartCounts = (TextView) view.findViewById(R.id.tv_startCounts);
+
         connectChanged(BleManager.isConnSuccessful);
         registerBoradcastReceiver();
     }
@@ -166,22 +173,40 @@ public class VoltageFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            String strXqdDd = "";
-            String strXqdDdy = "";
+
             if (action.equals(GlobalConsts.ACTION_NOTIFI)) {  //收到notify
                 strTemp = intent.getStringExtra(EXTRA_DATA);
-                if (!strTemp.equals("00:00:00:00:00")) {  //过滤掉00:00:00:00:00
-                    if (strTemp.length() == 14) {
-                        if (strTemp.substring(0, 2).equals("04")) {
+                //去除：
+                if (!TextUtils.isEmpty(strTemp)) {
+                    strTemp = strTemp.replaceAll(":", "");
+                }
+
+                if (!strTemp.equals("0000000000")) {  //过滤掉00:00:00:00:00
+
+                    if (strTemp.length() == 10) {
+                        String substr = strTemp.substring(0, 6);
+                        String substr2 = strTemp.substring(6, 10);
+
+                        if (substr.equals(SampleGattAttributes.USE_DAYS)) {
+                            //试用天数
+                            tvUseDay.setText(Integer.parseInt(substr2, 16) + "天");
+                        } else if (substr.equals(SampleGattAttributes.STOP_DAYS)) {
+                            //停用天数
+                            tvStopDay.setText(Integer.parseInt(substr2, 16) + "天");
+                        } else if (substr.equals(SampleGattAttributes.START_COUNT)) {
+                            //启动次数
+                            tvStartCounts.setText(Integer.parseInt(substr2, 16) + "次");
+                        } else if (substr.equals(SampleGattAttributes.START_SIGNAL)) {
                             //启动信号  0X04A35C6699
                             startCarTime = System.currentTimeMillis();//记录下开始时间
                             isStartCarSignal = true;
-                            Log.e("lizhongze", "收到启动信号");
-                        } else if (strTemp.substring(0, 2).equals("08")) {
-                            //电压命令为：0X08xxyyzzww；其中xxyy为电压值，zzww为电压值反码
+                            LogUtils.d("--------收到启动信号--------");
+                        } else {
+                            //实时电压
+                            //电压命令为：08xxyyzzww；其中xxyy为电压值，zzww为电压值反码
                             //08 02 BE FD 41 -> 02 BE = 702 / 放大了100倍，7.02V
-                            String substr = strTemp.substring(3, 5) + strTemp.substring(6, 8);
-                            int voltage10 = Integer.parseInt(substr, 16); //702
+                            String voltageStr = strTemp.substring(2, 6);
+                            int voltage10 = Integer.parseInt(voltageStr, 16); //702
                             //百分比与电压值关系：0~100%对应的电压为12.00~12.60V
                             LogUtils.d("收到的数据为--" + strTemp + "电压值为--" + voltage10);
                             //成功接收到启动信号后
@@ -190,7 +215,7 @@ public class VoltageFragment extends BaseFragment {
                                 if (voltage10 >= 1320) {
                                     //真正的启动成功
                                     isStartCar = true;
-                                    Log.e("lizhongze", "真正的启动成功");
+                                    LogUtils.d("真正的启动成功");
                                 }
                                 if (isStartCar) {
                                     //真正地启动车后
@@ -284,8 +309,15 @@ public class VoltageFragment extends BaseFragment {
                                 persentTv.setText("100%");
                             }
                         }
+
+
                     }
+
+
+                } else {
+                    LogUtils.e("数据为--0000000000");
                 }
+
             } else if (action.equals(GlobalConsts.ACTION_CONNECT_CHANGE)) {
                 int status = intent.getIntExtra(BluetoothLeClass.CONNECT_STATUS, BluetoothLeClass.STATE_DISCONNECTED);
                 if (status == BluetoothLeClass.STATE_DISCONNECTED) {
@@ -293,8 +325,8 @@ public class VoltageFragment extends BaseFragment {
                 } else {
                     connectChanged(true);
                 }
-            }else if(action.equals(GlobalConsts.ACTION_SCAN_NEW_DEVICE)){
-                if(isVisible){
+            } else if (action.equals(GlobalConsts.ACTION_SCAN_NEW_DEVICE)) {
+                if (isVisible) {
                     ArrayList<iBeaconClass.iBeacon> mLeDevices;
                     mLeDevices = (ArrayList<iBeaconClass.iBeacon>) intent.getSerializableExtra(BleManager.SCAN_BLE_STATUS);
                     showPopupWindow(getContext(), view, mLeDevices);
@@ -306,7 +338,7 @@ public class VoltageFragment extends BaseFragment {
     private ListDialog dialog;
 
     public void showPopupWindow(Context context, View view, ArrayList<iBeaconClass.iBeacon> mLeDevices) {
-        if(dialog == null){
+        if (dialog == null) {
             dialog = new ListDialog(context, new ListDialog.ItemClickCallback() {
                 @Override
                 public void callback(iBeaconClass.iBeacon bean, int position) {
@@ -329,9 +361,9 @@ public class VoltageFragment extends BaseFragment {
                 titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
                 mItems.clear();
                 loadingView.setProgress(0);
-                loadingView.setPercentText(0+"V");
+                loadingView.setPercentText(0 + "V");
                 persentTv.setText("0%");
-                statusIv.setVisibility(View.INVISIBLE);
+                statusIv.setVisibility(View.GONE);
             }
         }
     }
@@ -401,10 +433,10 @@ public class VoltageFragment extends BaseFragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(hidden){
+        if (hidden) {
             //不可见
             isVisible = false;
-        }else{
+        } else {
             isVisible = true;
         }
     }

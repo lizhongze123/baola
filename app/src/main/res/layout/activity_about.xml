@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+
     tools:context="com.XMBT.bluetooth.le.ui.pbattery.BatteryActivity">
 
 
@@ -16,6 +17,12 @@
         app:title_background="@color/title_bg"
         app:title_text="关于我们"
         app:title_textColor="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
 
     <ImageView
         android:layout_width="80dp"
@@ -41,10 +48,12 @@
         android:textSize="16sp"/>
 
     <View
+        android:visibility="gone"
         android:layout_marginTop="30dp"
         style="@style/separation_line"/>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/ll_update"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -87,7 +96,10 @@
     </LinearLayout>
 
 
-    <View style="@style/separation_line"/>
+    <View
+        android:visibility="gone"
+        style="@style/separation_line"/>
 
+    </LinearLayout>
 
 </LinearLayout>

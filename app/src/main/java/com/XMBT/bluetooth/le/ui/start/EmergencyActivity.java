@@ -54,6 +54,8 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
 
     private BleManager bleManager;
 
+    private String[] previous = new String[3];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,17 +68,21 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     }
 
     private void initBle() {
-        bleManager = BleManager.getInstance(this);
-        if (!bleManager.isSupportBle()) {
-            showToast(getResources().getString(R.string.ble_not_supported));
-        }
-
-        //如果有连接过，下一次自动连接
-        String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, "");
-        if(!TextUtils.isEmpty(address)){
-            bleManager.realConnect(GlobalConsts.POWER, address);
+        if(BleManager.isConnSuccessful){
+            bleManager.disconnect();
         }else{
-            bleManager.startScan(this, GlobalConsts.POWER);
+            bleManager = BleManager.getInstance(this);
+            if (!bleManager.isSupportBle()) {
+                showToast(getResources().getString(R.string.ble_not_supported));
+            }
+
+            //如果有连接过，下一次自动连接
+            String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, "");
+            if(!TextUtils.isEmpty(address)){
+                bleManager.realConnect(GlobalConsts.POWER, address);
+            }else{
+                bleManager.startScan(this, GlobalConsts.POWER);
+            }
         }
     }
 
@@ -180,6 +186,14 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                         String substr = strTemp.substring(0, 6);
                         String substr2 = strTemp.substring(6, 10);
 
+                        if(TextUtils.isEmpty(previous[0])){
+                            previous[0] = substr2;
+                        }else if(TextUtils.isEmpty(previous[1])){
+                            previous[1] = substr2;
+                        }else if(TextUtils.isEmpty(previous[2])){
+                            previous[2] = substr2;
+                        }
+
                         if (substr.equals(SampleGattAttributes.REAL_VOLTAGE)) {
                             String voltageStr = substr2.substring(0, 2);
                             int vol10 = Integer.parseInt(voltageStr, 16);
@@ -198,23 +212,34 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FIVE)) {
                                 LogUtils.d("电池电量---18");
                                 chargingprigressView.setDCAnimation(18);
-                                tvStatus.setText("电源良好，允许启动汽车");
+                                if(yesOrNo()){
+                                    tvStatus.setText("电源良好，允许启动汽车");
+                                }
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FOUR)) {
                                 LogUtils.d("电池电量---14");
                                 chargingprigressView.setDCAnimation(14);
-                                tvStatus.setText("电源良好，允许启动汽车");
+                                if(yesOrNo()){
+                                    tvStatus.setText("电源良好，允许启动汽车");
+                                }
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_THREE)) {
                                 LogUtils.d("电池电量---10");
                                 chargingprigressView.setDCAnimation(10);
-                                tvStatus.setText("电量不足，禁止启动汽车");
+                                if(yesOrNo()){
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }
+
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_TWO)) {
                                 LogUtils.d("电池电量---6");
                                 chargingprigressView.setDCAnimation(6);
-                                tvStatus.setText("电量不足，禁止启动汽车");
+                                if(yesOrNo()){
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_ONE)) {
                                 LogUtils.d("电池电量---2");
                                 chargingprigressView.setDCAnimation(2);
-                                tvStatus.setText("电量不足，禁止启动汽车");
+                                if(yesOrNo()){
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }
                             }
                         }
                         if (substr.equals(SampleGattAttributes.REAL_TEMPERATURE)) {
@@ -224,7 +249,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                                 tvTemperature.setText("点击温度:" + temf + "℃");
                                 tvStatus.setText("温度过高 禁止启动");
                             } else {
-                                tvTemperature.setText("点击温度:" + temf + "℃");
+                                tvTemperature.setText("电池温度:" + temf + "℃");
                             }
                         }
 
@@ -295,6 +320,17 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         }
     };
 
+    private boolean yesOrNo() {
+        if(previous.length == 3){
+            if(previous[0].equals(previous[1]) && previous[1].equals(previous[2])){
+                return true;
+            }else {
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
 
     private ListDialog dialog;
 

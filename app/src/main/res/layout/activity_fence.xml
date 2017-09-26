@@ -40,51 +40,73 @@
             android:id="@+id/btn_loc"
             android:layout_width="34dp"
             android:layout_height="34dp"
-            android:layout_above="@+id/ll_seekbar"
+            android:layout_above="@+id/ll"
             android:layout_marginLeft="10dp"
             android:background="@drawable/icon_myloc"/>
 
         <LinearLayout
-            android:id="@+id/ll_seekbar"
+            android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/run_speed"
-                android:layout_width="wrap_content"
+            <ToggleButton
+                android:id="@+id/tb"
+                android:layout_width="60dp"
+                android:layout_gravity="center"
+                android:checked="true"
+                android:textOff=""
+                android:textOn=""
+                android:background="@drawable/selector_tg"
+                android:layout_height="30dp" />
+
+            <LinearLayout
+                android:id="@+id/ll_seekbar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="2dp"
-                android:gravity="center"
-                android:text="200m"
-                android:textColor="@color/gray_33"
-                android:textSize="12sp"/>
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:orientation="horizontal">
 
-            <SeekBar
-                android:id="@+id/seekBar"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_height="50dp"
-                android:layout_gravity="center_vertical"
-                android:progressBackgroundTint="@color/black"
-                android:max="800"
-                android:progressTint="@color/black"
-                android:thumb="@drawable/seekbar_thumb"
-                android:visibility="visible" />
+                <TextView
+                    android:id="@+id/run_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="2dp"
+                    android:gravity="center"
+                    android:text="200m"
+                    android:textColor="@color/gray_33"
+                    android:textSize="12sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="2dp"
-                android:gravity="center"
-                android:text="1000m"
-                android:textColor="@color/gray_33"
-                android:textSize="12sp" />
+                <SeekBar
+                    android:id="@+id/seekBar"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_vertical"
+                    android:progressBackgroundTint="@color/black"
+                    android:max="800"
+                    android:progressTint="@color/black"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:text="1000m"
+                    android:textColor="@color/gray_33"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

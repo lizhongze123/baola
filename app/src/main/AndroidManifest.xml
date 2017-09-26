@@ -117,6 +117,8 @@
             android:process=":remote">
         </service>
 
+        <service android:name=".ui.gbattery.DisplacementService"></service>
+
         <activity android:name=".map.TraceDemoActivity" />
         <activity android:name=".ui.gbattery.FortificationActivity" />
         <activity android:name=".ui.gbattery.WarnCenterActivity" />

@@ -276,7 +276,6 @@ public class LineView2 extends View {
 
         for (int i = 0; i < mItems.size(); i++) {
             float x = (mItems.get(i).getMsec() - mItems.get(0).getMsec()) * xInterval + xOrigin;
-            ;
             if (i == 0) {
                 mPath.moveTo(x, yOrigin - (mItems.get(i).getValue() - min) / yInterval);
             } else {

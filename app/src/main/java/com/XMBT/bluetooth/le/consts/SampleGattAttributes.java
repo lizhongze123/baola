@@ -169,4 +169,24 @@ public class SampleGattAttributes {
      * usb-关闭
      */
     public static String USB_CLOSE = "04748B00FF";
+
+
+    //----------------------------智能电瓶---------------------------
+    /**
+     * 启动信号
+     */
+    public static String START_SIGNAL = "04A35C6699";
+    /**
+     * 试用天数
+     */
+    public static String USE_DAYS = "04A55A";
+    /**
+     * 停用天数
+     */
+    public static String STOP_DAYS = "04A758";
+    /**
+     * 启动次数
+     */
+    public static String START_COUNT = "04A956";
+
 }

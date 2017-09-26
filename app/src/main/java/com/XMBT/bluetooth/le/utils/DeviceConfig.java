@@ -3,9 +3,6 @@ package com.XMBT.bluetooth.le.utils;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
-/**
- * Created by vienan on 2016/1/24.
- */
 public class DeviceConfig {
 
     public static int screenWidth;
