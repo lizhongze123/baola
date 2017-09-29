@@ -139,9 +139,10 @@ public class BluetoothLeClass extends Service {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
 
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-
-                if (mOnConnectListener != null)
+                BleManager.isConnSuccessful = true;
+                if (mOnConnectListener != null){
                     mOnConnectListener.onConnect(gatt);
+                }
                 LogUtils.d("Connected to GATT server.");
 
                 // Attempts to discover services after successful connection.
@@ -167,8 +168,10 @@ public class BluetoothLeClass extends Service {
                 mContext.sendBroadcast(mIntent);
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                if (mOnDisconnectListener != null)
+                BleManager.isConnSuccessful = false;
+                if (mOnDisconnectListener != null){
                     mOnDisconnectListener.onDisconnect(gatt);
+                }
                 LogUtils.d("Disconnected from GATT server.");
 
                 // 发送广播
@@ -176,7 +179,6 @@ public class BluetoothLeClass extends Service {
                 mIntent.putExtra(CONNECT_STATUS, STATE_DISCONNECTED);
                 mContext.sendBroadcast(mIntent);
 
-                BleManager.isConnSuccessful = false;
             }
         }
 

@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.bean.iBeaconClass;
+import com.XMBT.bluetooth.le.consts.GlobalConsts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +145,17 @@ public class ListDialog extends PopupWindow{
             if(TextUtils.isEmpty(dataList.get(position).name)){
                 viewHolder.tvName.setText("未知设备");
             }else{
-                viewHolder.tvName.setText(dataList.get(position).name);
+                if(dataList.get(position).name.equals(GlobalConsts.POWER)){
+                    viewHolder.tvName.setText(GlobalConsts.POWER_CN);
+                }else if(dataList.get(position).name.equals(GlobalConsts.LIGHTING)){
+                    viewHolder.tvName.setText(GlobalConsts.LIGHTING_CN);
+                }else if(dataList.get(position).name.equals(GlobalConsts.BATTERY)){
+                    viewHolder.tvName.setText(GlobalConsts.BATTERY_CN);
+                }else if(dataList.get(position).name.equals(GlobalConsts.GPS_BATTERY)){
+                    viewHolder.tvName.setText(GlobalConsts.GPS_BATTERY_CN);
+                }else{
+                    viewHolder.tvName.setText(dataList.get(position).name);
+                }
             }
             viewHolder.tvAddress.setText(dataList.get(position).bluetoothAddress);
             return convertView;

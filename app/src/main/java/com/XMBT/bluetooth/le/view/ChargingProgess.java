@@ -16,7 +16,6 @@ import com.XMBT.bluetooth.le.utils.DensityUtils;
 
 /**
  * 充电进度绘制，使用属性动画完成。
- * Created by ly on 2016/12/6.
  */
 
 public class ChargingProgess extends View {
@@ -41,11 +40,12 @@ public class ChargingProgess extends View {
     private float item_width;
     //边界高度
     private float item_height;
-    //view内部的进度前景色
-    private int item_charging_src;
-    //view内部的进度背景色
+    //电池进度前景色
+    private int item_charging_src_green;
+    private int item_charging_src_red;
+    //电池进度背景色
     private int item_charging_background;
-    //view背景色
+    //电池背景色
     private int background;
     //<!--边界颜色-->
     private int border_color;
@@ -54,7 +54,7 @@ public class ChargingProgess extends View {
     //动画时间
     private int duration;
 
-    //view的宽度和高度
+    //电池的宽度和高度
     private int mWidth;
     private int mHeight;
 
@@ -99,13 +99,14 @@ public class ChargingProgess extends View {
     private void getSettingValue(AttributeSet attrs) {
         TypedArray array = mContext.obtainStyledAttributes(attrs, R.styleable.charging_progress);
         oritation = array.getInt(R.styleable.charging_progress_cgv_oritation, HORIZONTAL);
-        border_width = array.getDimension(R.styleable.charging_progress_cgv_border_width, DensityUtils.dp2px(mContext, 2));
+        border_width = array.getDimension(R.styleable.charging_progress_cgv_border_width, DensityUtils.dp2px(mContext, 1));
         item_height = array.getDimension(R.styleable.charging_progress_cgv_item_height, DensityUtils.dp2px(mContext, 15));
         item_width = array.getDimension(R.styleable.charging_progress_cgv_item_width, DensityUtils.dp2px(mContext, 8));
-        item_charging_src = array.getColor(R.styleable.charging_progress_cgv_item_charging_src, 0xff33b5e5);
-        item_charging_background = array.getColor(R.styleable.charging_progress_cgv_item_charging_background, 0x4009f7f7);
-        background = array.getColor(R.styleable.charging_progress_cgv_background, 0x2009f7f7);
-        border_color = array.getColor(R.styleable.charging_progress_cgv_border_color, 0xff33b5e5);
+        item_charging_src_green = array.getColor(R.styleable.charging_progress_cgv_item_charging_src, 0xff1CA93A);
+        item_charging_src_red = array.getColor(R.styleable.charging_progress_cgv_item_charging_src, 0xffff0006);
+        item_charging_background = array.getColor(R.styleable.charging_progress_cgv_item_charging_background, 0xffffffff);
+        background = array.getColor(R.styleable.charging_progress_cgv_background, 0xfff0ebeb);
+        border_color = array.getColor(R.styleable.charging_progress_cgv_border_color, 0xffbbbbbb);
         border_cornor_radius = array.getDimension(R.styleable.charging_progress_cgv_border_cornor_radius, DensityUtils.dp2px(mContext, 2));
         duration = array.getInt(R.styleable.charging_progress_cgv_duration, 4 * 1000);
         item_count = array.getInt(R.styleable.charging_progress_cgv_item_count, 4);
@@ -144,26 +145,30 @@ public class ChargingProgess extends View {
         super.onDraw(canvas);
 
         int left = 0;
-        int top = mHeight / 4;
+        int top = mHeight / 3;
         int right = (int) item_height / 2;
         int bottom = 3 * mHeight / 4;
 
-        //顶部的矩形
+        //电池正极矩形
         RectF topRect = new RectF(mWidth, top, mWidth + right, bottom);
-        canvas.drawRoundRect(topRect, border_cornor_radius, border_cornor_radius, mPaint);
-        //总的进度背景
+//        canvas.drawRect(topRect, mPaint);
+//        canvas.drawRoundRect(topRect, border_cornor_radius, border_cornor_radius, mPaint);
+        //电池边框
         RectF border = new RectF(left, left, mWidth, mHeight);
-        canvas.drawRoundRect(border, border_cornor_radius, border_cornor_radius, mPaint);
+//        canvas.drawRect(border, mPaint);
+//        canvas.drawRoundRect(border, border_cornor_radius, border_cornor_radius, mPaint);
 
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor((background));
 
         //填充顶部矩形的背景
-        RectF topRectInner = new RectF(mWidth + left + border_cornor_radius / 2, top + border_cornor_radius / 2, mWidth + right - border_cornor_radius / 2, bottom - border_cornor_radius / 2);
+//        RectF topRectInner = new RectF(mWidth + left + border_cornor_radius / 2, top + border_cornor_radius / 2, mWidth + right - border_cornor_radius / 2, bottom - border_cornor_radius / 2);
+        RectF topRectInner = new RectF(mWidth, top, mWidth + right , bottom );
         canvas.drawRect(topRectInner, mPaint);
 
         //填充总的进度背景
-        RectF borderInner = new RectF(left + border_cornor_radius / 2, left + border_cornor_radius / 2, mWidth - border_cornor_radius / 2, mHeight - border_cornor_radius / 2);
+//        RectF borderInner = new RectF(left + border_cornor_radius / 2, left + border_cornor_radius / 2, mWidth - border_cornor_radius / 2, mHeight - border_cornor_radius / 2);
+        RectF borderInner = new RectF(left, left, mWidth, mHeight);
         canvas.drawRect(borderInner, mPaint);
 
 
@@ -269,11 +274,13 @@ public class ChargingProgess extends View {
                         item_height / 2 + i * (3 * item_height / 2), 3 * mHeight / 4);
                 canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
                 mPaint.setStyle(Paint.Style.FILL);
-                mPaint.setColor(item_charging_src);
+                mPaint.setColor(item_charging_src_green);
                 canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
             }
         }
 
+
+        //只有一格电的情况
         if(getProgress() == 2){
             int i = 1;
             RectF backRect = new RectF((i + 1) * item_height / 2 + (i - 1) * item_height,
@@ -281,7 +288,7 @@ public class ChargingProgess extends View {
                     item_height / 2 + i * (3 * item_height / 2), 3 * mHeight / 4);
             mPaint.setStyle(Paint.Style.FILL);
             if (show) {
-                mPaint.setColor((item_charging_src));
+                mPaint.setColor((item_charging_src_red));
             } else {
                 mPaint.setColor((item_charging_background));
             }
@@ -345,7 +352,7 @@ public class ChargingProgess extends View {
                     item_height / 2 + i * (3 * item_height / 2));
             canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
             mPaint.setStyle(Paint.Style.FILL);
-            mPaint.setColor(item_charging_src);
+            mPaint.setColor(item_charging_src_green);
             canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
         }
 

@@ -15,6 +15,7 @@ import com.XMBT.bluetooth.le.http.ApiResultCallback;
 import com.XMBT.bluetooth.le.sp.UserSp;
 import com.XMBT.bluetooth.le.ui.main.ActivityCollector;
 import com.XMBT.bluetooth.le.ui.misc.LoginActivity;
+import com.XMBT.bluetooth.le.utils.Configure;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.utils.VersionUtils;
@@ -94,7 +95,7 @@ public class ChangePwdActivity extends BaseActivity {
                     @Override
                     public void onSuccessResponse(List<String> data) {
                         showToast("修改密码成功");
-                        GlobalConsts.isLogin = false;
+                        Configure.isLogin = false;
                         startActivity(new Intent(ChangePwdActivity.this, LoginActivity.class));
                         ActivityCollector.finishAll();
                         finish();

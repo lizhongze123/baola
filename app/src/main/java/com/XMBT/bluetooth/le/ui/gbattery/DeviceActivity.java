@@ -2,85 +2,69 @@ package com.XMBT.bluetooth.le.ui.gbattery;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.XMBT.bluetooth.le.R;
-import com.XMBT.bluetooth.le.base.BaseFragment;
+import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.http.ApiResultCallback;
 import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.utils.LogUtils;
+import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
-import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
-import com.stx.xhb.xbanner.XBanner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeviceFragment extends BaseFragment implements XBanner.XBannerAdapter, View.OnClickListener {
-
-    private View rootView;
+/**
+ * gps设备界面
+ */
+public class DeviceActivity extends BaseActivity implements View.OnClickListener {
 
     public final int REQUEST_CODE = 0X01;
 
     public static String DATA_DEVICE = "device";
 
-    private XBanner xBanner;
     private ListView listView;
-    private List<Integer> imgurls = new ArrayList<>();
     private List<YunCheDeviceEntity> yunCheDeviceEntities = new ArrayList<>();
     private DeviceListAdapter adapter;
     private SwipeRefreshLayout swipe;
     private TitleBar titleBar;
 
-
-    public static DeviceFragment newInstance() {
-        DeviceFragment itemFragement = new DeviceFragment();
-        return itemFragement;
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = View.inflate(getActivity(), R.layout.fragment_device, null);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_device);
+        StatusBarHelper.setStatusBarColor(this, R.color.title_bg);
         initViews();
         getDevice();
-        return rootView;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             getDevice();
         }
     }
 
     private void initViews() {
-        titleBar = (TitleBar) rootView.findViewById(R.id.titleBar);
+        titleBar = (TitleBar) findViewById(R.id.titleBar);
         titleBar.setLeftOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                onBackPressed();
             }
         });
-        rootView.findViewById(R.id.addBtn).setOnClickListener(this);
-        xBanner = (XBanner) rootView.findViewById(R.id.xbanner);
-        listView = (ListView) rootView.findViewById(R.id.listView);
-        swipe = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-        imgurls.add(R.drawable.banner_one);
-        imgurls.add(R.drawable.banner_three);
-        xBanner.setData(imgurls, null);
-        xBanner.setmAdapter(this);
-        adapter = new DeviceListAdapter(getContext(), yunCheDeviceEntities);
+        findViewById(R.id.addBtn).setOnClickListener(this);
+        listView = (ListView) findViewById(R.id.listView);
+        swipe = (SwipeRefreshLayout) findViewById(R.id.swipe);
+        adapter = new DeviceListAdapter(DeviceActivity.this, yunCheDeviceEntities);
         adapter.setOnDeleteListener(new DeviceListAdapter.OnDeleteListener() {
             @Override
             public void onDelete(int pos) {
@@ -98,20 +82,20 @@ public class DeviceFragment extends BaseFragment implements XBanner.XBannerAdapt
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getContext(), YunCheActivity.class);
-                intent.putExtra(DATA_DEVICE, yunCheDeviceEntities.get(position));
-                startActivity(intent);
+                Intent intent = new Intent(DeviceActivity.this, YunCheActivity.class);
+                intent.putExtra("test",4);
+                if(yunCheDeviceEntities.get(position) != null){
+                    intent.putExtra(DATA_DEVICE, yunCheDeviceEntities.get(position));
+                    startActivity(intent);
+                }else{
+                    LogUtils.e("DeviceActivity的device为null");
+                }
             }
         });
     }
 
-    @Override
-    public void loadBanner(XBanner banner, View view, int position) {
-        Glide.with(DeviceFragment.this).load(imgurls.get(position)).into((ImageView) view);
-    }
-
     private void getDevice() {
-        String mds = UserSp.getInstance(getContext()).getMds(GlobalConsts.userName);
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         showLoadingDialog("加载中，请稍候");
         OkGo.get(GlobalConsts.GET_DATE)
                 .tag(this)
@@ -147,7 +131,7 @@ public class DeviceFragment extends BaseFragment implements XBanner.XBannerAdapt
     }
 
     private void delDevice(final int position) {
-        String mds = UserSp.getInstance(getContext()).getMds(GlobalConsts.userName);
+        String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         String macId = yunCheDeviceEntities.get(position).macid;
         showLoadingDialog("加载中，请稍候");
         OkGo.get(GlobalConsts.GET_DATE)
@@ -183,7 +167,7 @@ public class DeviceFragment extends BaseFragment implements XBanner.XBannerAdapt
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addBtn:
-                Intent intent = new Intent(getContext(), AddYuncheActivity.class);
+                Intent intent = new Intent(this, AddYuncheActivity.class);
                 startActivityForResult(intent, REQUEST_CODE);
                 break;
         }

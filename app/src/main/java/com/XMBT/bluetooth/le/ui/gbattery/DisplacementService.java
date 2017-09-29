@@ -1,6 +1,5 @@
 package com.XMBT.bluetooth.le.ui.gbattery;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -14,6 +13,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
@@ -62,14 +62,18 @@ public class DisplacementService extends Service implements SpeechSynthesizerLis
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null){
-            device = (YunCheDeviceEntity) intent.getSerializableExtra(DeviceFragment.DATA_DEVICE);
-            //获取围栏状态
-            getFenStatus();
-            //获取位移设防状态
-            getStatus();
-            serviceTimerTask(device);
+            device = (YunCheDeviceEntity) intent.getSerializableExtra(DeviceActivity.DATA_DEVICE);
+            if(device != null){
+                //获取围栏状态
+                getFenStatus();
+                //获取位移设防状态
+                getStatus();
+                serviceTimerTask(device);
+            }else{
+                LogUtils.e("device为null");
+            }
         }else{
-            LogUtils.d("++++++++++++++++++++++++++++");
+            LogUtils.e("intent为null");
         }
         return START_REDELIVER_INTENT;
     }
@@ -82,7 +86,7 @@ public class DisplacementService extends Service implements SpeechSynthesizerLis
         /**
          *创建Notification
          */
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        /*NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.drawable.ic_launcher);
         builder.setContentTitle("宝利奥");
         builder.setContentText("正在后台运行");
@@ -93,7 +97,7 @@ public class DisplacementService extends Service implements SpeechSynthesizerLis
 //        builder.setContentIntent(pendingIntent);
         Notification notification = builder.build();
         //启动到前台
-        startForeground(1, notification);
+        startForeground(1, notification);*/
 
 
         initTTS();
@@ -287,7 +291,7 @@ public class DisplacementService extends Service implements SpeechSynthesizerLis
                     double weidustr = aryrecords.getDouble(weidu);
 
                     //检测位移报警
-                    checkDisplacement(weidustr, jingdustr);
+//                    checkDisplacement(weidustr, jingdustr);
 
                     //检测围栏报警
                     checkFence(weidustr, jingdustr);
@@ -357,8 +361,8 @@ public class DisplacementService extends Service implements SpeechSynthesizerLis
     }
 
     private void alarm(String type, String tips) {
-        Intent intent = new Intent(this, YunCheActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        Intent intent = new Intent(this, YunCheActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         NotificationCompat.Builder localBuilder = new NotificationCompat.Builder(this);
@@ -372,7 +376,7 @@ public class DisplacementService extends Service implements SpeechSynthesizerLis
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         localBuilder.setSound(alarmSound);
         localBuilder.setVisibility(VISIBILITY_PUBLIC);
-        localBuilder.setFullScreenIntent(pendingIntent, false);
+//        localBuilder.setFullScreenIntent(pendingIntent, false);
 //                          localBuilder.setContentIntent(pendingIntent);
 
 

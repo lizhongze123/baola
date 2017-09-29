@@ -1,63 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/main_bg"
+    tools:context="com.XMBT.bluetooth.le.ui.pbattery.BatteryActivity">
 
-    <com.XMBT.bluetooth.le.view.TitleBar
-        android:id="@+id/titleBar"
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title_background="@color/title_bg"
-        app:title_text="设备"
-        app:title_textColor="@color/white"
-        app:right_button_image="@drawable/add"/>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:background="#ffffff"
-        android:id="@+id/relativeLayout2">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#d1d1d1"
-            android:layout_alignParentTop="true"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:id="@+id/imageView"
-            android:src="@drawable/menu"
-            android:layout_centerVertical="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="我的设备"
-            android:textColor="#000000"
-            android:id="@+id/textView2"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/imageView"
-            android:textSize="16sp"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#d1d1d1"
-            android:layout_alignParentBottom="true"/>
-    </RelativeLayout>
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="0dp"
+        android:layout_weight="1"></FrameLayout>
 
     <View style="@style/separation_line"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/main_tab"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:checkedButton="@+id/radio1"
+            android:id="@+id/radioGroup">
+
+            <RadioButton
+                android:id="@+id/radio1"
+                style="@style/main_tab"
+                android:drawableTop="@drawable/index_radio_selector"
+                android:text="设备"/>
+
+            <RadioButton
+                android:id="@+id/radio2"
+                style="@style/main_tab"
+                android:text="查询"
+                android:drawableTop="@drawable/parts_radio_selector"/>
+
+            <RadioButton
+                android:id="@+id/radio3"
+                style="@style/main_tab"
+                android:text="资讯"
+                android:drawableTop="@drawable/advice_radio_selector"/>
+
+            <RadioButton
+                android:id="@+id/radio4"
+                style="@style/main_tab"
+                android:text="商城"
+                android:drawableTop="@drawable/advice_radio_selector"/>
+
+            <RadioButton
+                android:id="@+id/radio5"
+                style="@style/main_tab"
+                android:text="个人"
+                android:drawableTop="@drawable/main_me"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
 
 </LinearLayout>

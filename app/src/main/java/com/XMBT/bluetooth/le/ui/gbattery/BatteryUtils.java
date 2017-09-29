@@ -17,12 +17,12 @@ public class BatteryUtils {
     public static double fenceLat;
     public static double fenceLng;
     public static double radius ;
-    public static String fenceStatus;
+    public static String fenceStatus = "0"; 
     public static boolean isFirstFenceAlarm = true;
     public static long fenceTime;
 
     //----------------位移报警-------------------
-    public static String displaceStatus;
+    public static String displaceStatus = "0";
     public static boolean isFirstDisplaceStatusAlarm = true;
     public static long time;
     /**

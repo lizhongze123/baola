@@ -11,13 +11,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.base.BaseFragment;
 import com.XMBT.bluetooth.le.utils.ToolsUtil;
 
 /**
  * 咨询fragment
  */
 
-public class AdviceFragment extends Fragment {
+public class AdviceFragment extends BaseFragment {
     View view;
     WebView webView;
 

@@ -21,6 +21,7 @@ import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
 import com.XMBT.bluetooth.le.utils.HexUtil;
+import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.ListDialog;
@@ -83,7 +84,7 @@ public class BatteryActivity extends BaseActivity {
         handler1.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.e("lzz", "发送防止蓝牙死机命令");
+                LogUtils.d("发送防止蓝牙死机命令");
                 String newValue1 = SampleGattAttributes.WRITE_CRASH;
                 byte[] dataToWrite1 = HexUtil.hexStringToBytes(newValue1);
                 bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite1);

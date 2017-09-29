@@ -48,7 +48,6 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
     private YunCheDeviceEntity device;
     private TextView voltageTv, dayTv, persentTv;
     private TitleBar titleBar;
-    private DisplacementService mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +57,16 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView.smoothScrollTo(0, 0);
         Intent intent = getIntent();
-        device = (YunCheDeviceEntity) intent.getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        device = (YunCheDeviceEntity) intent.getSerializableExtra(DeviceActivity.DATA_DEVICE);
+        int iii = intent.getIntExtra("test",0);
+        LogUtils.e("iii--"+iii);
         initViews();
         //开启服务
-        Intent i = new Intent(this, DisplacementService.class);
-        i.putExtra(DeviceFragment.DATA_DEVICE, device);
+        Intent i = new Intent(YunCheActivity.this, DisplacementService.class);
+        if(device == null){
+            LogUtils.e("yuncheactivity的device为null");
+        }
+        i.putExtra(DeviceActivity.DATA_DEVICE, device);
         startService(i);
         getVoltage();
     }
@@ -98,23 +102,23 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     Intent intent = new Intent(YunCheActivity.this, BaiduMapActivity.class);
-                    intent.putExtra(DeviceFragment.DATA_DEVICE, device);
+                    intent.putExtra(DeviceActivity.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 1) {
                     Intent intent = new Intent(YunCheActivity.this, TraceActivity.class);
-                    intent.putExtra(DeviceFragment.DATA_DEVICE, device);
+                    intent.putExtra(DeviceActivity.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 2) {
                     Intent intent = new Intent(YunCheActivity.this, FortificationActivity.class);
-                    intent.putExtra(DeviceFragment.DATA_DEVICE, device);
+                    intent.putExtra(DeviceActivity.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 3) {
                     Intent intent = new Intent(YunCheActivity.this, WarnCenterActivity2.class);
-                    intent.putExtra(DeviceFragment.DATA_DEVICE, device);
+                    intent.putExtra(DeviceActivity.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 4) {
                     Intent intent = new Intent(YunCheActivity.this, FenceActivity.class);
-                    intent.putExtra(DeviceFragment.DATA_DEVICE, device);
+                    intent.putExtra(DeviceActivity.DATA_DEVICE, device);
                     startActivity(intent);
                 } else if (position == 5) {
                     Intent intent = new Intent(YunCheActivity.this, ForumActivity.class);
@@ -217,8 +221,8 @@ public class YunCheActivity extends BaseActivity implements XBanner.XBannerAdapt
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent i = new Intent(this, DisplacementService.class);
-        stopService(i);
-        BatteryUtils.reset();
+//        Intent i = new Intent(this, DisplacementService.class);
+//        stopService(i);
+//        BatteryUtils.reset();
     }
 }

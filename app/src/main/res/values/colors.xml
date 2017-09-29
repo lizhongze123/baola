@@ -22,4 +22,12 @@
     <color name="transparent">#00000000</color>
     <color name="transparent2">#88000000</color>
 
+    <color name="text_green">#1CA93A</color>
+    <color name="text_red">#ff0006</color>
+
+    <!-- -->
+    <color name="main_tab">#fff</color>
+    <color name="main_bg">#f0f2f5</color>
+
+
 </resources>

@@ -10,9 +10,13 @@ import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.User;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.event.NotifyEvent;
 import com.XMBT.bluetooth.le.sp.UserSp;
-import com.XMBT.bluetooth.le.ui.gbattery.GpsBatteryActivity;
+import com.XMBT.bluetooth.le.ui.gbattery.DeviceActivity;
+import com.XMBT.bluetooth.le.utils.Configure;
+import com.XMBT.bluetooth.le.utils.EvenManager;
 import com.XMBT.bluetooth.le.utils.LogUtils;
+import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.lzy.okgo.OkGo;
@@ -30,6 +34,9 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 public class LoginActivity extends BaseActivity {
+
+    public static final int LOGIN = 0;
+    public static final int LOGOUT = 1;
 
     private EditText phoneEt, passwordEt;
     private TitleBar titleBar;
@@ -130,9 +137,17 @@ public class LoginActivity extends BaseActivity {
                                                 UserSp.getInstance(LoginActivity.this).setMds(GlobalConsts.userName, mds);
                                                 UserSp.getInstance(LoginActivity.this).setId(GlobalConsts.userName,id);
                                                 UserSp.getInstance(LoginActivity.this).setPwd(GlobalConsts.userName, passwordEt.getText().toString());
+
+                                                Configure.USERID = phoneEt.getText().toString();
+                                                if (Configure.USERID != null) {
+                                                    PreferenceUtils.write(LoginActivity.this, "USER", "USER_ID", Configure.USERID);
+                                                }
+                                                Configure.isLogin = true;
                                                 showToast("登录成功");
-                                                GlobalConsts.isLogin = true;
-                                                startActivity(new Intent(LoginActivity.this, GpsBatteryActivity.class));
+
+                                                //发送广播
+                                                EvenManager.sendEvent(new NotifyEvent(LOGIN));
+
                                                 finish();
                                             } catch (IOException e) {
 
@@ -148,6 +163,14 @@ public class LoginActivity extends BaseActivity {
                     showToast(sb.toString());
                 }
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (Configure.CALLBACK != null){
+            Configure.CALLBACK.postExec();
         }
     }
 }

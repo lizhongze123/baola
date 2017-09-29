@@ -1,28 +1,36 @@
-package com.XMBT.bluetooth.le.ui.gbattery;
+package com.XMBT.bluetooth.le.ui.main;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseFragment;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.event.NotifyEvent;
+import com.XMBT.bluetooth.le.ui.gbattery.AboutActivity;
+import com.XMBT.bluetooth.le.ui.gbattery.ChangePwdActivity;
+import com.XMBT.bluetooth.le.ui.gbattery.RefreshActivity;
+import com.XMBT.bluetooth.le.ui.misc.LoginActivity;
 import com.XMBT.bluetooth.le.utils.Configure;
+import com.XMBT.bluetooth.le.utils.EvenManager;
+import com.XMBT.bluetooth.le.utils.LoginUtil;
 import com.XMBT.bluetooth.le.view.TitleBar;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
 
-public class MeFragment extends BaseFragment implements View.OnClickListener {
+public class MySelfFragment extends BaseFragment implements View.OnClickListener {
+
     private View rootView;
+    private TextView tvLogin, tvUser;
 
     @Nullable
     @Override
@@ -45,16 +53,45 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         rootView.findViewById(R.id.ll_share).setOnClickListener(this);
         rootView.findViewById(R.id.ll_about).setOnClickListener(this);
         rootView.findViewById(R.id.ll_logout).setOnClickListener(this);
+        tvLogin = (TextView) rootView.findViewById(R.id.tv_login);
+        tvUser = (TextView) rootView.findViewById(R.id.tv_user);
+        refresh();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
+    }
+
+    private void refresh() {
+        if(Configure.isLogin){
+            tvLogin.setText("退出登录");
+            tvUser.setText(Configure.USERID);
+        }else{
+            tvLogin.setText("点击登录");
+            tvUser.setText("");
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ll_refresh:
-                startActivity(new Intent(getContext(), RefreshActivity.class));
+                LoginUtil.checkLogin(this.getContext(), new LoginUtil.LoginForCallBack() {
+                    @Override
+                    public void callBack() {
+                        startActivity(new Intent(getContext(), RefreshActivity.class));
+                    }
+                });
                 break;
             case R.id.ll_changePwd:
-                startActivity(new Intent(getContext(), ChangePwdActivity.class));
+                LoginUtil.checkLogin(this.getContext(), new LoginUtil.LoginForCallBack() {
+                    @Override
+                    public void callBack() {
+                        startActivity(new Intent(getContext(), ChangePwdActivity.class));
+                    }
+                });
                 break;
             case R.id.ll_share:
                 showShare();
@@ -63,7 +100,16 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(getContext(), AboutActivity.class));
                 break;
             case R.id.ll_logout:
-                logout();
+                if(Configure.isLogin){
+                    logout();
+                }else{
+                    LoginUtil.checkLogin(this.getContext(), new LoginUtil.LoginForCallBack() {
+                        @Override
+                        public void callBack() {
+                            refresh();
+                        }
+                    });
+                }
                 break;
 
         }
@@ -78,7 +124,10 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Configure.isLogin = false;
-                            getActivity().finish();
+                            Configure.USERID = "";
+                            refresh();
+                            EvenManager.sendEvent(new NotifyEvent(LoginActivity.LOGOUT));
+                            showToast("已退出");
                         }
                     })
                     .setNegativeButton("取消", null)

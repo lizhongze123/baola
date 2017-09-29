@@ -22,15 +22,13 @@ import com.XMBT.bluetooth.le.view.loadingdialog.LoadingDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by lzz on 2017/8/7.
- */
 
 public class BleManager {
 
     public static final String CONNECTED_STATUS = "connected_status";
 
     public static final String SCAN_BLE_STATUS = "scan_ble_status";
+    public static final String SCAN_BLE_DATA = "scan_ble_data";
     public static final int SCAN_BLE_FAILED = 0;
     public static final int SCAN_BLE_SUCCESSFUL = 1;
 
@@ -135,18 +133,11 @@ public class BleManager {
     private PeriodScanCallback mLeCallback = new PeriodScanCallback(5000) {
         @Override
         public void onScanTimeout() {
-            boolean isHas = false;
             LogUtils.d("mLeDevices.size()--" + mLeDevices.size());
 
-            // 发送广播
-//            Intent mIntent = new Intent(GlobalConsts.ACTION_SCAN_BLE_OVER);
-//            if (isHas) {
-//                mIntent.putExtra(SCAN_BLE_STATUS, SCAN_BLE_SUCCESSFUL);
-//            } else {
-//                mIntent.putExtra(SCAN_BLE_STATUS, SCAN_BLE_FAILED);
-//
-//            }
-//            mContext.sendBroadcast(mIntent);
+            Intent mIntent = new Intent(GlobalConsts.ACTION_SCAN_BLE_OVER);
+            mIntent.putExtra(SCAN_BLE_DATA, mLeDevices);
+            mContext.sendBroadcast(mIntent);
             if (loadingDialog != null) {
                 loadingDialog.dismiss();
             }
@@ -154,35 +145,47 @@ public class BleManager {
 
         @Override
         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-            final iBeaconClass.iBeacon ibeacon = iBeaconClass.fromScanData(device, rssi, scanRecord);
-            addDevice(ibeacon);
+            if(device.getName() != null){
+                if(device.getName().equals(GlobalConsts.POWER)
+                        || device.getName().equals(GlobalConsts.LIGHTING)
+                        || device.getName().equals(GlobalConsts.BATTERY)
+                        || device.getName().equals(GlobalConsts.GPS_BATTERY)){
+                    final iBeaconClass.iBeacon ibeacon = iBeaconClass.fromScanData(device, rssi, scanRecord);
+                    addDevice(ibeacon);
+                }else{
+                    LogUtils.d("扫描出未知设备");
+                }
+            }else{
+                LogUtils.d("未知设备");
+            }
         }
 
     };
 
-    public void realConnect(String type, String address){
+    public void realConnect(final String type, final String address){
         if(!TextUtils.isEmpty(address)){
 
-            if(TextUtils.isEmpty(productName)){
-                isConnSuccessful = mBLE.connect(address);
-            }else if(productName.equals(type)){
-                isConnSuccessful = mBLE.connect(address);
-                //连接成功后保存地址在本地
-                if(isConnSuccessful){
+            mBLE.connect(address);
+            mBLE.setOnConnectListener(new BluetoothLeClass.OnConnectListener() {
+                @Override
+                public void onConnect(BluetoothGatt gatt) {
+                    if(!TextUtils.isEmpty(productName)){
+                        //连接成功后保存地址在本地
+                        if(isConnSuccessful){
+                            if(type.equals(GlobalConsts.BATTERY)){
+                                PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, address);
+                            }else if(type.equals(GlobalConsts.POWER)){
+                                PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, address);
+                            }else if(type.equals(GlobalConsts.LIGHTING)){
+                                PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.LIGHTING, address);
+                            }
 
-                    if(type.equals(GlobalConsts.BATTERY)){
-                        PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, address);
-                    }else if(type.equals(GlobalConsts.POWER)){
-                        PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, address);
-                    }else if(type.equals(GlobalConsts.LIGHTING)){
-                        PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.LIGHTING, address);
+                        }
                     }
-
                 }
-                LogUtils.e("connect bRet = " + isConnSuccessful);
-            }
-        }
+            });
 
+        }
 //        for (int i = 0; i < mLeDevices.size(); i++) {
 //            //如果设备名字相同就连接
 //            if (mLeDevices.get(i).name != null && mLeDevices.get(i).name.equals(productName)) {
@@ -217,9 +220,6 @@ public class BleManager {
                 break;
             }
         }
-        Intent mIntent = new Intent(GlobalConsts.ACTION_SCAN_NEW_DEVICE);
-        mIntent.putExtra(SCAN_BLE_STATUS, mLeDevices);
-        mContext.sendBroadcast(mIntent);
     }
 
     /**

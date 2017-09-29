@@ -25,12 +25,43 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/selector_item_default"
+                android:orientation="horizontal"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="当前帐号"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tv_user"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_height="wrap_content"
+                    tools:text="15625100371"
+                    android:textSize="14sp"/>
+
+            </LinearLayout>
+
+            <View style="@style/separation_line"/>
+
+            <View
+                android:layout_marginTop="15dp"
+                style="@style/separation_line"/>
+
+            <LinearLayout
                 android:id="@+id/ll_refresh"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/selector_item_default"
                 android:orientation="horizontal"
                 android:gravity="center"
+                android:visibility="gone"
                 android:padding="15dp">
 
                 <ImageView
@@ -46,6 +77,14 @@
                     android:layout_height="wrap_content"
                     android:text="刷新设置"
                     android:textSize="14sp"/>
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/personnew_more"/>
 
             </LinearLayout>
 
@@ -75,6 +114,14 @@
                     android:text="修改密码"
                     android:textSize="14sp"/>
 
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/personnew_more"/>
+
             </LinearLayout>
 
             <View style="@style/separation_line"/>
@@ -103,13 +150,17 @@
                     android:text="一键分享"
                     android:textSize="14sp"/>
 
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/personnew_more"/>
+
             </LinearLayout>
 
             <View style="@style/separation_line"/>
-
-            <View
-                android:layout_marginTop="20dp"
-                style="@style/separation_line"/>
 
             <LinearLayout
                 android:id="@+id/ll_about"
@@ -134,10 +185,22 @@
                     android:text="关于我们"
                     android:textSize="14sp"/>
 
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/personnew_more"/>
+
             </LinearLayout>
 
-            <View style="@style/separation_line"/>
+            <View
+                style="@style/separation_line"/>
 
+            <View
+                android:layout_marginTop="15dp"
+                style="@style/separation_line"/>
 
             <LinearLayout
                 android:id="@+id/ll_logout"
@@ -156,10 +219,11 @@
                     android:visibility="gone"/>
 
                 <TextView
+                    android:id="@+id/tv_login"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0"
                     android:layout_height="wrap_content"
-                    android:text="退出登录"
+                    android:text="点击登录"
                     android:textSize="14sp"/>
 
             </LinearLayout>

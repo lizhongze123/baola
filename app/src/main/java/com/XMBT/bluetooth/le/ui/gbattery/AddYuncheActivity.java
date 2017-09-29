@@ -10,6 +10,7 @@ import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.http.ApiResultCallback;
 import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.utils.Configure;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.TitleBar;
 import com.lzy.okgo.OkGo;
@@ -43,7 +44,7 @@ public class AddYuncheActivity extends BaseActivity {
     public void doClick(View view) {
         switch (view.getId()) {
             case R.id.addBtn:
-                if (!GlobalConsts.isLogin) {
+                if (!Configure.isLogin) {
                     showToast("请先登录");
                 } else {
                     if (!TextUtils.isEmpty(editText.getText().toString())) {

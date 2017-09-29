@@ -78,7 +78,7 @@ public class FortificationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fortification);
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
-        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceActivity.DATA_DEVICE);
         this.mSpeechSynthesizer = SpeechSynthesizer.getInstance();
         initViews();
         addListener();

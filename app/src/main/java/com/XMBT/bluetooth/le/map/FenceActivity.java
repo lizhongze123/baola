@@ -16,7 +16,7 @@ import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.sp.UserSp;
 import com.XMBT.bluetooth.le.ui.gbattery.BatteryUtils;
-import com.XMBT.bluetooth.le.ui.gbattery.DeviceFragment;
+import com.XMBT.bluetooth.le.ui.gbattery.DeviceActivity;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
@@ -100,7 +100,7 @@ public class FenceActivity extends BaseActivity implements OnGetGeoCoderResultLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fence);
         StatusBarHelper.setStatusBarColor(this, R.color.title_color);
-        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceActivity.DATA_DEVICE);
         initView();
         getLocate();
         getFenStatus();

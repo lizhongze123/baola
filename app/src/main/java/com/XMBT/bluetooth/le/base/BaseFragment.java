@@ -5,6 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
+import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.sp.UserSp;
+import com.XMBT.bluetooth.le.ui.misc.LoginActivity;
+import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.ToastUtils;
 import com.XMBT.bluetooth.le.view.loadingdialog.LoadingDialog;
 

@@ -89,7 +89,7 @@ public class WarnCenterActivity extends BaseActivity {
     /**取报警数量*/
     public void getAlarmCount() {
         showLoadingDialog(null);
-        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceActivity.DATA_DEVICE);
         String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         OkGo.get(GlobalConsts.GET_DATE)
                 .tag(this)
@@ -116,7 +116,7 @@ public class WarnCenterActivity extends BaseActivity {
      */
     public void getDetailData(String type) {
         showLoadingDialog(null);
-        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceActivity.DATA_DEVICE);
         String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         OkGo.get(GlobalConsts.GET_DATE)
                 .tag(this)

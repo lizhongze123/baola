@@ -1,9 +1,11 @@
 package com.XMBT.bluetooth.le.consts;
 
 
+import com.XMBT.bluetooth.le.utils.Configure;
+
 public class GlobalConsts {
 
-    public static boolean isLogin = false;
+
     public static String userName ;
 
     public static final String URL = "http://app.ycqpmall.com/";
@@ -26,6 +28,12 @@ public class GlobalConsts {
     public static final String BATTERY = "XM Battery";//动力电池
     public static final String GPS_BATTERY = "GPS"; //gps智能电池
 
+
+    public static final String LIGHTING_CN = "汽车智能照明系统";
+    public static final String POWER_CN = "汽车智能启动电源";
+    public static final String BATTERY_CN = "汽车智能动力电池";
+    public static final String GPS_BATTERY_CN = "汽车GPS智能电池";
+
     /**
      * IntentFilter
      */
@@ -46,5 +54,17 @@ public class GlobalConsts {
      * 连接成功的蓝牙地址的sp文件名
      */
     public static final String SP_BLUETOOTH_DEVICE = "baoliao";
+
+    /**
+     * 产品sp file名
+     */
+    public static String getProductSpName(){
+        if(Configure.USERID != null){
+            return "product" + Configure.USERID;
+        } else{
+            return "";
+        }
+
+    }
 
 }

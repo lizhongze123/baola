@@ -6,12 +6,9 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
@@ -19,7 +16,6 @@ import com.XMBT.bluetooth.le.bean.YunCheDeviceEntity;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.sp.UserSp;
 import com.XMBT.bluetooth.le.ui.gbattery.adapter.AlarmBean;
-import com.XMBT.bluetooth.le.ui.gbattery.adapter.AlarmAdapter;
 import com.XMBT.bluetooth.le.ui.gbattery.adapter.MyAlarmAdapter;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
@@ -124,7 +120,7 @@ public class WarnCenterActivity2 extends BaseActivity implements RadioGroup.OnCh
      * 取报警数量
      */
     public void getAlarmCount() {
-        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceActivity.DATA_DEVICE);
         String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         OkGo.get(GlobalConsts.GET_DATE)
                 .tag(this)
@@ -150,7 +146,7 @@ public class WarnCenterActivity2 extends BaseActivity implements RadioGroup.OnCh
      * 取报警信息
      */
     public void getDetailData(final String type, final int pageIndex, int pageSize) {
-        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceFragment.DATA_DEVICE);
+        device = (YunCheDeviceEntity) getIntent().getSerializableExtra(DeviceActivity.DATA_DEVICE);
         String mds = UserSp.getInstance(this).getMds(GlobalConsts.userName);
         OkGo.get(GlobalConsts.GET_DATE)
                 .tag(this)

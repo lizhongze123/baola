@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <com.XMBT.bluetooth.le.view.TitleBar
@@ -11,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title_background="@color/title_bg"
-        app:title_text="GPS电池"
-        app:left_button_image="@drawable/common_ic_left_arrow"
+        app:title_text="设备"
         app:title_textColor="@color/white" />
 
     <com.stx.xhb.xbanner.XBanner
@@ -47,30 +45,34 @@
             android:text="智能设备列表"
             android:textSize="16sp" />
 
-        <ImageButton
-            android:id="@+id/addBtn"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+        <LinearLayout
+            android:id="@+id/ll_btn"
             android:layout_marginRight="16dp"
-            android:background="@drawable/add2x" />
+            android:gravity="center"
+            android:layout_width="40dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/addBtn"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:background="@drawable/add2x"/>
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 
     <View style="@style/separation_line" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/relativeLayout2">
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_centerHorizontal="true" />
 
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <View style="@style/separation_line"/>
 
 </LinearLayout>
