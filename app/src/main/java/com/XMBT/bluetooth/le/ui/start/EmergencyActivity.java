@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
@@ -21,11 +23,13 @@ import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
 import com.XMBT.bluetooth.le.ui.light.LightFunctionActivity;
 import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.utils.LogUtils;
+import com.XMBT.bluetooth.le.utils.PhoneInfoUtils;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
 import com.XMBT.bluetooth.le.view.ChargingProgess;
 import com.XMBT.bluetooth.le.view.ListDialog;
 import com.XMBT.bluetooth.le.view.TitleBar;
+import com.XMBT.bluetooth.le.view.dialog.InputDialog;
 import com.bumptech.glide.Glide;
 import com.stx.xhb.xbanner.XBanner;
 
@@ -54,7 +58,10 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
 
     private BleManager bleManager;
 
-    private String[] previous = new String[3];
+    private List<String> previous = new ArrayList<>();
+
+    private InputDialog inputDialog;
+    private InputDialog changeDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +75,28 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     }
 
     private void initBle() {
+        bleManager = BleManager.getInstance(this);
+        //第一次进来正常扫描，然后连接
+        //第二次进来不用连接
+        //正在连接着进来，先断开连接，再判断连接
+        if (!bleManager.isSupportBle()) {
+            showToast(getResources().getString(R.string.ble_not_supported));
+        }
+
         if(BleManager.isConnSuccessful){
-            bleManager.disconnect();
-        }else{
-            bleManager = BleManager.getInstance(this);
-            if (!bleManager.isSupportBle()) {
-                showToast(getResources().getString(R.string.ble_not_supported));
+
+            if(!BleManager.CONNECT_TYPE.equals(GlobalConsts.POWER)){
+                bleManager.disconnect();
+                //如果有连接过，下一次自动连接
+                String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, "");
+                if(!TextUtils.isEmpty(address)){
+                    bleManager.realConnect(GlobalConsts.POWER, address);
+                }else{
+                    bleManager.startScan(this, GlobalConsts.POWER);
+                }
             }
 
+        }else{
             //如果有连接过，下一次自动连接
             String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, "");
             if(!TextUtils.isEmpty(address)){
@@ -84,6 +105,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                 bleManager.startScan(this, GlobalConsts.POWER);
             }
         }
+
     }
 
     private void initDatas() {
@@ -133,7 +155,69 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         cbWarninglight.setOnClickListener(this);
         cbUsb.setOnClickListener(this);
 
+        findViewById(R.id.ll_setting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!BleManager.isConnSuccessful) {
+                    reset();
+                    showToast("请先连接设备");
+                    return;
+                }
+                changeDialog.showDialog();
+            }
+        });
+
+        inputDialog = new InputDialog(EmergencyActivity.this);
+        inputDialog.setOnButtonListener(new InputDialog.OnButtonListener() {
+            @Override
+            public void onPositive(String str) {
+                if(TextUtils.isEmpty(str) || str.length() != 4){
+                    showToast("请输入正确的4位数字密码");
+                }else{
+                    writePwd(SampleGattAttributes.SEND_PWD, str);
+                    inputDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onNavigate() {
+                BleManager.getInstance(EmergencyActivity.this).disconnect();
+            }
+        });
+
+        changeDialog = new InputDialog(EmergencyActivity.this);
+        changeDialog.setCancelable(true);
+        changeDialog.setCanceledOnTouchOutside(true);
+        changeDialog.setOnButtonListener(new InputDialog.OnButtonListener() {
+            @Override
+            public void onPositive(String str) {
+                if(TextUtils.isEmpty(str) || str.length() != 4){
+                    showToast("请输入正确的4位数字密码");
+                }else{
+                    writePwd(SampleGattAttributes.CHANGE_PWD, str);
+                    changeDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onNavigate() {
+
+            }
+        });
+
         connectChanged(BleManager.isConnSuccessful);
+    }
+
+    private void writePwd(String instructions, String value){
+        showLoadingDialog(null);
+        String str = Integer.toHexString(Integer.valueOf(value));
+        while (str.length() < 4){
+            str = "0" + str;
+        }
+        String pwdInstructions = instructions + str;
+        LogUtils.d("发送的密码为--" + pwdInstructions);
+        byte[] dataToWrite1 = HexUtil.hexStringToBytes(pwdInstructions);
+        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite1);
     }
 
     @Override
@@ -179,20 +263,27 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                 //去除：
                 if (!TextUtils.isEmpty(strTemp)) {
                     strTemp = strTemp.replaceAll(":", "");
+                    LogUtils.d("通知指令为：" + strTemp);
                 }
                 if (!strTemp.equals("0000000000")) {  //过滤掉00:00:00:00:00
 
-                    if (strTemp.length() == 10) {
+                    //密码相关指令
+                    if(strTemp.equals(SampleGattAttributes.PWD_WRONG)){
+                        dismissLoadingDialog();
+                        inputDialog.showDialog();
+                    }else if(strTemp.equals(SampleGattAttributes.PWD_RIGHT)){
+                        dismissLoadingDialog();
+                    }else if(strTemp.equals(SampleGattAttributes.CHANGE_PWD_WRONG)){
+                        dismissLoadingDialog();
+                        showToast("修改密码失败");
+                    }else if(strTemp.equals(SampleGattAttributes.CHANGE_PWD_RIGHT)){
+                        showToast("修改密码成功");
+                        dismissLoadingDialog();
+                        //修改成功后发送密码至服务器
+                    }else if (strTemp.length() == 10) {
+                        //灯光相关指令
                         String substr = strTemp.substring(0, 6);
                         String substr2 = strTemp.substring(6, 10);
-
-                        if(TextUtils.isEmpty(previous[0])){
-                            previous[0] = substr2;
-                        }else if(TextUtils.isEmpty(previous[1])){
-                            previous[1] = substr2;
-                        }else if(TextUtils.isEmpty(previous[2])){
-                            previous[2] = substr2;
-                        }
 
                         if (substr.equals(SampleGattAttributes.REAL_VOLTAGE)) {
                             String voltageStr = substr2.substring(0, 2);
@@ -209,26 +300,65 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                         //电量<=2格时，电量不足
                         //温度大于45°，禁止启动汽车
                         if (substr.equals(SampleGattAttributes.BATTERY_INDICATOR)) {
+
+                            if(previous.size() == 3){
+                                previous.remove(2);
+                            }else{
+                                previous.add(substr2);
+                            }
+
                             if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FIVE)) {
                                 LogUtils.d("电池电量---18");
                                 chargingprigressView.setDCAnimation(18);
-                                tvStatus.setText("电源良好，允许启动汽车");
+
+                                if(previous.size() != 3){
+                                    tvStatus.setText("电源良好，允许启动汽车");
+                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
+                                    tvStatus.setText("电源良好，允许启动汽车");
+                                }else{
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }
+
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FOUR)) {
                                 LogUtils.d("电池电量---14");
                                 chargingprigressView.setDCAnimation(14);
-                                tvStatus.setText("电源良好，允许启动汽车");
+                                if(previous.size() != 3){
+                                    tvStatus.setText("电源良好，允许启动汽车");
+                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
+                                    tvStatus.setText("电源良好，允许启动汽车");
+                                }else{
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_THREE)) {
                                 LogUtils.d("电池电量---10");
                                 chargingprigressView.setDCAnimation(10);
-                                tvStatus.setText("电量不足，禁止启动汽车");
+                                if(previous.size() != 3){
+                                    tvStatus.setText("电源良好，允许启动汽车");
+                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }else{
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_TWO)) {
                                 LogUtils.d("电池电量---6");
                                 chargingprigressView.setDCAnimation(6);
-                                tvStatus.setText("电量不足，禁止启动汽车");
+                                if(previous.size() != 3){
+                                    tvStatus.setText("电源良好，允许启动汽车");
+                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }else{
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_ONE)) {
                                 LogUtils.d("电池电量---2");
                                 chargingprigressView.setDCAnimation(2);
-                                tvStatus.setText("电量不足，禁止启动汽车");
+                                if(previous.size() != 3){
+                                    tvStatus.setText("电源良好，允许启动汽车");
+                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }else{
+                                    tvStatus.setText("电量不足，禁止启动汽车");
+                                }
                             }
                         }
                         if (substr.equals(SampleGattAttributes.REAL_TEMPERATURE)) {
@@ -294,6 +424,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                     connectChanged(false);
                 } else {
                     connectChanged(true);
+                    sendMac();
                 }
             } else if (action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)) {
                 ArrayList<iBeaconClass.iBeacon> mLeDevices;
@@ -304,6 +435,33 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
             }
         }
     };
+
+    private final Handler mHandler = new Handler();
+    private int macCount;
+    /**
+     * 连接成功后发送mac地址最后两个byte,间隔300ms发送三次
+     */
+    private void sendMac() {
+        macCount = 0;
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(macCount != 3){
+                    //54:14:73:A0:47:B4
+                    String macAddress = PhoneInfoUtils.getMacAddress();
+                    macAddress = macAddress.substring(12,macAddress.length());
+                    macAddress = macAddress.replaceAll(":", "");
+                    String newValue1 = SampleGattAttributes.SEND_MAC + macAddress;
+                    byte[] dataToWrite1 = HexUtil.hexStringToBytes(newValue1);
+                    bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite1);
+                    macCount++;
+                    LogUtils.d("第" + macCount + "次发送mac地址--" + newValue1);
+                    mHandler.postDelayed(this, 300);
+                }
+
+            }
+        }, 300);
+    }
 
     private ListDialog dialog;
 
@@ -324,7 +482,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        bleManager.disconnect();
+//        bleManager.disconnect();
         unregisterReceiver(mBroadcastReceiver);
     }
 

@@ -128,21 +128,37 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
     }
 
     private void initBle() {
+        bleManager = BleManager.getInstance(this);
+        //第一次进来正常扫描，然后连接
+        //第二次进来不用连接
+        //正在连接着进来，先断开连接，再判断连接
+        if (!bleManager.isSupportBle()) {
+            showToast(getResources().getString(R.string.ble_not_supported));
+        }
+
         if(BleManager.isConnSuccessful){
-            bleManager.disconnect();
-        }else{
-            bleManager = BleManager.getInstance(this);
-            if (!bleManager.isSupportBle()) {
-                showToast(getResources().getString(R.string.ble_not_supported));
+
+            if(!BleManager.CONNECT_TYPE.equals(GlobalConsts.LIGHTING)){
+                bleManager.disconnect();
+                //如果有连接过，下一次自动连接
+                String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, "");
+                if(!TextUtils.isEmpty(address)){
+                    bleManager.realConnect(GlobalConsts.POWER, address);
+                }else{
+                    bleManager.startScan(this, GlobalConsts.POWER);
+                }
             }
+
+        }else{
             //如果有连接过，下一次自动连接
-            String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.LIGHTING, "");
-            if (!TextUtils.isEmpty(address)) {
-                bleManager.realConnect(GlobalConsts.LIGHTING, address);
-            } else {
-                bleManager.startScan(this, GlobalConsts.LIGHTING);
+            String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.POWER, "");
+            if(!TextUtils.isEmpty(address)){
+                bleManager.realConnect(GlobalConsts.POWER, address);
+            }else{
+                bleManager.startScan(this, GlobalConsts.POWER);
             }
         }
+
     }
 
     private void initDatas() {

@@ -14,9 +14,6 @@ import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
 
-/**
- * Created by lzz on 2017/9/28.
- */
 
 public class InputDialog extends Dialog{
 
@@ -26,7 +23,7 @@ public class InputDialog extends Dialog{
     private TextView tvNavigate, tvPositive;
 
     public InputDialog(@NonNull Context context) {
-        super(context);
+        super(context, R.style.tip_dialog);
         this.context = context;
     }
 
@@ -42,21 +39,20 @@ public class InputDialog extends Dialog{
         etNum = (EditText) findViewById(R.id.et_num);
         tvNavigate = (TextView) findViewById(R.id.tv_cancel);
         tvPositive = (TextView) findViewById(R.id.tv_positive);
-        tvNavigate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
         tvPositive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onPositive(etNum.getText().toString());
             }
         });
+        tvNavigate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onNavigate();
+                dismiss();
+            }
+        });
     }
-
-
 
     private void init() {
         Window window = this.getWindow();
@@ -67,17 +63,23 @@ public class InputDialog extends Dialog{
         params.gravity = Gravity.CENTER;
         window.setAttributes(p);
 //      window.setWindowAnimations(R.style.Animation_Popup);
-        this.setCancelable(true);
-        this.setCanceledOnTouchOutside(true);
+        this.setCancelable(false);
+        this.setCanceledOnTouchOutside(false);
     }
 
-    private OnPositiveListener mListener;
+    public void showDialog(){
+        etNum.setText("");
+        this.show();
+    }
 
-    public interface OnPositiveListener {
+    private OnButtonListener mListener;
+
+    public interface OnButtonListener {
         void onPositive(String str);
+        void onNavigate();
     }
 
-    public void setOnPositiveListener(OnPositiveListener listener) {
+    public void setOnButtonListener(OnButtonListener listener) {
         this.mListener = listener;
     }
 }

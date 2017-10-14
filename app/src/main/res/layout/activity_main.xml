@@ -54,7 +54,7 @@
                 android:id="@+id/radio4"
                 style="@style/main_tab"
                 android:text="商城"
-                android:drawableTop="@drawable/advice_radio_selector"/>
+                android:drawableTop="@drawable/mail_radio_selector"/>
 
             <RadioButton
                 android:id="@+id/radio5"

@@ -189,4 +189,34 @@ public class SampleGattAttributes {
      */
     public static String START_COUNT = "04A956";
 
+
+    //----------------------------密码指令---------------------------
+    /**
+     * 发送MAC地址
+     */
+    public static String SEND_MAC = "04E51F";
+    /**
+     * 密码正确
+     */
+    public static String PWD_RIGHT = "04E52E11EE";
+    /**
+     * 密码错误
+     */
+    public static String PWD_WRONG = "04E52E00FF";
+    /**
+     * 发送密码
+     */
+    public static String SEND_PWD = "04E53D";
+    /**
+     * 修改密码
+     */
+    public static String CHANGE_PWD = "04E54C";
+    /**
+     * 修改密码正确
+     */
+    public static String CHANGE_PWD_RIGHT = "04E55B11EE";
+    /**
+     * 修改密码错误
+     */
+    public static String CHANGE_PWD_WRONG = "04E55B00FF";
 }

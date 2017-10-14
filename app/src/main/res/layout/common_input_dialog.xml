@@ -35,7 +35,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:hint="4位密码"
-                android:inputType="number"
+                android:inputType="numberPassword"
                 android:gravity="center"
                 android:maxLength="4"
                 android:paddingLeft="30dp"
@@ -43,6 +43,7 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:maxLines="1"
+                android:textColor="@color/gray_33"
                 android:background="@drawable/white_circular_bead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -89,7 +90,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
 
 </LinearLayout>

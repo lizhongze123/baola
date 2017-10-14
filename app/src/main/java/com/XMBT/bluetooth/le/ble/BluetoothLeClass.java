@@ -203,7 +203,7 @@ public class BluetoothLeClass extends Service {
                 mOnDataAvailableListener.onCharacteristicWrite(gatt, characteristic);
             // 不调用它,接收不到数据.
             broadcastUpdate(ACTION_NOTIFI, characteristic);
-            LogUtils.i("收到通知--" + characteristic.getUuid().toString());
+//            LogUtils.i("收到通知--" + characteristic.getUuid().toString());
         }
 
         /**

@@ -206,45 +206,60 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp">
 
-                    <RelativeLayout
+                    <LinearLayout
+                        android:id="@+id/ll_setting"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:gravity="center">
 
-                        <CheckBox
-                            android:id="@+id/cb_setting"
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:button="@null"
                             android:drawablePadding="5dp"
-                            android:drawableTop="@drawable/icon_light"
+                            android:src="@drawable/icon_set"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
                             android:gravity="center"
-                            android:text="设置"
+                            android:layout_marginTop="4dp"
                             android:textColor="@drawable/on_off_textcolor_selector"
-                            android:textSize="12sp" />
+                            android:text="修改密码"/>
 
-                    </RelativeLayout>
 
-                    <RelativeLayout
-                        android:visibility="invisible"
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_question"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:gravity="center">
 
-                        <CheckBox
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:button="@null"
                             android:drawablePadding="5dp"
-                            android:drawableTop="@drawable/icon_light"
-                            android:gravity="center"
-                            android:text="设置"
-                            android:textColor="@drawable/on_off_textcolor_selector"
-                            android:textSize="12sp" />
+                            android:src="@drawable/icon_set"
+                            android:gravity="center" />
 
-                    </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:textColor="@drawable/on_off_textcolor_selector"
+                            android:text="常见问题"/>
+
+                    </LinearLayout>
 
                     <RelativeLayout
                         android:visibility="invisible"

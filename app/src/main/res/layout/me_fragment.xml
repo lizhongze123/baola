@@ -90,7 +90,6 @@
 
             <View style="@style/separation_line"/>
 
-
             <LinearLayout
                 android:id="@+id/ll_changePwd"
                 android:layout_width="match_parent"
@@ -105,13 +104,13 @@
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"
-                    android:visibility="gone"/>
+                    android:src="@drawable/icon_pwd" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="修改密码"
+                    android:text="修改帐号密码"
                     android:textSize="14sp"/>
 
                 <ImageView
@@ -126,6 +125,40 @@
 
             <View style="@style/separation_line"/>
 
+            <LinearLayout
+                android:id="@+id/ll_queryPwd"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/selector_item_default"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="15dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_alarm"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="查看设备密码"
+                    android:textSize="14sp"/>
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/personnew_more"/>
+
+            </LinearLayout>
+
+            <View style="@style/separation_line"/>
 
             <LinearLayout
                 android:id="@+id/ll_share"
@@ -141,7 +174,7 @@
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"
-                    android:visibility="gone"/>
+                    android:src="@drawable/icon_share"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -176,7 +209,8 @@
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"
-                    android:visibility="gone"/>
+                    android:src="@drawable/icon_about"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"

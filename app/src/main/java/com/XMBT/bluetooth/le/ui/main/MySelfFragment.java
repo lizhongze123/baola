@@ -50,6 +50,7 @@ public class MySelfFragment extends BaseFragment implements View.OnClickListener
         });
         rootView.findViewById(R.id.ll_refresh).setOnClickListener(this);
         rootView.findViewById(R.id.ll_changePwd).setOnClickListener(this);
+        rootView.findViewById(R.id.ll_queryPwd).setOnClickListener(this);
         rootView.findViewById(R.id.ll_share).setOnClickListener(this);
         rootView.findViewById(R.id.ll_about).setOnClickListener(this);
         rootView.findViewById(R.id.ll_logout).setOnClickListener(this);
@@ -90,6 +91,14 @@ public class MySelfFragment extends BaseFragment implements View.OnClickListener
                     @Override
                     public void callBack() {
                         startActivity(new Intent(getContext(), ChangePwdActivity.class));
+                    }
+                });
+                break;
+            case R.id.ll_queryPwd:
+                LoginUtil.checkLogin(this.getContext(), new LoginUtil.LoginForCallBack() {
+                    @Override
+                    public void callBack() {
+                        startActivity(new Intent(getContext(), QueryPwdActivity.class));
                     }
                 });
                 break;

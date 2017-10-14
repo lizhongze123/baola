@@ -36,7 +36,14 @@ public class BleManager {
     private Context mContext;
     private BluetoothAdapter mBluetoothAdapter;
     private static BluetoothLeClass mBLE;
+    /**
+     * 是否连接成功
+     */
     public static boolean isConnSuccessful = false;
+    /**
+     * 当前连接的类型
+     */
+    public static String CONNECT_TYPE = "";
 
     public static BluetoothGattCharacteristic gattCharacteristic_write = null;
     public static BluetoothGattCharacteristic gattCharacteristic_char2 = null;
@@ -172,6 +179,8 @@ public class BleManager {
                     if(!TextUtils.isEmpty(productName)){
                         //连接成功后保存地址在本地
                         if(isConnSuccessful){
+                            //保存连接成功后的type
+                            CONNECT_TYPE = type;
                             if(type.equals(GlobalConsts.BATTERY)){
                                 PreferenceUtils.write(mContext, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, address);
                             }else if(type.equals(GlobalConsts.POWER)){
