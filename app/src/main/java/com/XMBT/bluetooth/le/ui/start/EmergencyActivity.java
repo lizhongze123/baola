@@ -51,7 +51,9 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     private String strTemp;
 
     private TextView tvVoltage, tvStatus, tvTemperature;
-    private CheckBox cbFloodlight, cbWarninglight, cbUsb;
+    private TextView tvFloodlight, tvWarninglight, tvUsb;
+    private LinearLayout llFloodlight, llWarninglight, llUsb;
+    private ImageView ivQuestion;
 
     private float temf, volf;
     private ChargingProgess chargingprigressView;
@@ -62,6 +64,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
 
     private InputDialog inputDialog;
     private InputDialog changeDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,18 +145,24 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         tvVoltage = (TextView) findViewById(R.id.tv_voltage);
         chargingprigressView = (ChargingProgess) findViewById(R.id.chargingprigressView);
         tvTemperature = (TextView) findViewById(R.id.tv_temperature);
-        cbFloodlight = (CheckBox) findViewById(R.id.cb_floodlight);
-        cbWarninglight = (CheckBox) findViewById(R.id.cb_warninglight);
-        cbUsb = (CheckBox) findViewById(R.id.cb_usb);
+        findViewById(R.id.iv_question).setOnClickListener(this);
+
+        llFloodlight = (LinearLayout) findViewById(R.id.ll_floodlight);
+        llWarninglight = (LinearLayout) findViewById(R.id.ll_warninglight);
+        llUsb = (LinearLayout) findViewById(R.id.ll_usb);
+        tvFloodlight = (TextView) findViewById(R.id.tv_floodlight);
+        tvWarninglight = (TextView) findViewById(R.id.tv_warninglight);
+        tvUsb = (TextView) findViewById(R.id.tv_usb);
+
         tvStatus = (TextView) findViewById(R.id.tv_status);
 
         xBanner = (XBanner) findViewById(R.id.xbanner);
         xBanner.setData(bannerUrls, null);
         xBanner.setmAdapter(this);
 
-        cbFloodlight.setOnClickListener(this);
-        cbWarninglight.setOnClickListener(this);
-        cbUsb.setOnClickListener(this);
+        llFloodlight.setOnClickListener(this);
+        llWarninglight.setOnClickListener(this);
+        llUsb.setOnClickListener(this);
 
         findViewById(R.id.ll_setting).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,9 +252,9 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         } else {
             titleBar.setTvRight("未连接");
             titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
-            chargingprigressView.setProgress(0);
-            tvVoltage.setText("电池电压:" + 0 + "V");
-            tvTemperature.setText("电池温度:" + 0 + "℃");
+//            chargingprigressView.setProgress(0);
+//            tvVoltage.setText("电池电压:" + 0 + "V");
+//            tvTemperature.setText("电池温度:" + 0 + "℃");
             tvStatus.setText("设备未连接");
             tvStatus.setEnabled(false);
             reset();
@@ -270,7 +279,9 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                     //密码相关指令
                     if(strTemp.equals(SampleGattAttributes.PWD_WRONG)){
                         dismissLoadingDialog();
-                        inputDialog.showDialog();
+                        if(!inputDialog.isShowing()){
+                            inputDialog.showDialog();
+                        }
                     }else if(strTemp.equals(SampleGattAttributes.PWD_RIGHT)){
                         dismissLoadingDialog();
                     }else if(strTemp.equals(SampleGattAttributes.CHANGE_PWD_WRONG)){
@@ -280,8 +291,26 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                         showToast("修改密码成功");
                         dismissLoadingDialog();
                         //修改成功后发送密码至服务器
+                    }else if(strTemp.equals(SampleGattAttributes.FLOODLIGHT_STATUS_OPEN)){
+                        tvFloodlight.setEnabled(true);
+                        //白灯状态开
+                    }else if(strTemp.equals(SampleGattAttributes.FLOODLIGHT_STATUS_CLOSE)){
+                        tvFloodlight.setEnabled(false);
+                        //白灯状态关
+                    }else if(strTemp.equals(SampleGattAttributes.WARNINGLIGHT_STATUS_OPEN)){
+                        tvWarninglight.setEnabled(true);
+                        //红蓝状态开
+                    }else if(strTemp.equals(SampleGattAttributes.WARNINGLIGHT_STATUS_CLOSE)){
+                        tvWarninglight.setEnabled(false);
+                        //红蓝状态关
+                    }else if(strTemp.equals(SampleGattAttributes.USB_STATUS_OPEN)){
+                        tvUsb.setEnabled(true);
+                        //usb状态开
+                    }else if(strTemp.equals(SampleGattAttributes.USB_STATUS_CLOSE)){
+                        tvUsb.setEnabled(false);
+                        //usb状态关
                     }else if (strTemp.length() == 10) {
-                        //灯光相关指令
+                        //电量相关指令
                         String substr = strTemp.substring(0, 6);
                         String substr2 = strTemp.substring(6, 10);
 
@@ -301,9 +330,8 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                         //温度大于45°，禁止启动汽车
                         if (substr.equals(SampleGattAttributes.BATTERY_INDICATOR)) {
 
-                            if(previous.size() == 3){
+                            if(previous.size() == 3) {
                                 previous.remove(2);
-                            }else{
                                 previous.add(substr2);
                             }
 
@@ -377,43 +405,6 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
 //                            tempetureTv.setText(tem+"\n使用天数："+substr2);
                         }
 
-                        if (substr.equals("04:99:66")) {// || substr.equals("04:BB:44") ){
-
-                        }
-
-                        if (substr.equals("04:BB:44")) {
-                            strXqdDdy = "氙气灯电压->" + substr2;
-                        }
-
-                        if (substr.equals("04:DD:22")) {
-
-                            if (substr2.equals("01:FE")) {
-                                //氙气大灯故障:工作电压过高!
-                            }
-
-                            if (substr2.equals("02:FD")) {
-                                //氙气大灯故障:工作电压过低
-                            }
-
-                            if (substr2.equals("03:FC")) {
-                                //氙气大灯故障:工作温度过高
-                            }
-
-                            if (substr2.equals("04:FB")) {
-                                //氙气大灯故障:点灯失败!"+"\n"+"氙气大灯已经关闭!
-                            }
-                        }
-
-                        if (substr.equals("04:CC:33")) {
-
-                            if (substr2.equals("31:CE")) {
-                                //"车灯状态: 开"
-                            }
-
-                            if (substr2.equals("00:FF")) {
-                                //车灯状态: 关"
-                            }
-                        }
                     }
 
 
@@ -427,11 +418,15 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                     sendMac();
                 }
             } else if (action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)) {
+//                ArrayList<iBeaconClass.iBeacon> mLeDevices;
+//                mLeDevices = (ArrayList<iBeaconClass.iBeacon>) intent.getSerializableExtra(BleManager.SCAN_BLE_DATA);
+//                if(mLeDevices.size() > 0){
+//                    showPopupWindow(EmergencyActivity.this, titleBar, mLeDevices);
+//                }
+            } else if (action.equals(GlobalConsts.ACTION_SCAN_NEW_DEVICE)) {
                 ArrayList<iBeaconClass.iBeacon> mLeDevices;
                 mLeDevices = (ArrayList<iBeaconClass.iBeacon>) intent.getSerializableExtra(BleManager.SCAN_BLE_DATA);
-                if(mLeDevices.size() > 0){
-                    showPopupWindow(EmergencyActivity.this, titleBar, mLeDevices);
-                }
+                showPopupWindow(EmergencyActivity.this, titleBar, mLeDevices);
             }
         }
     };
@@ -470,13 +465,17 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
             dialog = new ListDialog(context, new ListDialog.ItemClickCallback() {
                 @Override
                 public void callback(iBeaconClass.iBeacon bean, int position) {
+                    BleManager.getInstance(EmergencyActivity.this).stopScan();
                     //点击设备连接
                     BleManager.getInstance(EmergencyActivity.this).realConnect(bean.name, bean.bluetoothAddress);
                 }
             });
         }
+
         dialog.changeData(mLeDevices);
-        dialog.show(view);
+        if (!dialog.isShowing()){
+            dialog.show(view);
+        }
     }
 
     @Override
@@ -499,77 +498,113 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         }
 
         switch (v.getId()) {
-            case R.id.cb_floodlight:
-//              点击之后的状态
 
-                if (cbFloodlight.isChecked()) {
+            case R.id.iv_question:
+                showToast("即将推出，敬请期待。");
+                break;
+            case R.id.ll_floodlight:
 
+                if(!tvFloodlight.isEnabled()){
                     newValue = SampleGattAttributes.FLOODLIGHT_OPEN;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
-
-                    cbFloodlight.setChecked(true);
-                    cbFloodlight.setText("照明灯(开启)");
-                    cbWarninglight.setChecked(false);
-                    cbWarninglight.setText("警示灯(关闭)");
-                    cbUsb.setChecked(true);
-                    cbUsb.setText("USB输出(开启)");
-                } else {
+                }else{
                     newValue = SampleGattAttributes.FLOODLIGHT_CLOSE;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
-
-                    cbFloodlight.setChecked(false);
-                    cbFloodlight.setText("照明灯(关闭)");
-                    cbUsb.setChecked(false);
-                    cbUsb.setText("USB输出(关闭)");
                 }
+//                if (cbFloodlight.isChecked()) {
+//
+//                    newValue = SampleGattAttributes.FLOODLIGHT_OPEN;
+//                    dataToWrite = HexUtil.hexStringToBytes(newValue);
+//                    BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+//
+//                    cbFloodlight.setChecked(true);
+//                    cbFloodlight.setText("照明灯(开启)");
+//                    cbWarninglight.setChecked(false);
+//                    cbWarninglight.setText("警示灯(关闭)");
+//                    cbUsb.setChecked(true);
+//                    cbUsb.setText("USB输出(开启)");
+//                } else {
+//                    newValue = SampleGattAttributes.FLOODLIGHT_CLOSE;
+//                    dataToWrite = HexUtil.hexStringToBytes(newValue);
+//                    BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+//
+//                    cbFloodlight.setChecked(false);
+//                    cbFloodlight.setText("照明灯(关闭)");
+//                    cbUsb.setChecked(false);
+//                    cbUsb.setText("USB输出(关闭)");
+//                }
                 break;
-            case R.id.cb_warninglight:
-                if (cbWarninglight.isChecked()) {
+            case R.id.ll_warninglight:
 
+
+                if(!tvWarninglight.isEnabled()){
                     newValue = SampleGattAttributes.WARNINGLIGHT_FAST;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
-
-                    cbFloodlight.setChecked(false);
-                    cbFloodlight.setText("照明灯(关闭)");
-                    cbWarninglight.setChecked(true);
-                    cbWarninglight.setText("警示灯(开启)");
-                    cbUsb.setChecked(true);
-                    cbUsb.setText("USB输出(开启)");
-                } else {
+                }else{
                     newValue = SampleGattAttributes.WARNINGLIGHT_CLOSE;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
-
-
-                    cbWarninglight.setChecked(false);
-                    cbWarninglight.setText("警示灯(关闭)");
-                    cbUsb.setChecked(false);
-                    cbUsb.setText("USB输出(关闭)");
                 }
-                break;
-            case R.id.cb_usb:
-                if (cbUsb.isChecked()) {
 
+//                if (cbWarninglight.isChecked()) {
+//
+//                    newValue = SampleGattAttributes.WARNINGLIGHT_FAST;
+//                    dataToWrite = HexUtil.hexStringToBytes(newValue);
+//                    BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+//
+//                    cbFloodlight.setChecked(false);
+//                    cbFloodlight.setText("照明灯(关闭)");
+//                    cbWarninglight.setChecked(true);
+//                    cbWarninglight.setText("警示灯(开启)");
+//                    cbUsb.setChecked(true);
+//                    cbUsb.setText("USB输出(开启)");
+//                } else {
+//                    newValue = SampleGattAttributes.WARNINGLIGHT_CLOSE;
+//                    dataToWrite = HexUtil.hexStringToBytes(newValue);
+//                    BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+//
+//
+//                    cbWarninglight.setChecked(false);
+//                    cbWarninglight.setText("警示灯(关闭)");
+//                    cbUsb.setChecked(false);
+//                    cbUsb.setText("USB输出(关闭)");
+//                }
+                break;
+            case R.id.ll_usb:
+
+
+                if(!tvUsb.isEnabled()){
                     newValue = SampleGattAttributes.USB_OPEN;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
-
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
-                    cbUsb.setChecked(true);
-                    cbUsb.setText("USB输出(开启)");
-                } else {
+                }else{
                     newValue = SampleGattAttributes.USB_CLOSE;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
-                    cbUsb.setChecked(false);
-                    cbUsb.setText("USB输出(关闭)");
-                    cbWarninglight.setChecked(false);
-                    cbWarninglight.setText("警示灯(关闭)");
-                    cbFloodlight.setChecked(false);
-                    cbFloodlight.setText("照明灯(关闭)");
                 }
+
+//                if (cbUsb.isChecked()) {
+//
+//                    newValue = SampleGattAttributes.USB_OPEN;
+//                    dataToWrite = HexUtil.hexStringToBytes(newValue);
+//
+//                    BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+//                    cbUsb.setChecked(true);
+//                    cbUsb.setText("USB输出(开启)");
+//                } else {
+//                    newValue = SampleGattAttributes.USB_CLOSE;
+//                    dataToWrite = HexUtil.hexStringToBytes(newValue);
+//                    BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+//                    cbUsb.setChecked(false);
+//                    cbUsb.setText("USB输出(关闭)");
+//                    cbWarninglight.setChecked(false);
+//                    cbWarninglight.setText("警示灯(关闭)");
+//                    cbFloodlight.setChecked(false);
+//                    cbFloodlight.setText("照明灯(关闭)");
+//                }
                 break;
         }
 
@@ -580,11 +615,11 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
      * 复位所有
      * */
     private void reset(){
-        cbUsb.setChecked(false);
-        cbUsb.setText("USB输出(关闭)");
-        cbWarninglight.setChecked(false);
-        cbWarninglight.setText("警示灯(关闭)");
-        cbFloodlight.setChecked(false);
-        cbFloodlight.setText("照明灯(关闭)");
+//        cbUsb.setChecked(false);
+//        cbUsb.setText("USB输出(关闭)");
+//        cbWarninglight.setChecked(false);
+//        cbWarninglight.setText("警示灯(关闭)");
+//        cbFloodlight.setChecked(false);
+//        cbFloodlight.setText("照明灯(关闭)");
     }
 }

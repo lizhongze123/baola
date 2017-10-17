@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
+import com.XMBT.bluetooth.le.utils.LogUtils;
 
 
 public class InputDialog extends Dialog{
@@ -25,17 +26,19 @@ public class InputDialog extends Dialog{
     public InputDialog(@NonNull Context context) {
         super(context, R.style.tip_dialog);
         this.context = context;
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.common_input_dialog);
-        initViews();
         init();
+        initViews();
     }
 
     private void initViews(){
+        LogUtils.e("1111");
         etNum = (EditText) findViewById(R.id.et_num);
         tvNavigate = (TextView) findViewById(R.id.tv_cancel);
         tvPositive = (TextView) findViewById(R.id.tv_positive);
@@ -68,7 +71,9 @@ public class InputDialog extends Dialog{
     }
 
     public void showDialog(){
-        etNum.setText("");
+        if(etNum != null){
+            etNum.setText("");
+        }
         this.show();
     }
 

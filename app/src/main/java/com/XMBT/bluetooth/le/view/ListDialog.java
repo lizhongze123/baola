@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.bean.iBeaconClass;
+import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 
 import java.util.ArrayList;
@@ -91,8 +92,9 @@ public class ListDialog extends PopupWindow{
 
     @Override
     public void dismiss() {
-        super.dismiss();
+        BleManager.getInstance(mContext).stopScan();
         backgroundAlpha(1.0f);
+        super.dismiss();
     }
 
     private void backgroundAlpha(float v) {

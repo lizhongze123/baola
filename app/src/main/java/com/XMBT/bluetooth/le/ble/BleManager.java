@@ -56,6 +56,9 @@ public class BleManager {
 
     private LoadingDialog loadingDialog;
 
+    private int SCAN_TIME = 8000;
+    private boolean mScanning = false;
+
     private String productName = "";
 
     public static BleManager getInstance(Context context) {
@@ -103,6 +106,7 @@ public class BleManager {
 
         mLeDevices = new ArrayList<>();
         mLeCallback.setBleManager(this).notifyScanStarted();
+        mScanning = true;
         boolean success = mBluetoothAdapter.startLeScan(mLeCallback);
         if (success) {
 
@@ -119,6 +123,7 @@ public class BleManager {
 
         mLeDevices = new ArrayList<>();
         mLeCallback.setBleManager(this).notifyScanStarted();
+        mScanning = true;
         boolean success = mBluetoothAdapter.startLeScan(callback);
         if (success) {
 
@@ -129,6 +134,7 @@ public class BleManager {
 
 
     public void stopScan() {
+        mScanning = false;
         mLeCallback.removeHandlerMsg();
         mBluetoothAdapter.stopLeScan(mLeCallback);
     }
@@ -137,7 +143,7 @@ public class BleManager {
     /***
      * 蓝牙扫描回调
      */
-    private PeriodScanCallback mLeCallback = new PeriodScanCallback(5000) {
+    private PeriodScanCallback mLeCallback = new PeriodScanCallback(SCAN_TIME) {
         @Override
         public void onScanTimeout() {
             LogUtils.d("mLeDevices.size()--" + mLeDevices.size());
@@ -148,22 +154,27 @@ public class BleManager {
             if (loadingDialog != null) {
                 loadingDialog.dismiss();
             }
+            mScanning = false;
         }
 
         @Override
         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+            if (loadingDialog != null) {
+                loadingDialog.dismiss();
+            }
             if(device.getName() != null){
                 if(device.getName().equals(GlobalConsts.POWER)
                         || device.getName().equals(GlobalConsts.LIGHTING)
                         || device.getName().equals(GlobalConsts.BATTERY)
                         || device.getName().equals(GlobalConsts.GPS_BATTERY)){
                     final iBeaconClass.iBeacon ibeacon = iBeaconClass.fromScanData(device, rssi, scanRecord);
+                    LogUtils.d("添加蓝牙设备--"+device.getAddress());
                     addDevice(ibeacon);
                 }else{
-                    LogUtils.d("扫描出未知设备");
+                    LogUtils.d("扫描出未知设备--"+device.getAddress());
                 }
             }else{
-                LogUtils.d("未知设备");
+                LogUtils.d("未知设备"+device.getAddress());
             }
         }
 
@@ -218,17 +229,25 @@ public class BleManager {
         if (device == null) {
             return;
         }
-        if(mLeDevices.size() == 0){
+        if(mLeDevices.size() != 0){
+            boolean isRepeat = false;
+            for (int i = 0; i < mLeDevices.size(); i++) {
+                String btAddress = mLeDevices.get(i).bluetoothAddress;
+                if(btAddress.equals(device.bluetoothAddress)){
+                    isRepeat = true;
+                    break;
+                }
+            }
+            if(!isRepeat){
+                mLeDevices.add(device);
+            }
+        }else{
             mLeDevices.add(device);
         }
-        for (int i = 0; i < mLeDevices.size(); i++) {
-            String btAddress = mLeDevices.get(i).bluetoothAddress;
-            if (btAddress.equals(device.bluetoothAddress)) {
-                mLeDevices.add(i + 1, device);
-                mLeDevices.remove(i);
-                break;
-            }
-        }
+
+        Intent mIntent = new Intent(GlobalConsts.ACTION_SCAN_NEW_DEVICE);
+        mIntent.putExtra(SCAN_BLE_DATA, mLeDevices);
+        mContext.sendBroadcast(mIntent);
     }
 
     /**

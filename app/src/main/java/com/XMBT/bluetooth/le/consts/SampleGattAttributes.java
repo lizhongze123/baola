@@ -169,6 +169,30 @@ public class SampleGattAttributes {
      * usb-关闭
      */
     public static String USB_CLOSE = "04748B00FF";
+    /**
+     * 白灯状态
+     */
+    public static String FLOODLIGHT_STATUS_OPEN = "04DA3F11EE";
+    /**
+     * 白灯状态
+     */
+    public static String FLOODLIGHT_STATUS_CLOSE = "04DA3F00FF";
+    /**
+     * 红蓝灯状态
+     */
+    public static String WARNINGLIGHT_STATUS_OPEN = "04DA4E11EE";
+    /**
+     * 红蓝灯状态
+     */
+    public static String WARNINGLIGHT_STATUS_CLOSE = "04DA4E00FF";
+    /**
+     * usb状态
+     */
+    public static String USB_STATUS_OPEN = "04DA5D11EE";
+    /**
+     * usb状态
+     */
+    public static String USB_STATUS_CLOSE = "04DA5D00FF";
 
 
     //----------------------------智能电瓶---------------------------

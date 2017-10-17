@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_bg"
+    android:background="@color/white"
     tools:context="com.XMBT.bluetooth.le.ui.start.EmergencyActivity">
 
     <com.XMBT.bluetooth.le.view.TitleBar
@@ -100,20 +100,34 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="15dp"
                 android:background="#ffffff"
-                android:paddingBottom="16dp">
+                android:layout_gravity="center"
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/tv_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_toLeftOf="@+id/iv_question"
                     android:text="未连接设备"
+                    android:gravity="center"
                     android:enabled="false"
                     android:padding="8dp"
                     android:background="@drawable/sel_start"
                     android:textColor="@drawable/sel_start_text"/>
+
+                <ImageView
+                    android:id="@+id/iv_question"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:padding="5dp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/icon_wenhao" />
 
             </RelativeLayout>
 
@@ -122,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:paddingBottom="5dp"
+                android:paddingBottom="10dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -139,72 +153,92 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp">
 
-                    <RelativeLayout
+                    <LinearLayout
+                        android:id="@+id/ll_floodlight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:gravity="center">
 
-                        <CheckBox
-                            android:id="@+id/cb_floodlight"
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:button="@null"
                             android:drawablePadding="5dp"
-                            android:drawableTop="@drawable/icon_light"
+                            android:src="@drawable/icon_light"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tv_floodlight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
                             android:gravity="center"
-                            android:text="照明灯(关闭)"
+                            android:layout_marginTop="4dp"
+                            android:enabled="false"
                             android:textColor="@drawable/on_off_textcolor_selector"
-                            android:textSize="12sp" />
+                            android:text="照明灯"/>
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
-                    <RelativeLayout
+                    <LinearLayout
+                        android:id="@+id/ll_warninglight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:gravity="center">
 
-                        <CheckBox
-                            android:id="@+id/cb_warninglight"
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:button="@null"
                             android:drawablePadding="5dp"
-                            android:drawableTop="@drawable/icon_warning"
+                            android:src="@drawable/icon_warning"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tv_warninglight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
                             android:gravity="center"
-                            android:text="警示灯(关闭)"
+                            android:enabled="false"
+                            android:layout_marginTop="4dp"
                             android:textColor="@drawable/on_off_textcolor_selector"
-                            android:textSize="12sp" />
+                            android:text="警示灯"/>
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
-                    <RelativeLayout
+                    <LinearLayout
+                        android:id="@+id/ll_usb"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:gravity="center">
 
-                        <CheckBox
-                            android:id="@+id/cb_usb"
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:button="@null"
                             android:drawablePadding="5dp"
-                            android:drawableTop="@drawable/icon_usb"
+                            android:src="@drawable/icon_usb"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tv_usb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:enabled="false"
                             android:gravity="center"
-                            android:text="USB输出(关闭)"
+                            android:layout_marginTop="4dp"
                             android:textColor="@drawable/on_off_textcolor_selector"
-                            android:textSize="12sp" />
-                    </RelativeLayout>
+                            android:text="USB输出"/>
 
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp">
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/ll_setting"
@@ -227,6 +261,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
                             android:gravity="center"
+                            android:enabled="false"
                             android:layout_marginTop="4dp"
                             android:textColor="@drawable/on_off_textcolor_selector"
                             android:text="修改密码"/>
@@ -234,54 +269,9 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/ll_question"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:button="@null"
-                            android:drawablePadding="5dp"
-                            android:src="@drawable/icon_set"
-                            android:gravity="center" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="12sp"
-                            android:gravity="center"
-                            android:layout_marginTop="4dp"
-                            android:textColor="@drawable/on_off_textcolor_selector"
-                            android:text="常见问题"/>
-
-                    </LinearLayout>
-
-                    <RelativeLayout
-                        android:visibility="invisible"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center">
-
-                        <CheckBox
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:button="@null"
-                            android:drawablePadding="5dp"
-                            android:drawableTop="@drawable/icon_light"
-                            android:gravity="center"
-                            android:text="设置"
-                            android:textColor="@drawable/on_off_textcolor_selector"
-                            android:textSize="12sp" />
-
-                    </RelativeLayout>
-
                 </LinearLayout>
+
+
             </LinearLayout>
         </LinearLayout>
 

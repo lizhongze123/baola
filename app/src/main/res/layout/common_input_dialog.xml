@@ -33,7 +33,6 @@
                 android:id="@+id/et_num"
                 android:textSize="14sp"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
                 android:hint="4位密码"
                 android:inputType="numberPassword"
                 android:gravity="center"
@@ -43,10 +42,13 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:maxLines="1"
+                android:background="@null"
                 android:textColor="@color/gray_33"
-                android:background="@drawable/white_circular_bead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            <View
+                style="@style/separation_line"/>
 
         </LinearLayout>
 
