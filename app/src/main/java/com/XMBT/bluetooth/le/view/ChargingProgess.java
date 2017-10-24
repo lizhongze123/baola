@@ -290,7 +290,8 @@ public class ChargingProgess extends View {
             if (show) {
                 mPaint.setColor((item_charging_src_red));
             } else {
-                mPaint.setColor((item_charging_background));
+//              mPaint.setColor((item_charging_background));
+                mPaint.setColor((item_charging_src_red));
             }
             canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
         }
