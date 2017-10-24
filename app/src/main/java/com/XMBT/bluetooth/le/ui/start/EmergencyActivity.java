@@ -60,7 +60,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
 
     private BleManager bleManager;
 
-    private List<String> previous = new ArrayList<>();
+//    private List<String> previous = new ArrayList<>();
 
     private InputDialog inputDialog;
     private InputDialog changeDialog;
@@ -309,6 +309,15 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                     }else if(strTemp.equals(SampleGattAttributes.USB_STATUS_CLOSE)){
                         tvUsb.setEnabled(false);
                         //usb状态关
+                    }else if(strTemp.equals(SampleGattAttributes.NORMAL_POWER)){
+                        tvStatus.setText("电源良好 允许启动汽车");
+                    }else if(strTemp.equals(SampleGattAttributes.LOW_POWER)){
+                        tvStatus.setText("电量不足 禁止启动汽车");
+                    }else if(strTemp.equals(SampleGattAttributes.MCU_TO_APP)){
+                        //收到该命令后，回应命令
+                        String newValue1 = SampleGattAttributes.APP_TO_MCU;
+                        byte[] dataToWrite1 = HexUtil.hexStringToBytes(newValue1);
+                        bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite1);
                     }else if (strTemp.length() == 10) {
                         //电量相关指令
                         String substr = strTemp.substring(0, 6);
@@ -330,63 +339,63 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                         //温度大于45°，禁止启动汽车
                         if (substr.equals(SampleGattAttributes.BATTERY_INDICATOR)) {
 
-                            if(previous.size() == 3) {
-                                previous.remove(2);
-                                previous.add(substr2);
-                            }
+//                            if(previous.size() == 3) {
+//                                previous.remove(2);
+//                                previous.add(substr2);
+//                            }
 
                             if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FIVE)) {
                                 LogUtils.d("电池电量---18");
                                 chargingprigressView.setDCAnimation(18);
 
-                                if(previous.size() != 3){
-                                    tvStatus.setText("电源良好，允许启动汽车");
-                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
-                                    tvStatus.setText("电源良好，允许启动汽车");
-                                }else{
-                                    tvStatus.setText("电量不足，禁止启动汽车");
-                                }
+//                                if(previous.size() != 3){
+//                                    tvStatus.setText("电源良好，允许启动汽车");
+//                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
+//                                    tvStatus.setText("电源良好，允许启动汽车");
+//                                }else{
+//                                    tvStatus.setText("电量不足，禁止启动汽车");
+//                                }
 
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FOUR)) {
                                 LogUtils.d("电池电量---14");
                                 chargingprigressView.setDCAnimation(14);
-                                if(previous.size() != 3){
-                                    tvStatus.setText("电源良好，允许启动汽车");
-                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
-                                    tvStatus.setText("电源良好，允许启动汽车");
-                                }else{
-                                    tvStatus.setText("电量不足，禁止启动汽车");
-                                }
+//                                if(previous.size() != 3){
+//                                    tvStatus.setText("电源良好，允许启动汽车");
+//                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
+//                                    tvStatus.setText("电源良好，允许启动汽车");
+//                                }else{
+//                                    tvStatus.setText("电量不足，禁止启动汽车");
+//                                }
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_THREE)) {
                                 LogUtils.d("电池电量---10");
                                 chargingprigressView.setDCAnimation(10);
-                                if(previous.size() != 3){
-                                    tvStatus.setText("电源良好，允许启动汽车");
-                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
-                                    tvStatus.setText("电量不足，禁止启动汽车");
-                                }else{
-                                    tvStatus.setText("电量不足，禁止启动汽车");
-                                }
+//                                if(previous.size() != 3){
+//                                    tvStatus.setText("电源良好，允许启动汽车");
+//                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
+//                                    tvStatus.setText("电量不足，禁止启动汽车");
+//                                }else{
+//                                    tvStatus.setText("电量不足，禁止启动汽车");
+//                                }
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_TWO)) {
                                 LogUtils.d("电池电量---6");
                                 chargingprigressView.setDCAnimation(6);
-                                if(previous.size() != 3){
-                                    tvStatus.setText("电源良好，允许启动汽车");
-                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
-                                    tvStatus.setText("电量不足，禁止启动汽车");
-                                }else{
-                                    tvStatus.setText("电量不足，禁止启动汽车");
-                                }
+//                                if(previous.size() != 3){
+//                                    tvStatus.setText("电源良好，允许启动汽车");
+//                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
+//                                    tvStatus.setText("电量不足，禁止启动汽车");
+//                                }else{
+//                                    tvStatus.setText("电量不足，禁止启动汽车");
+//                                }
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_ONE)) {
                                 LogUtils.d("电池电量---2");
                                 chargingprigressView.setDCAnimation(2);
-                                if(previous.size() != 3){
-                                    tvStatus.setText("电源良好，允许启动汽车");
-                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
-                                    tvStatus.setText("电量不足，禁止启动汽车");
-                                }else{
-                                    tvStatus.setText("电量不足，禁止启动汽车");
-                                }
+//                                if(previous.size() != 3){
+//                                    tvStatus.setText("电源良好，允许启动汽车");
+//                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
+//                                    tvStatus.setText("电量不足，禁止启动汽车");
+//                                }else{
+//                                    tvStatus.setText("电量不足，禁止启动汽车");
+//                                }
                             }
                         }
                         if (substr.equals(SampleGattAttributes.REAL_TEMPERATURE)) {
@@ -394,7 +403,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             temf = Integer.parseInt(tempstr, 16);
                             if (temf >= 45) {
                                 tvTemperature.setText("点击温度:" + temf + "℃");
-                                tvStatus.setText("温度过高 禁止启动");
+                                tvStatus.setText("温度过高 立即停止使用");
                             } else {
                                 tvTemperature.setText("电池温度:" + temf + "℃");
                             }

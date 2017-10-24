@@ -193,6 +193,19 @@ public class SampleGattAttributes {
      * usb状态
      */
     public static String USB_STATUS_CLOSE = "04DA5D00FF";
+    /**
+     * 电源良好
+     */
+    public static String NORMAL_POWER = "04DA6C00FF";
+    /**
+     * 电量不足
+     */
+    public static String LOW_POWER = "04DA6C11EE";
+    /**
+     * app收到指令后返回给mcu
+     */
+    public static String MCU_TO_APP = "04DA7B11EE";
+    public static String APP_TO_MCU = "04DA8A22DD";
 
 
     //----------------------------智能电瓶---------------------------
