@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
@@ -64,6 +65,8 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
 
     private InputDialog inputDialog;
     private InputDialog changeDialog;
+
+    private RelativeLayout rl;
 
 
     @Override
@@ -142,6 +145,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     private void initView() {
         initTitle();
 
+        rl = (RelativeLayout) findViewById(R.id.rl);
         tvVoltage = (TextView) findViewById(R.id.tv_voltage);
         chargingprigressView = (ChargingProgess) findViewById(R.id.chargingprigressView);
         tvTemperature = (TextView) findViewById(R.id.tv_temperature);
@@ -329,7 +333,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             volf = vol10 / 10f;
                             if (volf < 10.5) {
                                 tvVoltage.setText("电池电压:" + volf + "V");
-                                tvVoltage.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+//                                tvVoltage.setTextColor(getResources().getColor(android.R.color.holo_red_light));
                             } else {
                                 tvVoltage.setText("电池电压:" + volf + "V");
                             }
@@ -404,8 +408,12 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             if (temf >= 45) {
                                 tvTemperature.setText("点击温度:" + temf + "℃");
                                 tvStatus.setText("温度过高 立即停止使用");
+                                tvStatus.setEnabled(true);
+                                rl.setBackground(getResources().getDrawable(R.drawable.label_shape_red));
                             } else {
                                 tvTemperature.setText("电池温度:" + temf + "℃");
+                                tvStatus.setEnabled(false);
+                                rl.setBackground(getResources().getDrawable(R.drawable.label_shape_green));
                             }
                         }
 
