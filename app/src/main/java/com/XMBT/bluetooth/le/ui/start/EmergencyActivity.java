@@ -19,6 +19,7 @@ import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
+import com.XMBT.bluetooth.le.consts.CacheConsts;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
 import com.XMBT.bluetooth.le.ui.light.LightFunctionActivity;
@@ -219,6 +220,18 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         });
 
         connectChanged(BleManager.isConnSuccessful);
+        initAll();
+    }
+
+    private void initAll(){
+        tvVoltage.setText(CacheConsts.voltage);
+        tvTemperature.setText(CacheConsts.temperature);
+        tvStatus.setText(CacheConsts.tvStatus);
+        tvStatus.setEnabled(CacheConsts.tvStatusBoolean);
+        chargingprigressView.setDCAnimation(CacheConsts.DCAnimation);
+        tvFloodlight.setEnabled(CacheConsts.floodlight);
+        tvWarninglight.setEnabled(CacheConsts.warninglight);
+        tvUsb.setEnabled(CacheConsts.usb);
     }
 
     private void writePwd(String instructions, String value){
@@ -297,26 +310,34 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                         //修改成功后发送密码至服务器
                     }else if(strTemp.equals(SampleGattAttributes.FLOODLIGHT_STATUS_OPEN)){
                         tvFloodlight.setEnabled(true);
+                        CacheConsts.floodlight = true;
                         //白灯状态开
                     }else if(strTemp.equals(SampleGattAttributes.FLOODLIGHT_STATUS_CLOSE)){
                         tvFloodlight.setEnabled(false);
+                        CacheConsts.floodlight = false;
                         //白灯状态关
                     }else if(strTemp.equals(SampleGattAttributes.WARNINGLIGHT_STATUS_OPEN)){
                         tvWarninglight.setEnabled(true);
+                        CacheConsts.warninglight = true;
                         //红蓝状态开
                     }else if(strTemp.equals(SampleGattAttributes.WARNINGLIGHT_STATUS_CLOSE)){
                         tvWarninglight.setEnabled(false);
+                        CacheConsts.warninglight = false;
                         //红蓝状态关
                     }else if(strTemp.equals(SampleGattAttributes.USB_STATUS_OPEN)){
                         tvUsb.setEnabled(true);
+                        CacheConsts.usb = true;
                         //usb状态开
                     }else if(strTemp.equals(SampleGattAttributes.USB_STATUS_CLOSE)){
                         tvUsb.setEnabled(false);
+                        CacheConsts.usb = false;
                         //usb状态关
                     }else if(strTemp.equals(SampleGattAttributes.NORMAL_POWER)){
-                        tvStatus.setText("电源良好 允许启动汽车");
+                        CacheConsts.tvStatus = "电源良好 允许启动汽车";
+                        tvStatus.setText(CacheConsts.tvStatus );
                     }else if(strTemp.equals(SampleGattAttributes.LOW_POWER)){
-                        tvStatus.setText("电量不足 禁止启动汽车");
+                        CacheConsts.tvStatus = "电量不足 禁止启动汽车";
+                        tvStatus.setText(CacheConsts.tvStatus);
                     }else if(strTemp.equals(SampleGattAttributes.MCU_TO_APP)){
                         //收到该命令后，回应命令
                         String newValue1 = SampleGattAttributes.APP_TO_MCU;
@@ -331,12 +352,14 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             String voltageStr = substr2.substring(0, 2);
                             int vol10 = Integer.parseInt(voltageStr, 16);
                             volf = vol10 / 10f;
-                            if (volf < 10.5) {
-                                tvVoltage.setText("电池电压:" + volf + "V");
+                            CacheConsts.voltage = "电池电压：" + volf + "V";
+                            tvVoltage.setText(CacheConsts.voltage);
+//                            if (volf < 10.5) {
+//                                tvVoltage.setText("电池电压:" + volf + "V");
 //                                tvVoltage.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-                            } else {
-                                tvVoltage.setText("电池电压:" + volf + "V");
-                            }
+//                            } else {
+//                                tvVoltage.setText("电池电压:" + volf + "V");
+//                            }
                         }
                         //电量>=3格时，电源良好
                         //电量<=2格时，电量不足
@@ -351,6 +374,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FIVE)) {
                                 LogUtils.d("电池电量---18");
                                 chargingprigressView.setDCAnimation(18);
+                                CacheConsts.DCAnimation = 18;
 
 //                                if(previous.size() != 3){
 //                                    tvStatus.setText("电源良好，允许启动汽车");
@@ -363,6 +387,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FOUR)) {
                                 LogUtils.d("电池电量---14");
                                 chargingprigressView.setDCAnimation(14);
+                                CacheConsts.DCAnimation = 14;
 //                                if(previous.size() != 3){
 //                                    tvStatus.setText("电源良好，允许启动汽车");
 //                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
@@ -373,6 +398,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_THREE)) {
                                 LogUtils.d("电池电量---10");
                                 chargingprigressView.setDCAnimation(10);
+                                CacheConsts.DCAnimation = 10;
 //                                if(previous.size() != 3){
 //                                    tvStatus.setText("电源良好，允许启动汽车");
 //                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
@@ -383,6 +409,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_TWO)) {
                                 LogUtils.d("电池电量---6");
                                 chargingprigressView.setDCAnimation(6);
+                                CacheConsts.DCAnimation = 6;
 //                                if(previous.size() != 3){
 //                                    tvStatus.setText("电源良好，允许启动汽车");
 //                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
@@ -393,6 +420,7 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                             } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_ONE)) {
                                 LogUtils.d("电池电量---2");
                                 chargingprigressView.setDCAnimation(2);
+                                CacheConsts.DCAnimation = 2;
 //                                if(previous.size() != 3){
 //                                    tvStatus.setText("电源良好，允许启动汽车");
 //                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
@@ -405,14 +433,18 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                         if (substr.equals(SampleGattAttributes.REAL_TEMPERATURE)) {
                             String tempstr = substr2.substring(0, 2);
                             temf = Integer.parseInt(tempstr, 16);
+                            CacheConsts.temperature = "电池温度：" + temf + "℃";
                             if (temf >= 45) {
-                                tvTemperature.setText("点击温度:" + temf + "℃");
-                                tvStatus.setText("温度过高 立即停止使用");
-                                tvStatus.setEnabled(true);
+                                tvTemperature.setText(CacheConsts.temperature);
+                                CacheConsts.tvStatus = "温度过高 立即停止使用";
+                                CacheConsts.tvStatusBoolean = true;
+                                tvStatus.setText(CacheConsts.tvStatus);
+                                tvStatus.setEnabled(CacheConsts.tvStatusBoolean);
                                 rl.setBackground(getResources().getDrawable(R.drawable.label_shape_red));
                             } else {
-                                tvTemperature.setText("电池温度:" + temf + "℃");
-                                tvStatus.setEnabled(false);
+                                tvTemperature.setText(CacheConsts.temperature);
+                                CacheConsts.tvStatusBoolean = false;
+                                tvStatus.setEnabled(CacheConsts.tvStatusBoolean);
                                 rl.setBackground(getResources().getDrawable(R.drawable.label_shape_green));
                             }
                         }
@@ -522,10 +554,12 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
             case R.id.ll_floodlight:
 
                 if(!tvFloodlight.isEnabled()){
+                    LogUtils.e("开");
                     newValue = SampleGattAttributes.FLOODLIGHT_OPEN;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
                 }else{
+                    LogUtils.e("关");
                     newValue = SampleGattAttributes.FLOODLIGHT_CLOSE;
                     dataToWrite = HexUtil.hexStringToBytes(newValue);
                     BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
