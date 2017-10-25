@@ -95,8 +95,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         app:cgv_item_count="4"
-                        app:cgv_item_height="15dp"
-                        app:cgv_item_width="25dp" />
+                        app:cgv_item_height="13dp"
+                        app:cgv_item_width="20dp" />
 
                 </RelativeLayout>
 

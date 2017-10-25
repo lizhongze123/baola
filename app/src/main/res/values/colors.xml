@@ -29,5 +29,7 @@
     <color name="main_tab">#fff</color>
     <color name="main_bg">#f0f2f5</color>
 
+    <color name="battery_border">#6aadfc</color>
+    <color name="battery_border2">#336aadfc</color>
 
 </resources>
