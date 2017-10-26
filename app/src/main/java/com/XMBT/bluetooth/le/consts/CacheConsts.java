@@ -11,7 +11,7 @@ public class CacheConsts {
     public static String tvStatus = "设备未连接";
     public static boolean tvStatusBoolean;
     public static boolean floodlight, warninglight, usb;
-
+    public static boolean voltageBoolean = false;
 
     public void reset(){
 //        voltage = "电池电压：0V";

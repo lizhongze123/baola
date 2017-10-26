@@ -228,6 +228,11 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
         tvTemperature.setText(CacheConsts.temperature);
         tvStatus.setText(CacheConsts.tvStatus);
         tvStatus.setEnabled(CacheConsts.tvStatusBoolean);
+        if(CacheConsts.tvStatusBoolean){
+            rl.setBackground(getResources().getDrawable(R.drawable.label_shape_red));
+        }else{
+            rl.setBackground(getResources().getDrawable(R.drawable.label_shape_green));
+        }
         chargingprigressView.setDCAnimation(CacheConsts.DCAnimation);
         tvFloodlight.setEnabled(CacheConsts.floodlight);
         tvWarninglight.setEnabled(CacheConsts.warninglight);
@@ -334,102 +339,24 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                         //usb状态关
                     }else if(strTemp.equals(SampleGattAttributes.NORMAL_POWER)){
                         CacheConsts.tvStatus = "电源良好 允许启动汽车";
-                        tvStatus.setText(CacheConsts.tvStatus );
+                        tvStatus.setText(CacheConsts.tvStatus);
+                        CacheConsts.voltageBoolean = false;
+                        CacheConsts.tvStatusBoolean = false;
                     }else if(strTemp.equals(SampleGattAttributes.LOW_POWER)){
                         CacheConsts.tvStatus = "电量不足 禁止启动汽车";
                         tvStatus.setText(CacheConsts.tvStatus);
+                        CacheConsts.tvStatusBoolean = true;
+                        CacheConsts.voltageBoolean = true;
                     }else if(strTemp.equals(SampleGattAttributes.MCU_TO_APP)){
                         //收到该命令后，回应命令
                         String newValue1 = SampleGattAttributes.APP_TO_MCU;
                         byte[] dataToWrite1 = HexUtil.hexStringToBytes(newValue1);
                         bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite1);
                     }else if (strTemp.length() == 10) {
-                        //电量相关指令
                         String substr = strTemp.substring(0, 6);
                         String substr2 = strTemp.substring(6, 10);
 
-                        if (substr.equals(SampleGattAttributes.REAL_VOLTAGE)) {
-                            String voltageStr = substr2.substring(0, 2);
-                            int vol10 = Integer.parseInt(voltageStr, 16);
-                            volf = vol10 / 10f;
-                            CacheConsts.voltage = "电池电压：" + volf + "V";
-                            tvVoltage.setText(CacheConsts.voltage);
-//                            if (volf < 10.5) {
-//                                tvVoltage.setText("电池电压:" + volf + "V");
-//                                tvVoltage.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-//                            } else {
-//                                tvVoltage.setText("电池电压:" + volf + "V");
-//                            }
-                        }
-                        //电量>=3格时，电源良好
-                        //电量<=2格时，电量不足
-                        //温度大于45°，禁止启动汽车
-                        if (substr.equals(SampleGattAttributes.BATTERY_INDICATOR)) {
-
-//                            if(previous.size() == 3) {
-//                                previous.remove(2);
-//                                previous.add(substr2);
-//                            }
-
-                            if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FIVE)) {
-                                LogUtils.d("电池电量---18");
-                                chargingprigressView.setDCAnimation(18);
-                                CacheConsts.DCAnimation = 18;
-
-//                                if(previous.size() != 3){
-//                                    tvStatus.setText("电源良好，允许启动汽车");
-//                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
-//                                    tvStatus.setText("电源良好，允许启动汽车");
-//                                }else{
-//                                    tvStatus.setText("电量不足，禁止启动汽车");
-//                                }
-
-                            } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FOUR)) {
-                                LogUtils.d("电池电量---14");
-                                chargingprigressView.setDCAnimation(14);
-                                CacheConsts.DCAnimation = 14;
-//                                if(previous.size() != 3){
-//                                    tvStatus.setText("电源良好，允许启动汽车");
-//                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
-//                                    tvStatus.setText("电源良好，允许启动汽车");
-//                                }else{
-//                                    tvStatus.setText("电量不足，禁止启动汽车");
-//                                }
-                            } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_THREE)) {
-                                LogUtils.d("电池电量---10");
-                                chargingprigressView.setDCAnimation(10);
-                                CacheConsts.DCAnimation = 10;
-//                                if(previous.size() != 3){
-//                                    tvStatus.setText("电源良好，允许启动汽车");
-//                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
-//                                    tvStatus.setText("电量不足，禁止启动汽车");
-//                                }else{
-//                                    tvStatus.setText("电量不足，禁止启动汽车");
-//                                }
-                            } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_TWO)) {
-                                LogUtils.d("电池电量---6");
-                                chargingprigressView.setDCAnimation(6);
-                                CacheConsts.DCAnimation = 6;
-//                                if(previous.size() != 3){
-//                                    tvStatus.setText("电源良好，允许启动汽车");
-//                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
-//                                    tvStatus.setText("电量不足，禁止启动汽车");
-//                                }else{
-//                                    tvStatus.setText("电量不足，禁止启动汽车");
-//                                }
-                            } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_ONE)) {
-                                LogUtils.d("电池电量---2");
-                                chargingprigressView.setDCAnimation(2);
-                                CacheConsts.DCAnimation = 2;
-//                                if(previous.size() != 3){
-//                                    tvStatus.setText("电源良好，允许启动汽车");
-//                                }else if(previous.get(0).equals(previous.get(1)) && previous.get(1).equals(previous.get(2))){
-//                                    tvStatus.setText("电量不足，禁止启动汽车");
-//                                }else{
-//                                    tvStatus.setText("电量不足，禁止启动汽车");
-//                                }
-                            }
-                        }
+                        //温度优先级最高
                         if (substr.equals(SampleGattAttributes.REAL_TEMPERATURE)) {
                             String tempstr = substr2.substring(0, 2);
                             temf = Integer.parseInt(tempstr, 16);
@@ -442,18 +369,49 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
                                 tvStatus.setEnabled(CacheConsts.tvStatusBoolean);
                                 rl.setBackground(getResources().getDrawable(R.drawable.label_shape_red));
                             } else {
-                                tvTemperature.setText(CacheConsts.temperature);
-                                CacheConsts.tvStatusBoolean = false;
-                                tvStatus.setEnabled(CacheConsts.tvStatusBoolean);
-                                rl.setBackground(getResources().getDrawable(R.drawable.label_shape_green));
+
+                                if(!CacheConsts.voltageBoolean){
+                                    tvTemperature.setText(CacheConsts.temperature);
+                                    CacheConsts.tvStatusBoolean = false;
+                                    tvStatus.setEnabled(CacheConsts.tvStatusBoolean);
+                                    rl.setBackground(getResources().getDrawable(R.drawable.label_shape_green));
+                                }else{
+                                    tvTemperature.setText(CacheConsts.temperature);
+                                    CacheConsts.tvStatusBoolean = true;
+                                    tvStatus.setEnabled(CacheConsts.tvStatusBoolean);
+                                    rl.setBackground(getResources().getDrawable(R.drawable.label_shape_red));
+                                }
+
+                            }
+                        }else if (substr.equals(SampleGattAttributes.REAL_VOLTAGE)) {
+                            String voltageStr = substr2.substring(0, 2);
+                            int vol10 = Integer.parseInt(voltageStr, 16);
+                            volf = vol10 / 10f;
+                            CacheConsts.voltage = "电池电压：" + volf + "V";
+                            tvVoltage.setText(CacheConsts.voltage);
+                        }else if (substr.equals(SampleGattAttributes.BATTERY_INDICATOR)) {
+                            if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FIVE)) {
+                                LogUtils.d("电池电量---18");
+                                chargingprigressView.setDCAnimation(18);
+                                CacheConsts.DCAnimation = 18;
+                            } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_FOUR)) {
+                                LogUtils.d("电池电量---14");
+                                chargingprigressView.setDCAnimation(14);
+                                CacheConsts.DCAnimation = 14;
+                            } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_THREE)) {
+                                LogUtils.d("电池电量---10");
+                                chargingprigressView.setDCAnimation(10);
+                                CacheConsts.DCAnimation = 10;
+                            } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_TWO)) {
+                                LogUtils.d("电池电量---6");
+                                chargingprigressView.setDCAnimation(6);
+                                CacheConsts.DCAnimation = 6;
+                            } else if (substr2.equals(SampleGattAttributes.BATTERY_INDICATOR_ONE)) {
+                                LogUtils.d("电池电量---2");
+                                chargingprigressView.setDCAnimation(2);
+                                CacheConsts.DCAnimation = 2;
                             }
                         }
-
-                        if (substr.equals(SampleGattAttributes.USED_DAYS)) {
-//                            String tem=tempetureTv.getText().toString();
-//                            tempetureTv.setText(tem+"\n使用天数："+substr2);
-                        }
-
                     }
 
 

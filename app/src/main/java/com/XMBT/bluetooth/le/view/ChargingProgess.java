@@ -228,30 +228,30 @@ public class ChargingProgess extends View {
      */
     public void setDCAnimation(final int progress) {
         chargeType = DC;
+        setProgress(progress);
 
-
-        if (progress == 2) {
-            animatorDC = ValueAnimator.ofFloat(0, 1);
-            animatorDC.setInterpolator(new LinearInterpolator());
-            animatorDC.setDuration(1000);
-            animatorDC.setRepeatCount(-1);
-            animatorDC.setRepeatMode(ValueAnimator.RESTART);
-            animatorDC.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    float value = (float) animation.getAnimatedValue();
-                    if (value > 0.5) {
-                        show = true;
-                    } else {
-                        show = false;
-                    }
-                    setProgress(progress);
-                }
-            });
-            animatorDC.start();
-        }else{
-            setProgress(progress);
-        }
+//        if (progress == 2) {
+//            animatorDC = ValueAnimator.ofFloat(0, 1);
+//            animatorDC.setInterpolator(new LinearInterpolator());
+//            animatorDC.setDuration(1000);
+//            animatorDC.setRepeatCount(-1);
+//            animatorDC.setRepeatMode(ValueAnimator.RESTART);
+//            animatorDC.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                @Override
+//                public void onAnimationUpdate(ValueAnimator animation) {
+//                    float value = (float) animation.getAnimatedValue();
+//                    if (value > 0.5) {
+//                        show = true;
+//                    } else {
+//                        show = false;
+//                    }
+//                    setProgress(progress);
+//                }
+//            });
+//            animatorDC.start();
+//        }else{
+//            setProgress(progress);
+//        }
 
 
     }
@@ -268,34 +268,42 @@ public class ChargingProgess extends View {
         }
         int j = getProgress() / item_count;
         //已经充好的进度
-        if (getProgress() != 4) {
-            for (int i = 1; i <= j; i++) {
-                RectF backRect = new RectF((i + 1) * item_height / 2 + (i - 1) * item_height,
-                        mHeight / 4,
-                        item_height / 2 + i * (3 * item_height / 2), 3 * mHeight / 4);
-                canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
-                mPaint.setStyle(Paint.Style.FILL);
-                mPaint.setColor(item_charging_src_green);
-                canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
-            }
+
+        if(j == 0){
+            j = 1;
         }
 
-
-        //只有一格电的情况
-        if(getProgress() == 2){
-            int i = 1;
+        for (int i = 1; i <= j; i++) {
             RectF backRect = new RectF((i + 1) * item_height / 2 + (i - 1) * item_height,
                     mHeight / 4,
                     item_height / 2 + i * (3 * item_height / 2), 3 * mHeight / 4);
+            canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
             mPaint.setStyle(Paint.Style.FILL);
-            if (show) {
+            if(j == 1 || j == 2){
                 mPaint.setColor((item_charging_src_red));
-            } else {
-//              mPaint.setColor((item_charging_background));
-                mPaint.setColor((item_charging_src_red));
+            }else {
+                mPaint.setColor(item_charging_src_green);
             }
             canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
         }
+
+
+//        if(j == 2 || j == 1){
+//            for (int i = 1; i <= j; i++){
+//                RectF backRect = new RectF((i + 1) * item_height / 2 + (i - 1) * item_height,
+//                        mHeight / 4,
+//                        item_height / 2 + i * (3 * item_height / 2), 3 * mHeight / 4);
+//                mPaint.setStyle(Paint.Style.FILL);
+//                if (show) {
+//                    mPaint.setColor((item_charging_src_red));
+//                } else {
+//                    mPaint.setColor((item_charging_src_red));
+//                }
+//                canvas.drawRoundRect(backRect, border_cornor_radius, border_cornor_radius, mPaint);
+//
+//            }
+//
+//        }
 
         //下一个进度，隐藏和显示交替执行动画
 //        int i;
