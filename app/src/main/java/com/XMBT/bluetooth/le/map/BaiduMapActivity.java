@@ -231,6 +231,7 @@ public class BaiduMapActivity extends BaseActivity implements OnGetGeoCoderResul
      * 内部TTS播报状态回传handler
      */
     private Handler ttsHandler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             int type = msg.what;
             switch (type) {

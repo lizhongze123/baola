@@ -104,15 +104,17 @@ public class TimePopuWindow implements OnClickListener {
      * 显示
      */
     public void showPopupWindow(View view) {
-        if (!popupWindow.isShowing())
+        if (!popupWindow.isShowing()) {
             popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        }
     }
 
     private OnTimeSelectListener listener;
 
     public void dismiss() {
-        if (popupWindow.isShowing())
+        if (popupWindow.isShowing()) {
             popupWindow.dismiss();
+        }
     }
 
     public interface OnTimeSelectListener {

@@ -165,14 +165,22 @@ public class LineChartView extends View implements View.OnTouchListener {
         ca.setxAixsPaddingTop(ta.getDimensionPixelSize(R.styleable.LineChartView_xAixsPaddingTop, -1));
         ca.setxAixsPaddingBottom(ta.getDimensionPixelSize(R.styleable.LineChartView_xAixsPaddingBottom, -1));
 
-        if (ca.getxAixsPaddingTop() == -1) ca.setxAixsPaddingTop(ca.getxAixsPadding());
-        if (ca.getxAixsPaddingBottom() == -1) ca.setxAixsPaddingBottom(ca.getxAixsPadding());
+        if (ca.getxAixsPaddingTop() == -1) {
+            ca.setxAixsPaddingTop(ca.getxAixsPadding());
+        }
+        if (ca.getxAixsPaddingBottom() == -1) {
+            ca.setxAixsPaddingBottom(ca.getxAixsPadding());
+        }
 
         ca.setyAixsPaddingLeft(ta.getDimensionPixelSize(R.styleable.LineChartView_yAixsPaddingLeft, -1));
         ca.setyAixsPaddingRight(ta.getDimensionPixelSize(R.styleable.LineChartView_yAixsPaddingRight, -1));
 
-        if (ca.getyAixsPaddingLeft() == -1) ca.setyAixsPaddingLeft(ca.getyAixsPadding());
-        if (ca.getyAixsPaddingRight() == -1) ca.setyAixsPaddingRight(ca.getyAixsPadding());
+        if (ca.getyAixsPaddingLeft() == -1) {
+            ca.setyAixsPaddingLeft(ca.getyAixsPadding());
+        }
+        if (ca.getyAixsPaddingRight() == -1) {
+            ca.setyAixsPaddingRight(ca.getyAixsPadding());
+        }
 
         ta.recycle();
 
@@ -215,12 +223,15 @@ public class LineChartView extends View implements View.OnTouchListener {
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        if (widthMode == MeasureSpec.AT_MOST)
+        if (widthMode == MeasureSpec.AT_MOST) {
             widthSize = 0;
-        if (heightMode == MeasureSpec.AT_MOST)
+        }
+        if (heightMode == MeasureSpec.AT_MOST) {
             heightSize = 0;
-        if (widthSize != 0 && heightSize != 0)
+        }
+        if (widthSize != 0 && heightSize != 0) {
             reSetUpdateAxis(widthSize, heightSize);
+        }
         widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, widthMode);
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, heightMode);
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
@@ -318,11 +329,13 @@ public class LineChartView extends View implements View.OnTouchListener {
                 aixsTitlePaint.getTextBounds(yaisPoint.getTitle(), 0, yaisPoint.getTitle().length(), rect);
                 int offset = yAixsPostion == AIXS_RIGHT ? measureWidth - rect.width() - getPaddingRight() : rect.width() + getPaddingLeft();
                 if (yAixsPostion == AIXS_RIGHT) {
-                    if (xAixsOffset == 0 || xAixsOffset > offset - ca.getyAixsPaddingLeft() - ca.getyAixsPaddingRight())
+                    if (xAixsOffset == 0 || xAixsOffset > offset - ca.getyAixsPaddingLeft() - ca.getyAixsPaddingRight()) {
                         xAixsOffset = offset - ca.getyAixsPaddingLeft() - ca.getyAixsPaddingRight();
+                    }
                 } else {
-                    if (xAixsOffset < offset + ca.getyAixsPaddingLeft() + ca.getyAixsPaddingRight())
+                    if (xAixsOffset < offset + ca.getyAixsPaddingLeft() + ca.getyAixsPaddingRight()) {
                         xAixsOffset = offset + ca.getyAixsPaddingLeft() + ca.getyAixsPaddingRight();
+                    }
                 }
             }
         }
@@ -335,11 +348,13 @@ public class LineChartView extends View implements View.OnTouchListener {
             aixsTitlePaint.getTextBounds(xaisPoint.getTitle(), 0, xaisPoint.getTitle().length(), rect);
             int offset = xAixsPostion == AIXS_TOP ? getPaddingTop() + rect.height() : measureHeight - rect.height() - getPaddingBottom();
             if (xAixsPostion == AIXS_TOP) {
-                if (yAixsOffset < offset + ca.getxAixsPaddingTop() + ca.getxAixsPaddingBottom())
+                if (yAixsOffset < offset + ca.getxAixsPaddingTop() + ca.getxAixsPaddingBottom()) {
                     yAixsOffset = offset + ca.getxAixsPaddingTop() + ca.getxAixsPaddingBottom();
+                }
             } else {
-                if (yAixsOffset == 0 || yAixsOffset > offset - ca.getxAixsPaddingTop() - ca.getxAixsPaddingBottom())
+                if (yAixsOffset == 0 || yAixsOffset > offset - ca.getxAixsPaddingTop() - ca.getxAixsPaddingBottom()) {
                     yAixsOffset = offset - ca.getxAixsPaddingTop() - ca.getxAixsPaddingBottom();
+                }
             }
         }
 
@@ -366,7 +381,9 @@ public class LineChartView extends View implements View.OnTouchListener {
             for (int index = 0; index < dataPoints.size(); index++) {
                 DataAixsPoint dataPoint = dataPoints.get(index);
                 AixsPoint xPoint = serachAixs(dataPoint, xAixsPoints);
-                if (xPoint == null) xPoint = xAixsPoints.get(index);
+                if (xPoint == null) {
+                    xPoint = xAixsPoints.get(index);
+                }
                 dataPoint.setCenterX(xPoint.getCenterX());
                 dataPoint.setCenterY(calculateCenterY(yfristCenterY, ylastCenterY, dataPoint.getAixsVal()));
             }
@@ -377,8 +394,9 @@ public class LineChartView extends View implements View.OnTouchListener {
      * 计算X轴的步骤长
      */
     public int calculateXAixsStep(int measureWidth, int maxyAuxAixsTitleWidth) {
-        if (hideYAixsTitles)
+        if (hideYAixsTitles) {
             return measureWidth / xAixsPoints.size();
+        }
         AixsPoint lastPoit = xAixsPoints.get(0);
         Rect rect = new Rect();
         aixsTitlePaint.setColor(ca.getxAixsTitleColor());
@@ -453,7 +471,9 @@ public class LineChartView extends View implements View.OnTouchListener {
      */
     public void drawAixs(Canvas canvas) {
 
-        if (xAixsPoints.size() <= 0 || yAixsPoints.size() <= 0) return;
+        if (xAixsPoints.size() <= 0 || yAixsPoints.size() <= 0) {
+            return;
+        }
 
         aixsTitlePaint.setColor(ca.getxAixsTitleColor());
         aixsTitlePaint.setTextSize(ca.getxAixsTitleSize());
@@ -580,7 +600,9 @@ public class LineChartView extends View implements View.OnTouchListener {
      */
     public void drawDataPoint(Canvas canvas, ChartLine chartLine) {
 
-        if (chartLine == null || chartLine.getDataPoints().size() == 0) return;
+        if (chartLine == null || chartLine.getDataPoints().size() == 0) {
+            return;
+        }
 
         pathPaint.setColor(chartLine.getFillColor());
         pathStrokePaint.setColor(chartLine.getLineColor());
@@ -605,10 +627,11 @@ public class LineChartView extends View implements View.OnTouchListener {
         for (int index = 1; index < dataPoints.size(); index++) {
             DataAixsPoint datapoint = dataPoints.get(index);
             path.lineTo(datapoint.getCenterX(), datapoint.getCenterY());
-            if (chartLine.getDrawModel() == STROKE)
+            if (chartLine.getDrawModel() == STROKE) {
                 strokePath.lineTo(datapoint.getCenterX(), datapoint.getCenterY());
-            else
+            } else {
                 strokePath.lineTo(datapoint.getCenterX(), yAixsPostion == AIXS_TOP ? datapoint.getCenterY() + chartLine.getLineWidth() : datapoint.getCenterY() - chartLine.getLineWidth());
+            }
         }
 
 
@@ -621,8 +644,9 @@ public class LineChartView extends View implements View.OnTouchListener {
             path.lineTo(tempFristCenterX, tempYAixsOffset);
             path.lineTo(tempFristCenterX, frstData.getCenterY());
             canvas.drawPath(path, pathPaint);
-            if (chartLine.getDrawModel() == FILL_STROKE)
+            if (chartLine.getDrawModel() == FILL_STROKE) {
                 canvas.drawPath(strokePath, pathStrokePaint);
+            }
         }
 
     }
@@ -692,8 +716,9 @@ public class LineChartView extends View implements View.OnTouchListener {
                 } else if (yAixsPostion == AIXS_RIGHT) {
                     stopX = xAixsPoints.get(pathPointToYAixsPosion == AIXS_LEFT ? xAixsPoints.size() - 1 : 0).getCenterX();
                 }
-                if (stopX != -1)
+                if (stopX != -1) {
                     canvas.drawLine(startX, yVal, stopX, yVal, linePaint);
+                }
             }
         } else {
             //待定清除手指抬起来的指示线
@@ -728,8 +753,9 @@ public class LineChartView extends View implements View.OnTouchListener {
                 //计算用户指示触摸
                 touchPathYs = touchYsBelongToPath(downX);
                 if (touchPathYs.size() > 0) {
-                    if (listener != null)
+                    if (listener != null) {
                         notifyTouchToMonitor(touchPathYs, downX);
+                    }
                     invalidate();
                 }
 
@@ -776,8 +802,12 @@ public class LineChartView extends View implements View.OnTouchListener {
             }
         }
 
-        if (yAixsPostion == AIXS_LEFT && sreachIndex == 0) return -1;
-        if (yAixsPostion == AIXS_RIGHT && sreachIndex == dataSize - 1) return -1;
+        if (yAixsPostion == AIXS_LEFT && sreachIndex == 0) {
+            return -1;
+        }
+        if (yAixsPostion == AIXS_RIGHT && sreachIndex == dataSize - 1) {
+            return -1;
+        }
 
         AixsPoint two = dataPoints.get(sreachIndex);
         AixsPoint one = dataPoints.get(yAixsPostion == AIXS_LEFT ? sreachIndex - 1 : sreachIndex + 1);
@@ -801,10 +831,12 @@ public class LineChartView extends View implements View.OnTouchListener {
         int yfristCenterY = yAixsPoints.get(0).getCenterY();
         double maxYVal = 0;
         //计算当前指示线指向的Y轴对应的最大值
-        if (yAixsPostion == AIXS_LEFT)
+        if (yAixsPostion == AIXS_LEFT) {
             maxYVal = pathPointToYAixsPosion == AIXS_LEFT ? maxYAixsVal : maxYAuxAixsVal;
-        if (yAixsPostion == AIXS_RIGHT)
+        }
+        if (yAixsPostion == AIXS_RIGHT) {
             maxYVal = pathPointToYAixsPosion == AIXS_LEFT ? maxYAuxAixsVal : maxYAixsVal;
+        }
 
         for (Double touchPathY : touchPathYs) {
             final int touchY = touchPathY.intValue();
@@ -817,8 +849,9 @@ public class LineChartView extends View implements View.OnTouchListener {
         }
 
         if (datas.size() > 0) {
-            if (listener != null)
+            if (listener != null) {
                 listener.onTouchAixsData(datas);
+            }
         }
     }
 
@@ -837,8 +870,9 @@ public class LineChartView extends View implements View.OnTouchListener {
     public boolean inRange(int curAct, int... actions) {
 
         for (int index = 0; index < actions.length; index++) {
-            if (curAct == actions[index])
+            if (curAct == actions[index]) {
                 return true;
+            }
         }
         return false;
     }
@@ -874,8 +908,9 @@ public class LineChartView extends View implements View.OnTouchListener {
     }
 
     public LineChartView addChartLine(ChartLine chartLine) {
-        if (chartLine != null)
+        if (chartLine != null) {
             this.chartLines.add(chartLine);
+        }
         return this;
     }
 
@@ -893,10 +928,12 @@ public class LineChartView extends View implements View.OnTouchListener {
      * 清除旧的折线数据集
      */
     public void cleanOldLines() {
-        if (chartLines.size() > 0)
+        if (chartLines.size() > 0) {
             chartLines.clear();
-        if (touchPathYs != null && touchPathYs.size() > 0)
+        }
+        if (touchPathYs != null && touchPathYs.size() > 0) {
             touchPathYs.clear();
+        }
     }
 
     public void setShowVerGridLine(boolean showVerGridLine) {

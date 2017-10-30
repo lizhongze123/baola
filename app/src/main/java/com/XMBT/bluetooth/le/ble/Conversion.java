@@ -22,10 +22,11 @@ public class Conversion {
         Formatter formatter = new Formatter(sb);
 
         for (int i = 0; i < len; i++) {
-            if (i < len - 1)
+            if (i < len - 1) {
                 formatter.format("%02X:", b[i]);
-            else
+            } else {
                 formatter.format("%02X", b[i]);
+            }
 
         }
         formatter.close();
@@ -39,18 +40,20 @@ public class Conversion {
 
         if (!reverse) {
             for (int i = 0; i < b.length; i++) {
-                if (i < b.length - 1)
+                if (i < b.length - 1) {
                     formatter.format("%02X:", b[i]);
-                else
+                } else {
                     formatter.format("%02X", b[i]);
+                }
 
             }
         } else {
             for (int i = (b.length - 1); i >= 0; i--) {
-                if (i > 0)
+                if (i > 0) {
                     formatter.format("%02X:", b[i]);
-                else
+                } else {
                     formatter.format("%02X", b[i]);
+                }
 
             }
         }

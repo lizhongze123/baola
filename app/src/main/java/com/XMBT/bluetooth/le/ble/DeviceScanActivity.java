@@ -336,8 +336,9 @@ public class DeviceScanActivity extends ListActivity {
     };
 
     private void displayGattServices(List<BluetoothGattService> gattServices) {
-        if (gattServices == null)
+        if (gattServices == null) {
             return;
+        }
 
         for (BluetoothGattService gattService : gattServices) {
 

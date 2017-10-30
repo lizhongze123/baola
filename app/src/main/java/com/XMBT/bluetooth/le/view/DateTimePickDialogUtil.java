@@ -188,11 +188,13 @@ public class DateTimePickDialogUtil implements OnDateChangedListener, OnTimeChan
             loc = srcStr.lastIndexOf(pattern); // 最后一个匹配串的位置
         }
         if (frontOrBack.equalsIgnoreCase("front")) {
-            if (loc != -1)
+            if (loc != -1) {
                 result = srcStr.substring(0, loc); // 截取子串
+            }
         } else {
-            if (loc != -1)
+            if (loc != -1) {
                 result = srcStr.substring(loc + 1, srcStr.length()); // 截取子串
+            }
         }
         return result;
     }

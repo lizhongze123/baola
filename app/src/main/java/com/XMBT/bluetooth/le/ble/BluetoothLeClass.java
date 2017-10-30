@@ -193,14 +193,16 @@ public class BluetoothLeClass extends Service {
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            if (mOnDataAvailableListener != null)
+            if (mOnDataAvailableListener != null) {
                 mOnDataAvailableListener.onCharacteristicRead(gatt, characteristic, status);
+            }
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            if (mOnDataAvailableListener != null)
+            if (mOnDataAvailableListener != null) {
                 mOnDataAvailableListener.onCharacteristicWrite(gatt, characteristic);
+            }
             // 不调用它,接收不到数据.
             broadcastUpdate(ACTION_NOTIFI, characteristic);
 //            LogUtils.i("收到通知--" + characteristic.getUuid().toString());
@@ -403,8 +405,9 @@ public class BluetoothLeClass extends Service {
      * @return A {@code List} of supported services.
      */
     public List<BluetoothGattService> getSupportedGattServices() {
-        if (mBluetoothGatt == null)
+        if (mBluetoothGatt == null) {
             return null;
+        }
 
         return mBluetoothGatt.getServices();
     }

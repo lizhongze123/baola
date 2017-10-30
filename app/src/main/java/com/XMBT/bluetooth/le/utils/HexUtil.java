@@ -96,8 +96,9 @@ public class HexUtil {
         byte[] data = new byte[200];
         data = str.getBytes();
         final StringBuilder stringBuilder = new StringBuilder(data.length);
-        for (byte byteChar : data)
+        for (byte byteChar : data) {
             stringBuilder.append(String.format("%02X ", byteChar));
+        }
         return data;
     }
 

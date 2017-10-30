@@ -28,8 +28,9 @@ public class LeDeviceListAdapter extends BaseAdapter {
     }
 
     public void addDevice(iBeacon device) {
-        if (device == null)
+        if (device == null) {
             return;
+        }
 
         for (int i = 0; i < mLeDevices.size(); i++) {
             String btAddress = mLeDevices.get(i).bluetoothAddress;

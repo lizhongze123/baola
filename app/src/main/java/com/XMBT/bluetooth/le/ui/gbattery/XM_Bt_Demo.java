@@ -456,8 +456,9 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
                     rssibuffer[rssibufferIndex] = rssi;
                     rssibufferIndex++;
 
-                    if (rssibufferIndex == rssibufferSize)
+                    if (rssibufferIndex == rssibufferSize) {
                         rssiUsedFalg = true;
+                    }
 
                     rssibufferIndex = rssibufferIndex % rssibufferSize;
 
@@ -469,8 +470,9 @@ public class XM_Bt_Demo extends Activity implements View.OnClickListener {
 
                         rssi_avg = rssi_sum / rssibufferSize;
 
-                        if (-rssi_avg < 35)
+                        if (-rssi_avg < 35) {
                             rssi_avg = -35;
+                        }
 
                         if (-rssi_avg < -near) {
                             distance = distance_cm_min + ((-rssi_avg - 35) / (double) (-near - 35)) * distance_cm_max_near;

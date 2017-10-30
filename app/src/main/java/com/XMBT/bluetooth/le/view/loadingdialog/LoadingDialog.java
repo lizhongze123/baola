@@ -46,12 +46,14 @@ public class LoadingDialog extends Dialog {
     }
 
     public void setLoadingText(String str) {
-        if (loadingText != null)
+        if (loadingText != null) {
             loadingText.setText(str);
+        }
     }
 
     public void setLoadingText(int resId) {
-        if (loadingText != null)
+        if (loadingText != null) {
             loadingText.setText(resId);
+        }
     }
 }

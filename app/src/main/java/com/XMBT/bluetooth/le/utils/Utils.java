@@ -133,8 +133,9 @@ public class Utils {
         List<Integer> result = new ArrayList<Integer>();
         for (int i = 0; i < 32; i++) {
             int b = 1 << i;
-            if ((number & b) > 0)
+            if ((number & b) > 0) {
                 result.add(b);
+            }
         }
 
         return result;
