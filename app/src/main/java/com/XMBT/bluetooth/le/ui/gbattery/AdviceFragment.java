@@ -3,6 +3,7 @@ package com.XMBT.bluetooth.le.ui.gbattery;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,23 @@ public class AdviceFragment extends BaseFragment {
             }
         });
 
+        webView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if(keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()){
+                    if(keyEvent.getAction()==KeyEvent.ACTION_DOWN){ //只处理一次
+                        webView.goBack();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
         return view;
+
+
     }
+
+
 }

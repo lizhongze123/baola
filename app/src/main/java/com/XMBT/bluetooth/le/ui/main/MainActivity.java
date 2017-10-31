@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioButton;
 
@@ -14,13 +13,7 @@ import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
 import com.XMBT.bluetooth.le.ui.gbattery.AdviceFragment;
 import com.XMBT.bluetooth.le.ui.gbattery.PartsFragment;
-import com.XMBT.bluetooth.le.ui.start.EmergencyActivity;
-import com.XMBT.bluetooth.le.utils.Configure;
-import com.XMBT.bluetooth.le.utils.LogUtils;
-import com.XMBT.bluetooth.le.utils.PhoneInfoUtils;
-import com.XMBT.bluetooth.le.utils.PreferenceUtils;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
-import com.XMBT.bluetooth.le.view.dialog.InputDialog;
 
 /**
  * 首页tab activity
@@ -138,4 +131,5 @@ public class MainActivity extends BaseActivity {
             }, 2000);
         }
     }
+
 }
