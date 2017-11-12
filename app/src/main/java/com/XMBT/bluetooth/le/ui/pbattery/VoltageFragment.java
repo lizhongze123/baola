@@ -21,10 +21,12 @@ import com.XMBT.bluetooth.le.bean.RecordBean;
 import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
+import com.XMBT.bluetooth.le.consts.BatteryCache;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
 import com.XMBT.bluetooth.le.db.DBManger;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
+import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.ToastUtils;
 import com.XMBT.bluetooth.le.view.LineChart.ItemBean;
@@ -49,17 +51,11 @@ public class VoltageFragment extends BaseFragment {
     public final static String EXTRA_DATA = "EXTRA_DATA";
 
     private TitleBar titleBar;
-    private ImageView statusIv;
+    private TextView tvStatus;
     private LoadingView loadingView;
     private String strTemp;
-    private TextView persentTv;
     private LineView myline;
     private TextView tvUseDay, tvStopDay, tvStartCounts;
-
-    static final int rssibufferSize = 10;
-    private int[] rssibuffer = new int[rssibufferSize];
-    private int rssibufferIndex = 0;
-    private boolean rssiUsedFalg = false;
 
     /**
      * 折线数据
@@ -70,38 +66,6 @@ public class VoltageFragment extends BaseFragment {
      * 记录折线图x=0的title，删除数据用
      */
     private String tag;
-    /**
-     * 是否启动车了？
-     */
-    private boolean isStartCar;
-    /**
-     * 是否接收启动信号
-     */
-    private boolean isStartCarSignal;
-    /**
-     * 启动汽车的时间
-     */
-    private long startCarTime;
-    /**
-     * 熄火时间
-     */
-    private long stopCarTime;
-    /**
-     * 电压大于1290时候的电压
-     */
-    private long time1290;
-    /**
-     * 正在开始熄火
-     */
-    private boolean isStopping;
-    /**
-     * 记录了第一次小于1290的时间的flag，只需要记录一次
-     */
-    private boolean flag = true;
-    /**
-     * 存放启动信号之后5秒内的集合
-     */
-    private List<Integer> voltageList = new ArrayList<>();
 
     public static VoltageFragment newInstance(Boolean isConnSuccessful) {
         VoltageFragment itemFragement = new VoltageFragment();
@@ -157,9 +121,8 @@ public class VoltageFragment extends BaseFragment {
             }
         });
 
-        statusIv = (ImageView) view.findViewById(R.id.statusIv);
+        tvStatus = (TextView) view.findViewById(R.id.tv_status);
         loadingView = (LoadingView) view.findViewById(R.id.loadingView);
-        persentTv = (TextView) view.findViewById(R.id.textView10);
 
         tvUseDay = (TextView) view.findViewById(R.id.tv_useDay);
         tvStopDay = (TextView) view.findViewById(R.id.tv_stopDay);
@@ -167,6 +130,16 @@ public class VoltageFragment extends BaseFragment {
 
         connectChanged(BleManager.isConnSuccessful);
         registerBoradcastReceiver();
+        initAll();
+    }
+
+    private void initAll(){
+        loadingView.setPercentText(BatteryCache.voltage);
+        loadingView.setProgress(BatteryCache.progress);
+        tvStatus.setText(BatteryCache.tvSstatus);
+        tvUseDay.setText(BatteryCache.usedDay);
+        tvStopDay.setText(BatteryCache.stopDay);
+        tvStartCounts.setText(BatteryCache.startCounts);
     }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -196,121 +169,27 @@ public class VoltageFragment extends BaseFragment {
                         } else if (substr.equals(SampleGattAttributes.START_COUNT)) {
                             //启动次数
                             tvStartCounts.setText(Integer.parseInt(substr2, 16) + "次");
-                        } else if (substr.equals(SampleGattAttributes.START_SIGNAL)) {
-                            //启动信号  0X04A35C6699
-                            startCarTime = System.currentTimeMillis();//记录下开始时间
-                            isStartCarSignal = true;
-                            LogUtils.d("--------收到启动信号--------");
-                        } else {
+                        } else if(strTemp.equals(SampleGattAttributes.BATTERY_CHARGING_LOW)){
+                            tvStatus.setText("充电中 电压偏低");
+                        } else if(strTemp.equals(SampleGattAttributes.BATTERY_CHARGING_NORMAL)){
+                            tvStatus.setText("充电中 电压正常");
+                        } else if(strTemp.equals(SampleGattAttributes.BATTERY_CHARGING_HIGHT)){
+                            tvStatus.setText("充电中 电压过高");
+                        } else if(strTemp.equals(SampleGattAttributes.BATTERY_LOW)){
+                            tvStatus.setText("电压偏低");
+                        } else if(strTemp.equals(SampleGattAttributes.BATTERY_NORMAL)){
+                            tvStatus.setText("电压正常");
+                        } else if(substr.equals(SampleGattAttributes.PERCENT)){
+                            //百分比
+                            int progress = Integer.parseInt(substr2.substring(0,2), 16); //702
+                            loadingView.setProgress(progress);
+                            percentLine(progress);
+                        } else if(substr.equals(SampleGattAttributes.P_BATTERY_VOLTAGE)){
                             //实时电压
-                            //电压命令为：08xxyyzzww；其中xxyy为电压值，zzww为电压值反码
-                            //08 02 BE FD 41 -> 02 BE = 702 / 放大了100倍，7.02V
-                            String voltageStr = strTemp.substring(2, 6);
-                            int voltage10 = Integer.parseInt(voltageStr, 16); //702
-                            //百分比与电压值关系：0~100%对应的电压为12.00~12.60V
+                            int voltage10 = Integer.parseInt(substr2, 16); //702
                             LogUtils.d("收到的数据为--" + strTemp + "电压值为--" + voltage10);
-                            //成功接收到启动信号后
-                            if (isStartCarSignal) {
-                                //接到启动信号后，要有电压大于13.20才算启动成功
-                                if (voltage10 >= 1320) {
-                                    //真正的启动成功
-                                    isStartCar = true;
-                                    LogUtils.d("真正的启动成功");
-                                }
-                                if (isStartCar) {
-                                    //真正地启动车后
-                                    //如果某一时刻的电压值小于1290，即代表可能开始熄火
-                                    if (flag) {
-                                        //如果记录了第一次小于1290的时间，后面的不再需要记录时间
-                                        if (voltage10 < 1290) {
-                                            //可能开始熄火,记录下第一个低于1290的时间
-                                            time1290 = System.currentTimeMillis();
-                                            isStopping = true;
-                                            voltageList = new ArrayList<>();
-                                            flag = false;
-                                        }
-                                    }
-                                    //如果可能开始熄火了，记录5秒内电压的平均值是否小于1290
-                                    if (isStopping) {
-                                        //判断是否过了5秒
-                                        long currentTime = System.currentTimeMillis();
-                                        if (currentTime < time1290 + 5000) {
-                                            //把电压保存下来
-                                            voltageList.add(voltage10);
-                                        } else {
-                                            //过了5秒，求平均值
-                                            if (voltageList.size() > 0) {
-                                                int sum = 0;
-                                                for (int i = 0; i < voltageList.size(); i++) {
-                                                    sum = sum + voltageList.get(i);
-                                                }
-                                                int avg = sum / voltageList.size();
-                                                if (avg < 1290) {
-                                                    //代表真正的熄火成功
-                                                    ToastUtils.toastInBottom(getContext(), "熄火成功");
-                                                    stopCarTime = System.currentTimeMillis();
-                                                    //只有大于5分钟的数据才保存
-                                                    if ((stopCarTime - startCarTime) >= 300000) {
-                                                        //保存到数据库
-                                                        RecordBean bean = new RecordBean();
-                                                        bean.date = DateFormatUtils.getDate(DateFormatUtils.FORMAT_YMD);
-                                                        bean.startTime = DateFormatUtils.getDate(startCarTime, DateFormatUtils.FORMAT_HM);
-                                                        bean.stopTime = DateFormatUtils.getDate(stopCarTime, DateFormatUtils.FORMAT_HM);
-                                                        bean.duration = (stopCarTime - startCarTime) / 60000 + "分钟";
-                                                        DBManger.getInstance(getContext()).addRecord(bean);
-                                                        Log.e("lizhongze", "行驶时间为：" + ((stopCarTime - startCarTime) / 60000) + "分钟");
-                                                    }
-                                                    resetFlag();
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (voltage10 < 1240) {
-                                //< 12.40 电池充电
-                                statusIv.setVisibility(View.VISIBLE);
-                                statusIv.setImageResource(R.drawable.stutus2);
-                                int progress = (voltage10 - 1200) * 100 / 60;
-                                if (progress <= 0) {
-                                    progress = 0;
-                                }
-                                loadingView.setProgress(progress);
-//                                loadingView.setPercentText(Double.valueOf(progress * 0.006 + 12) +" V");
-                                loadingView.setPercentText(voltage10 * 1.0 / 100 + " V");
-                                persentTv.setText(progress + "%");
-                                percentLine(progress);
-                            } else if (voltage10 > 1239 && voltage10 < 1340) {
-                                //12.39 < x < 13.40 电压正常
-                                statusIv.setVisibility(View.VISIBLE);
-                                statusIv.setImageResource(R.drawable.status3);
-                                int progress = (voltage10 - 1200) * 100 / 60;
-                                if (progress >= 100) {
-                                    progress = 100;
-                                }
-                                loadingView.setPercentText(voltage10 * 1.0 / 100 + " V");
-                                if (voltage10 >= 1260) {
-                                    loadingView.setProgress(100);
-                                    percentLine(100);
-                                    persentTv.setText("100%");
-                                } else {
-                                    loadingView.setProgress(progress);
-                                    percentLine(progress);
-                                    persentTv.setText(progress + "%");
-                                }
-                            } else if (voltage10 > 1340) {
-                                // > 13.40 电池充电中
-                                statusIv.setVisibility(View.VISIBLE);
-                                statusIv.setImageResource(R.drawable.status1);
-                                loadingView.setProgress(100);
-                                loadingView.setPercentText(voltage10 * 1.0 / 100 + " V");
-                                percentLine(100);
-                                persentTv.setText("100%");
-                            }
+                            loadingView.setPercentText(voltage10 * 1.0 / 100 + " V");
                         }
-
-
                     }
 
 
@@ -328,7 +207,7 @@ public class VoltageFragment extends BaseFragment {
             } else if (action.equals(GlobalConsts.ACTION_SCAN_NEW_DEVICE)) {
                 if (isVisible) {
                     ArrayList<iBeaconClass.iBeacon> mLeDevices;
-                    mLeDevices = (ArrayList<iBeaconClass.iBeacon>) intent.getSerializableExtra(BleManager.SCAN_BLE_STATUS);
+                    mLeDevices = (ArrayList<iBeaconClass.iBeacon>) intent.getSerializableExtra(BleManager.SCAN_BLE_DATA);
                     showPopupWindow(getContext(), view, mLeDevices);
                 }
             }
@@ -360,10 +239,6 @@ public class VoltageFragment extends BaseFragment {
                 titleBar.setTvRight("未连接");
                 titleBar.setTvRightTextColor(getResources().getColor(R.color.white));
                 mItems.clear();
-                loadingView.setProgress(0);
-                loadingView.setPercentText(0 + "V");
-                persentTv.setText("0%");
-                statusIv.setVisibility(View.GONE);
             }
         }
     }
@@ -398,15 +273,6 @@ public class VoltageFragment extends BaseFragment {
         myline.setItems(mItems);
     }
 
-    private void resetFlag() {
-        flag = true;
-        isStartCarSignal = false;
-        isStartCar = false;
-        isStopping = false;
-        startCarTime = 0;
-        stopCarTime = 0;
-        time1290 = 0;
-    }
 
     /**
      * 不知道什么用处
@@ -428,11 +294,12 @@ public class VoltageFragment extends BaseFragment {
         getActivity().unregisterReceiver(mBroadcastReceiver);
     }
 
-    protected boolean isVisible;
+    protected boolean isVisible = true;
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        LogUtils.d("VoltageFragment.onHiddenChanged---"+hidden);
         if (hidden) {
             //不可见
             isVisible = false;

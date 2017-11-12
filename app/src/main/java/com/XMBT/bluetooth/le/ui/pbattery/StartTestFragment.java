@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +21,12 @@ import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
+import com.XMBT.bluetooth.le.consts.BatteryCache;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
 import com.XMBT.bluetooth.le.utils.DateFormatUtils;
 import com.XMBT.bluetooth.le.utils.DensityUtils;
+import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.view.LineChart.ItemBean;
 import com.XMBT.bluetooth.le.view.LineChart.LineView2;
 import com.XMBT.bluetooth.le.view.ListDialog;
@@ -50,6 +54,9 @@ public class StartTestFragment extends Fragment {
     private TitleBar titleBar;
     private LineView2 lineView;
     private TextView tvLeftStandard;
+
+    /**是否接收到启动信号*/
+    private boolean isReceiveSignal;
 
     public final static String EXTRA_DATA = "EXTRA_DATA";
     /**
@@ -135,6 +142,32 @@ public class StartTestFragment extends Fragment {
 
         connectChanged(BleManager.isConnSuccessful);
         registerBoradcastReceiver();
+        initAll();
+    }
+
+    private void initAll(){
+        tvTime.setText(BatteryCache.testDate);
+        tvVoltage.setText(BatteryCache.testVolatage);
+        if(BatteryCache.testVoltageStatus.equals("red")){
+            //电压偏低
+            progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.voltage_progress_warn));
+            ivTriangle.setImageResource(R.drawable.sort_down_red);
+            tvVoltage.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+            statusIv.setImageResource(R.drawable.startvoltage_warn);
+            tvInfo.setText("启动电压为" + BatteryCache.testInfo+ "V，电压偏低");
+            tvInfo.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+        } else  if(BatteryCache.testVoltageStatus.equals("green")){
+            //正常电压
+            progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.voltage_progress));
+            ivTriangle.setImageResource(R.drawable.sort_down_green);
+            tvVoltage.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+            statusIv.setImageResource(R.drawable.startvoltage_normal);
+            tvInfo.setText("启动电压为" + BatteryCache.testInfo+ "V，电压正常");
+            tvInfo.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+        }
+        if(BatteryCache.mItems != null){
+            lineView.setItems(BatteryCache.mItems);
+        }
     }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -144,41 +177,54 @@ public class StartTestFragment extends Fragment {
             if (action.equals(GlobalConsts.ACTION_NOTIFI)) {
                 strTemp = intent.getStringExtra(EXTRA_DATA);
 
-                if (!strTemp.equals("00:00:00:00:00")) {  //过滤掉00:00:00:00:00
+                if (!TextUtils.isEmpty(strTemp)) {
+                    strTemp = strTemp.replaceAll(":", "");
+                }
 
-                    if (strTemp.length() == 14) {
-                        if (strTemp.substring(0, 2).equals("04")) {
-                            //启动信号  0X04A35C6699
+                if (!strTemp.equals("0000000000")) {  //过滤掉00:00:00:00:00
+
+                    if (strTemp.length() == 10) {
+
+                        String substr = strTemp.substring(0, 6);
+                        String substr2 = strTemp.substring(6, 10);
+
+                        if (strTemp.equals(SampleGattAttributes.START_SIGNAL)) {
+                            //启动信号
+                            LogUtils.d("收到启动信号");
+                            isReceiveSignal = true;
                             startTime = System.currentTimeMillis();
                             date = DateFormatUtils.getDate(startTime, DateFormatUtils.FORMAT_ALL);
                             tvTime.setText(date);
+                            BatteryCache.testDate = date;
                             voltageList = new ArrayList<>();
                             mItems = new ArrayList<>();
-                        } else if (strTemp.substring(0, 2).equals("08")) {
-                            //电压命令为：0X08xxyyzzww；其中xxyy为电压值，zzww为电压值反码
-
+                        } else if(substr.equals(SampleGattAttributes.P_BATTERY_VOLTAGE)){
                             long currentTime = System.currentTimeMillis();
-                            if (currentTime < startTime + 2000) {
-                                //取收到启动信号后的两秒内的数据
-                                String substr = strTemp.substring(3, 5) + strTemp.substring(6, 8);
-                                int voltage10 = Integer.parseInt(substr, 16);
-                                voltageList.add(voltage10);
+                            int voltage10 = Integer.parseInt(substr2, 16);
+                            if(isReceiveSignal){
+                                if (currentTime < startTime + 3600) {
+                                    //保存收到启动信号后的数据
+                                    voltageList.add(voltage10);
 //                                addBean(currentTime, voltage10);
-                            } else if (startTime != 0 && currentTime > startTime + 2000) {
-                                //接收两秒的数据完毕
-                                Integer ii = Collections.min(voltageList);
-                                setProgress(ii);
-                                voltageList.addAll(0,beforeList);
-                                addBean(currentTime);
-                                lineView.setItems(mItems);
+                                } else if (currentTime > startTime + 3600) {
+                                    //接收两秒的数据完毕
+                                    Integer ii = Collections.min(voltageList);
+                                    setProgress(ii);
+                                    voltageList.addAll(0,beforeList);
+                                    addBean(currentTime);
+                                    lineView.setItems(mItems);
+                                    BatteryCache.mItems = mItems;
+                                    LogUtils.e("mItem---"+mItems.size());
+                                    isReceiveSignal = false;
+                                }
                             }else{
-                                String substr = strTemp.substring(3, 5) + strTemp.substring(6, 8);
-                                int voltage10 = Integer.parseInt(substr, 16);
+                                //一直保存两秒的数据
                                 if(beforeList.size() == 10){
                                     beforeList.remove(0);
                                 }
                                 beforeList.add(voltage10);
                             }
+
                         }
                     }
                 }
@@ -227,6 +273,7 @@ public class StartTestFragment extends Fragment {
         float voltage = (float) ii / 100;
         DecimalFormat df = new DecimalFormat("0.00");
         tvVoltage.setText(df.format(voltage) + "V");
+        BatteryCache.testVolatage = df.format(voltage) + "V";
         statusIv.setVisibility(View.VISIBLE);
 
         if (ii <= standardVoltage) {
@@ -237,6 +284,8 @@ public class StartTestFragment extends Fragment {
             statusIv.setImageResource(R.drawable.startvoltage_warn);
             tvInfo.setText("启动电压为" + df.format(voltage) + "V，电压偏低");
             tvInfo.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+            BatteryCache.testInfo = "启动电压为" + df.format(voltage) + "V，电压偏低";
+            BatteryCache.testVoltageStatus = "green";
         } else if (ii > standardVoltage) {
             //正常电压
             progressBar.setProgressDrawable(getResources().getDrawable(R.drawable.voltage_progress));
@@ -245,9 +294,8 @@ public class StartTestFragment extends Fragment {
             statusIv.setImageResource(R.drawable.startvoltage_normal);
             tvInfo.setText("启动电压为" + df.format(voltage) + "V，电压正常");
             tvInfo.setTextColor(getResources().getColor(android.R.color.holo_green_light));
-        }
-        for (int i = 0; i < voltageList.size(); i++) {
-            Log.e("lizhongze", i + "--电压为--" + voltageList.get(i).toString());
+            BatteryCache.testInfo = "启动电压为" + df.format(voltage) + "V，电压正常";
+            BatteryCache.testVoltageStatus = "red";
         }
     }
 

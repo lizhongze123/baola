@@ -268,18 +268,19 @@ public class LineView2 extends View {
 
     private void drawLine(Canvas canvas) {
         //  Y轴坐标间距
-        yInterval = (max - min) / yOrigin;
+        yInterval =  yOrigin / (max - min) ;
         //  X轴坐标间距  每毫秒的间距  总长6s
         xInterval = (mWidth - xOrigin) / 6 / 1000;
 
         Path mPath = new Path();
 
         for (int i = 0; i < mItems.size(); i++) {
-            float x = (mItems.get(i).getMsec() - mItems.get(0).getMsec()) * xInterval + xOrigin;
+//            float x = (mItems.get(i).getMsec() - mItems.get(0).getMsec()) * xInterval + xOrigin;
+            float x = i * xInterval * 200+ xOrigin;
             if (i == 0) {
-                mPath.moveTo(x, yOrigin - (mItems.get(i).getValue() - min) / yInterval);
+                mPath.moveTo(x, yOrigin - (mItems.get(i).getValue() - min) * yInterval);
             } else {
-                mPath.lineTo(x, yOrigin - (mItems.get(i).getValue() - min) / yInterval);
+                mPath.lineTo(x, yOrigin - (mItems.get(i).getValue() - min) * yInterval);
             }
         }
         canvas.drawPath(mPath, mLinePaint);

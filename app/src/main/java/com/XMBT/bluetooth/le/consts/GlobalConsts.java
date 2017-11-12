@@ -67,4 +67,7 @@ public class GlobalConsts {
 
     }
 
+    public final static String EXTRA_DATA = "EXTRA_DATA";
+
+
 }

@@ -148,19 +148,6 @@ public class BluetoothLeClass extends Service {
                 // Attempts to discover services after successful connection.
                 LogUtils.i("Attempting to start service discovery:" + mBluetoothGatt.discoverServices());
 
-                // 增加读rssi 的定时器
-                TimerTask task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (mBluetoothGatt != null) {
-                            mBluetoothGatt.readRemoteRssi();
-                        }
-                    }
-                };
-                Timer rssiTimer = new Timer();
-
-                // rssiTimer.schedule(task, 1000, 1000);
-//				rssiTimer.schedule(task, 160, 160);
 
                 // 发送广播
                 Intent mIntent = new Intent(GlobalConsts.ACTION_CONNECT_CHANGE);

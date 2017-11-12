@@ -61,10 +61,27 @@ public class BatteryActivity extends BaseActivity {
 
     private void initBle() {
         bleManager = BleManager.getInstance(this);
+        //第一次进来正常扫描，然后连接
+        //第二次进来不用连接
+        //正在连接着进来，先断开连接，再判断连接
         if (!bleManager.isSupportBle()) {
             showToast(getResources().getString(R.string.ble_not_supported));
         }
-        if(!BleManager.isConnSuccessful){
+
+        if(BleManager.isConnSuccessful){
+
+            if(!BleManager.CONNECT_TYPE.equals(GlobalConsts.BATTERY)){
+                bleManager.disconnect();
+                //如果有连接过，下一次自动连接
+                String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, "");
+                if(!TextUtils.isEmpty(address)){
+                    bleManager.realConnect(GlobalConsts.BATTERY, address);
+                }else{
+                    bleManager.startScan(this, GlobalConsts.BATTERY);
+                }
+            }
+
+        }else{
             //如果有连接过，下一次自动连接
             String address = PreferenceUtils.readString(this, GlobalConsts.SP_BLUETOOTH_DEVICE, GlobalConsts.BATTERY, "");
             if(!TextUtils.isEmpty(address)){
@@ -146,7 +163,7 @@ public class BatteryActivity extends BaseActivity {
             } else if (action.equals(GlobalConsts.ACTION_SCAN_BLE_OVER)) {
                 int status = intent.getIntExtra(BleManager.SCAN_BLE_STATUS, 0);
                 if (status == 0) {
-                    showToastCenter("未能检测到该设备，请稍后重试");
+//                    showToastCenter("未能检测到该设备，请稍后重试");
                 }
             }
         }
@@ -188,7 +205,6 @@ public class BatteryActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        bleManager.disconnect();
         unregisterReceiver(mBroadcastReceiver);
     }
 

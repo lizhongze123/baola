@@ -1,6 +1,7 @@
 package com.XMBT.bluetooth.le.ui.main;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.widget.RadioButton;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseActivity;
+import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.ui.gbattery.AdviceFragment;
 import com.XMBT.bluetooth.le.ui.gbattery.PartsFragment;
 import com.XMBT.bluetooth.le.utils.StatusBarHelper;
@@ -41,15 +43,6 @@ public class MainActivity extends BaseActivity {
         ActivityCollector.addActivity(this);
         initViews();
         addListener();
-        init(this);
-    }
-
-    // 初始化
-    public static void init(Context mContext) {
-//        Configure.USERID = PreferenceUtils.readString(mContext, "USER", "USER_ID");
-//        if (!TextUtils.isEmpty(Configure.USERID)){
-//            Configure.isLogin = true;
-//        }
     }
 
     private void initViews() {

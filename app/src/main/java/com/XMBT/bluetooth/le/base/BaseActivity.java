@@ -1,11 +1,23 @@
 package com.XMBT.bluetooth.le.base;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 
+import com.XMBT.bluetooth.le.bean.iBeaconClass;
+import com.XMBT.bluetooth.le.ble.BleManager;
+import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
+import com.XMBT.bluetooth.le.consts.BatteryCache;
+import com.XMBT.bluetooth.le.consts.GlobalConsts;
+import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
+import com.XMBT.bluetooth.le.utils.HexUtil;
+import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.XMBT.bluetooth.le.utils.ToastUtils;
 import com.XMBT.bluetooth.le.view.loadingdialog.LoadingDialog;
 
@@ -14,6 +26,7 @@ import java.util.ArrayList;
 public class BaseActivity extends FragmentActivity {
 
     LoadingDialog loadingDialog;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,4 +67,5 @@ public class BaseActivity extends FragmentActivity {
     public void showToastCenter(String tips) {
         ToastUtils.toastInCenter(this, tips);
     }
+
 }

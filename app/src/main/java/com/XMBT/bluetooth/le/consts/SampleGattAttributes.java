@@ -208,23 +208,7 @@ public class SampleGattAttributes {
     public static String APP_TO_MCU = "04DA8A22DD";
 
 
-    //----------------------------智能电瓶---------------------------
-    /**
-     * 启动信号
-     */
-    public static String START_SIGNAL = "04A35C6699";
-    /**
-     * 试用天数
-     */
-    public static String USE_DAYS = "04A55A";
-    /**
-     * 停用天数
-     */
-    public static String STOP_DAYS = "04A758";
-    /**
-     * 启动次数
-     */
-    public static String START_COUNT = "04A956";
+
 
 
     //----------------------------密码指令---------------------------
@@ -256,4 +240,87 @@ public class SampleGattAttributes {
      * 修改密码错误
      */
     public static String CHANGE_PWD_WRONG = "04E55B00FF";
+
+
+    //----------------------------智能电瓶---------------------------
+    /**
+     * 蓝牙发送通道检测
+     */
+    public static String SEND_CHECK = "04A91F11EE";
+    /**
+     * 蓝牙接收通道检测
+     */
+    public static String RECEIVE_CHECK = "04A92E22DD";
+    /**
+     * 启动信号
+     */
+    public static String START_SIGNAL = "04A35C6699";
+    /**
+     * 试用天数
+     */
+    public static String USE_DAYS = "04A55A";
+    /**
+     * 停用天数
+     */
+    public static String STOP_DAYS = "04A758";
+    /**
+     * 启动次数
+     */
+    public static String START_COUNT = "04A956";
+    /**
+     * 充电中 电压偏低
+     */
+    public static String BATTERY_CHARGING_LOW = "04A93D11FF";
+    /**
+     * 充电中 电压正常
+     */
+    public static String BATTERY_CHARGING_NORMAL = "04A93D22DD";
+    /**
+     * 充电中 电压偏高
+     */
+    public static String BATTERY_CHARGING_HIGHT = "04A93D33CC";
+    /**
+     * 电池正常
+     */
+    public static String BATTERY_NORMAL = "04A93D44BB";
+    /**
+     * 电池低电
+     */
+    public static String BATTERY_LOW = "04A93D55AA";
+    /**
+     * 电池电压
+     */
+    public static String P_BATTERY_VOLTAGE = "04A46B";
+    /**
+     * 百分比
+     */
+    public static String PERCENT = "04A94C";
+    /**
+     * mcu要求获取时间
+     */
+    public static String MCU_NEED_TIME = "04A95B11EE";
+    /**
+     * APP发送日期
+     */
+    public static String APP_DATE = "04FF";
+    /**
+     * APP发送时间
+     */
+    public static String APP_TIME = "04A979";
+    /**
+     * 启动时间
+     */
+//    public static String APP_TIME = "04A979";
+    /**
+     * 行驶时间
+     */
+//    public static String APP_TIME = "04A979";
+    /**
+     * 熄火时间
+     */
+//    public static String APP_TIME = "04A979";
+    /**
+     * 年月时间
+     */
+//    public static String APP_TIME = "04A979";
 }

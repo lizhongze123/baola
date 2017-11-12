@@ -11,15 +11,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.XMBT.bluetooth.le.bean.iBeaconClass;
+import com.XMBT.bluetooth.le.consts.BatteryCache;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
+import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.utils.LogUtils;
+import com.XMBT.bluetooth.le.utils.LoginUtil;
 import com.XMBT.bluetooth.le.utils.PreferenceUtils;
+import com.XMBT.bluetooth.le.utils.Utils;
 import com.XMBT.bluetooth.le.view.loadingdialog.LoadingDialog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -187,7 +194,7 @@ public class BleManager {
             mBLE.setOnConnectListener(new BluetoothLeClass.OnConnectListener() {
                 @Override
                 public void onConnect(BluetoothGatt gatt) {
-                    if(!TextUtils.isEmpty(productName)){
+
                         //连接成功后保存地址在本地
                         if(isConnSuccessful){
                             //保存连接成功后的type
@@ -201,7 +208,47 @@ public class BleManager {
                             }
 
                         }
+
+                }
+            });
+            mBLE.setOnDataAvailableListener(new BluetoothLeClass.OnDataAvailableListener() {
+                @Override
+                public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+
+                }
+
+                @Override
+                public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+                    //notify
+                    String strTemp = "";
+                    boolean isGood = Conversion.isAsciiPrintable(new String(characteristic.getValue(), 0, characteristic.getValue().length));
+                    if (!isGood) {
+                        strTemp = Conversion.BytetohexString(characteristic.getValue(), characteristic.getValue().length);
                     }
+                        if (!TextUtils.isEmpty(strTemp)) {
+                            strTemp = strTemp.replaceAll(":", "");
+                        }
+
+                        if (!strTemp.equals("0000000000")) {  //过滤掉00:00:00:00:00
+
+                            if (strTemp.length() == 10) {
+
+
+
+                                if(BleManager.CONNECT_TYPE.equals(GlobalConsts.BATTERY)){
+                                    notifyBattery(strTemp);
+                                }else if(BleManager.CONNECT_TYPE.equals(GlobalConsts.POWER)){
+                                }else if(BleManager.CONNECT_TYPE.equals(GlobalConsts.LIGHTING)){
+                                }
+
+
+                            }
+
+
+                        } else {
+                            LogUtils.e("数据为--0000000000");
+                        }
+
                 }
             });
 
@@ -330,4 +377,68 @@ public class BleManager {
         }
     }
 
+
+    /**
+     * 智能电瓶相关指令
+     */
+    private void notifyBattery(String strTemp) {
+
+        String substr = strTemp.substring(0, 6);
+        String substr2 = strTemp.substring(6, 10);
+
+        if(substr.equals(SampleGattAttributes.SEND_CHECK)){
+            LogUtils.e("----防止蓝牙死机指令发送----");
+            WriteCharX(BleManager.gattCharacteristic_write, HexUtil.hexStringToBytes(SampleGattAttributes.RECEIVE_CHECK));
+        } else if (substr.equals(SampleGattAttributes.USE_DAYS)) {
+            //试用天数
+            BatteryCache.usedDay = Integer.parseInt(substr2, 16) + "天";
+            //广播通知在service里
+        } else if (substr.equals(SampleGattAttributes.STOP_DAYS)) {
+            //停用天数
+            BatteryCache.stopDay = Integer.parseInt(substr2, 16) + "天";
+        } else if (substr.equals(SampleGattAttributes.START_COUNT)) {
+            //启动次数
+            BatteryCache.startCounts = Integer.parseInt(substr2, 16) + "次";
+        } else if(strTemp.equals(SampleGattAttributes.BATTERY_CHARGING_LOW)){
+            //充电中 电压偏低
+            BatteryCache.tvSstatus = "充电中 电压偏低";
+        } else if(strTemp.equals(SampleGattAttributes.BATTERY_CHARGING_NORMAL)){
+            //充电中 电压正常
+            BatteryCache.tvSstatus = "充电中 电压正常";
+        } else if(strTemp.equals(SampleGattAttributes.BATTERY_CHARGING_HIGHT)){
+            //充电中 电压过高
+            BatteryCache.tvSstatus = "充电中 电压过高";
+        } else if(strTemp.equals(SampleGattAttributes.BATTERY_LOW)){
+            //电压偏低
+            BatteryCache.tvSstatus = "电压偏低";
+        } else if(strTemp.equals(SampleGattAttributes.BATTERY_NORMAL)){
+            //电压正常
+            BatteryCache.tvSstatus = "电压正常";
+        }else if(substr.equals(SampleGattAttributes.PERCENT)){
+            //百分比
+            int progress = Integer.parseInt(substr2.substring(0,2), 16); //702
+            BatteryCache.progress = progress;
+        } else if(substr.equals(SampleGattAttributes.P_BATTERY_VOLTAGE)){
+            //实时电压
+            int voltage10 = Integer.parseInt(substr2, 16); //702
+            BatteryCache.voltage = voltage10 * 1.0 / 100 + " V";
+        } else if(strTemp.equals(SampleGattAttributes.MCU_NEED_TIME)){
+            //发送date
+            Calendar cal = Calendar.getInstance();
+            String year = Integer.toHexString(Integer.valueOf(String.valueOf(cal.get(Calendar.YEAR)).substring(2, 4)));
+            String day = Integer.toHexString(cal.get(Calendar.DATE));
+            String month = Integer.toHexString(cal.get(Calendar.MONTH) + 1);
+
+            String newValue = SampleGattAttributes.APP_DATE + year + month + day;
+            byte[] dataToWrite = HexUtil.hexStringToBytes(newValue);
+            BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite);
+
+            String hour = Integer.toHexString(cal.get(Calendar.HOUR_OF_DAY));
+            String minute = Integer.toHexString(cal.get(Calendar.MINUTE));
+            String newValue1 = SampleGattAttributes.APP_TIME + hour + minute;
+            byte[] dataToWrite1 = HexUtil.hexStringToBytes(newValue1);
+            BleManager.WriteCharX(BleManager.gattCharacteristic_write, dataToWrite1);
+
+        }
+    }
 }
