@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -481,7 +482,9 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
         myIntentFilter.addAction(GlobalConsts.ACTION_NOTIFI);
         myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_BLE_OVER);
         myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_NEW_DEVICE);
-        registerReceiver(mBroadcastReceiver, myIntentFilter);
+//        registerReceiver(mBroadcastReceiver, myIntentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, myIntentFilter);
+
     }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -627,7 +630,9 @@ public class LightFunctionActivity extends BaseActivity implements XBanner.XBann
 //      editor.putInt("progress",seekBar.getProgress());
         handler1.removeCallbacksAndMessages(null);
         bleManager.disconnect();
-        unregisterReceiver(mBroadcastReceiver);
+//        unregisterReceiver(mBroadcastReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
+
     }
 
 }

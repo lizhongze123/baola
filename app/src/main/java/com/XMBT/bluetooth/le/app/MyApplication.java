@@ -2,6 +2,8 @@ package com.XMBT.bluetooth.le.app;
 
 import android.app.Application;
 
+import com.XMBT.bluetooth.le.BuildConfig;
+import com.XMBT.bluetooth.le.utils.LogUtils;
 import com.baidu.mapapi.SDKInitializer;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -27,6 +29,12 @@ public class MyApplication extends MobApplication {
         //初始化Loggutils
         FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder().tag("lzz").build();
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
+        if(BuildConfig.LOG_DEBUG){
+            LogUtils.isDebug = true;
+        }else{
+            LogUtils.isDebug = false;
+        }
+
         OkGo.init(this);
 
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.XMBT.bluetooth.le.ui.misc.LoginActivity">
+    tools:context="com.XMBT.bluetooth.le.ui.misc.LoginActivity"
+    tools:keep="@layout/activity_change_device_pwd">
 
     <com.XMBT.bluetooth.le.view.TitleBar
         android:id="@+id/titleBar"

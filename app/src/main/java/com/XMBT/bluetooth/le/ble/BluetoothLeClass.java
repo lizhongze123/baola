@@ -29,6 +29,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
@@ -152,8 +153,8 @@ public class BluetoothLeClass extends Service {
                 // 发送广播
                 Intent mIntent = new Intent(GlobalConsts.ACTION_CONNECT_CHANGE);
                 mIntent.putExtra(CONNECT_STATUS, STATE_CONNECTED);
-                mContext.sendBroadcast(mIntent);
-
+//                mContext.sendBroadcast(mIntent);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(mIntent);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 BleManager.isConnSuccessful = false;
                 if (mOnDisconnectListener != null){
@@ -164,8 +165,8 @@ public class BluetoothLeClass extends Service {
                 // 发送广播
                 Intent mIntent = new Intent(GlobalConsts.ACTION_CONNECT_CHANGE);
                 mIntent.putExtra(CONNECT_STATUS, STATE_DISCONNECTED);
-                mContext.sendBroadcast(mIntent);
-
+//                mContext.sendBroadcast(mIntent);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(mIntent);
             }
         }
 
@@ -192,7 +193,7 @@ public class BluetoothLeClass extends Service {
             }
             // 不调用它,接收不到数据.
             broadcastUpdate(ACTION_NOTIFI, characteristic);
-//            LogUtils.i("收到通知--" + characteristic.getUuid().toString());
+            LogUtils.i("收到通知--" + characteristic.getUuid().toString());
         }
 
         /**
@@ -256,7 +257,8 @@ public class BluetoothLeClass extends Service {
         }
         //txt = Conversion.BytetohexString(b,b.length);
         intent.putExtra(EXTRA_DATA, txt);
-        mContext.sendBroadcast(intent);
+//        mContext.sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 
     public void updateRssiBroadcast(int rssi) {
@@ -265,7 +267,8 @@ public class BluetoothLeClass extends Service {
         Intent mIntent = new Intent(ACTION_NAME_RSSI);
         mIntent.putExtra("RSSI", rssi);
         // 发送广播
-        mContext.sendBroadcast(mIntent);
+//        mContext.sendBroadcast(mIntent);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(mIntent);
     }
 
     /**
@@ -367,8 +370,13 @@ public class BluetoothLeClass extends Service {
             LogUtils.i("Enable Notification");
             mBluetoothGatt.setCharacteristicNotification(characteristic, true);
             BluetoothGattDescriptor descriptor = characteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG_DESCRIPTOR_UUID);
-            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            mBluetoothGatt.writeDescriptor(descriptor);
+            boolean result = descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            LogUtils.i("setCharacteristicNotification result--"+result);
+//            mBluetoothGatt.writeDescriptor(descriptor);
+            for(BluetoothGattDescriptor dp:characteristic.getDescriptors()){
+                dp.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                mBluetoothGatt.writeDescriptor(dp);
+            }
         } else {
             LogUtils.i("Disable Notification");
             mBluetoothGatt.setCharacteristicNotification(characteristic, false);

@@ -59,6 +59,12 @@ public class LoginActivity extends BaseActivity {
         });
         phoneEt = (EditText) findViewById(R.id.phoneEt);
         passwordEt = (EditText) findViewById(R.id.passwordEt);
+        String account = UserSp.getInstance(LoginActivity.this).getAccount();
+        String pwd = UserSp.getInstance(LoginActivity.this).getPwd();
+        if(!TextUtils.isEmpty(account) && !TextUtils.isEmpty(pwd)){
+            phoneEt.setText(account);
+            passwordEt.setText(pwd);
+        }
     }
 
     public void doClick(View view) {
@@ -144,6 +150,7 @@ public class LoginActivity extends BaseActivity {
                                                 }
                                                 Configure.isLogin = true;
                                                 showToast("登录成功");
+                                                UserSp.getInstance(LoginActivity.this).saveUser(phoneEt.getText().toString(), passwordEt.getText().toString());
 
                                                 //发送广播
                                                 EvenManager.sendEvent(new NotifyEvent(LOGIN));
@@ -163,6 +170,7 @@ public class LoginActivity extends BaseActivity {
                     showToast(sb.toString());
                 }
                 break;
+                default:
         }
     }
 

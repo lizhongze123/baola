@@ -48,6 +48,8 @@ public class GlobalConsts {
     public static final String ACTION_SCAN_BLE_OVER = "action_scan_ble_over";
 
     public static final String ACTION_SCAN_NEW_DEVICE = "action_scan_new_device";
+    //发现服务完毕
+    public static final String ACTION_DICOVERD = "action_dicoverd";
 
 
     /**

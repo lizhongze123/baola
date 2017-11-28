@@ -13,7 +13,8 @@ public class LogUtils {
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
-    public static boolean isDebug = true;// 是否需要打印bug，可以在application的onCreate函数里面初始化
+    /**是否需要打印bug，可以在application的onCreate函数里面初始化*/
+    public static boolean isDebug = true;
 
     private static final String TAG = "lzz";
 

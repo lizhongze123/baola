@@ -81,4 +81,22 @@ public class UserSp {
         return refresh;
     }
 
+    public void saveUser(String account, String pwd){
+        sp = mContext.getSharedPreferences("user", Context.MODE_PRIVATE);
+        sp.edit().putString("account", account).commit();
+        sp.edit().putString("pwd", pwd).commit();
+    }
+
+    public String getAccount(){
+        sp = mContext.getSharedPreferences("user", Context.MODE_PRIVATE);
+        String account = sp.getString("account", "");
+        return account;
+    }
+
+    public String getPwd(){
+        sp = mContext.getSharedPreferences("user", Context.MODE_PRIVATE);
+        String pwd = sp.getString("pwd", "");
+        return pwd;
+    }
+
 }

@@ -38,7 +38,6 @@ public class InputDialog extends Dialog{
     }
 
     private void initViews(){
-        LogUtils.e("1111");
         etNum = (EditText) findViewById(R.id.et_num);
         tvNavigate = (TextView) findViewById(R.id.tv_cancel);
         tvPositive = (TextView) findViewById(R.id.tv_positive);

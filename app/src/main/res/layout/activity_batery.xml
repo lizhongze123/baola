@@ -18,8 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:id="@+id/radioGroup">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/radio1"

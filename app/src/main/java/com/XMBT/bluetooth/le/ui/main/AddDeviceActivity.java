@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -60,7 +61,8 @@ public class AddDeviceActivity extends BaseActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(GlobalConsts.FILTER_ADD_DEVICE);
                                 intent.putExtra("addDeviceEntity", addDeviceEntities.get(position));
-                                sendBroadcast(intent);
+//                                sendBroadcast(intent);
+                                LocalBroadcastManager.getInstance(AddDeviceActivity.this).sendBroadcast(intent);
                                 finish();
                             }
                         }).setNegativeButton("取消", null).create().show();

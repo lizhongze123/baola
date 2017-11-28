@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +80,9 @@ public class MyProductFragment extends BaseFragment implements XBanner.XBannerAd
     private void register() {
         EvenManager.register(this);
         mDeviceReceiver = new MyDeviceReceiver();
-        getContext().registerReceiver(mDeviceReceiver, new IntentFilter(GlobalConsts.FILTER_ADD_DEVICE));
+//        getContext().registerReceiver(mDeviceReceiver, new IntentFilter(GlobalConsts.FILTER_ADD_DEVICE));
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mDeviceReceiver, new IntentFilter(GlobalConsts.FILTER_ADD_DEVICE));
+
     }
 
     /**
@@ -210,7 +213,9 @@ public class MyProductFragment extends BaseFragment implements XBanner.XBannerAd
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.getContext().unregisterReceiver(mDeviceReceiver);
+//        this.getContext().unregisterReceiver(mDeviceReceiver);
+        LocalBroadcastManager.getInstance(this.getContext()).unregisterReceiver(mDeviceReceiver);
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

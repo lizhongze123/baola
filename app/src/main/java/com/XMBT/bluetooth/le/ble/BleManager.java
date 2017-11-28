@@ -10,6 +10,9 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 public class BleManager {
@@ -157,7 +161,8 @@ public class BleManager {
 
             Intent mIntent = new Intent(GlobalConsts.ACTION_SCAN_BLE_OVER);
             mIntent.putExtra(SCAN_BLE_DATA, mLeDevices);
-            mContext.sendBroadcast(mIntent);
+//            mContext.sendBroadcast(mIntent);
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(mIntent);
             if (loadingDialog != null) {
                 loadingDialog.dismiss();
             }
@@ -294,7 +299,8 @@ public class BleManager {
 
         Intent mIntent = new Intent(GlobalConsts.ACTION_SCAN_NEW_DEVICE);
         mIntent.putExtra(SCAN_BLE_DATA, mLeDevices);
-        mContext.sendBroadcast(mIntent);
+//        mContext.sendBroadcast(mIntent);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(mIntent);
     }
 
     /**
@@ -304,7 +310,7 @@ public class BleManager {
 
         @Override
         public void onServiceDiscover(BluetoothGatt gatt) {
-            displayGattServices(mBLE.getSupportedGattServices());
+            displayGattServices(mBLE.getSupportedGattServices(), gatt);
         }
 
     };
@@ -314,42 +320,51 @@ public class BleManager {
      *
      * @param gattServices
      */
-    private void displayGattServices(List<BluetoothGattService> gattServices) {
+    private void displayGattServices(List<BluetoothGattService> gattServices, BluetoothGatt gatt) {
         if (gattServices == null) {
             return;
         }
 
-        for (BluetoothGattService gattService : gattServices) {
+        BluetoothGattService service = gatt.getService(UUID.fromString(SampleGattAttributes.SERVICE_UUID));
+        gattCharacteristic_write = service.getCharacteristic(UUID.fromString(SampleGattAttributes.CHAR_WRITE));
+        gattCharacteristic_char2 = service.getCharacteristic(UUID.fromString(SampleGattAttributes.CHAR_NOTIFY));
+        setNotify();
 
-            int type = gattService.getType();
 
-            List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
+        Intent mIntent = new Intent(GlobalConsts.ACTION_DICOVERD);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(mIntent);
 
-            for (final BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+//        for (BluetoothGattService gattService : gattServices) {
+//
+//            int type = gattService.getType();
+//
+//            List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
+//
+//            for (final BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
 
-                int permission = gattCharacteristic.getPermissions();
+//                int permission = gattCharacteristic.getPermissions();
+//
+//                int property = gattCharacteristic.getProperties();
+//
+//                byte[] data = gattCharacteristic.getValue();
 
-                int property = gattCharacteristic.getProperties();
+//                if (gattCharacteristic.getUuid().toString().equals(SampleGattAttributes.CHAR_WRITE)) {
+//                    gattCharacteristic_write = gattCharacteristic;
+//                }
+//
+//                if (gattCharacteristic.getUuid().toString().equals(SampleGattAttributes.CHAR_NOTIFY)) {
+//                    gattCharacteristic_char2 = gattCharacteristic;
+//                    //连接成功后就使能
+//                    setNotify();
+//                }
 
-                byte[] data = gattCharacteristic.getValue();
-
-                if (gattCharacteristic.getUuid().toString().equals(SampleGattAttributes.CHAR_WRITE)) {
-                    gattCharacteristic_write = gattCharacteristic;
-                }
-
-                if (gattCharacteristic.getUuid().toString().equals(SampleGattAttributes.CHAR_NOTIFY)) {
-                    gattCharacteristic_char2 = gattCharacteristic;
-                    //连接成功后就使能
-                    setNotify();
-                }
-
-                List<BluetoothGattDescriptor> gattDescriptors = gattCharacteristic.getDescriptors();
-                for (BluetoothGattDescriptor gattDescriptor : gattDescriptors) {
-                    int descPermission = gattDescriptor.getPermissions();
-                    byte[] desData = gattDescriptor.getValue();
-                }
-            }
-        }
+//                List<BluetoothGattDescriptor> gattDescriptors = gattCharacteristic.getDescriptors();
+//                for (BluetoothGattDescriptor gattDescriptor : gattDescriptors) {
+//                    int descPermission = gattDescriptor.getPermissions();
+//                    byte[] desData = gattDescriptor.getValue();
+//                }
+//            }
+//        }
     }
 
     /**

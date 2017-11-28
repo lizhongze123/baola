@@ -209,7 +209,6 @@
                     android:textColor="@android:color/white"/>
 
                 <TextView
-                    android:id="@+id/tv_rightStandard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -248,7 +247,6 @@
             android:background="@drawable/shape_bg_gray">
 
             <TextView
-                android:id="@+id/textView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="高速充电电压"
@@ -299,7 +297,6 @@
                     android:textColor="@android:color/white"/>
 
                 <TextView
-                    android:id="@+id/tv_rightStandard2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

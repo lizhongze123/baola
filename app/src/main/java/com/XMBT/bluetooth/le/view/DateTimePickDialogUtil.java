@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
@@ -75,7 +76,6 @@ public class DateTimePickDialogUtil implements OnDateChangedListener, OnTimeChan
     /**
      * 弹出日期时间选择框方法
      *
-     * @param inputDate:为需要设置的日期时间文本编辑框
      * @return
      */
     public AlertDialog dateTimePickDialog(final int flag, String title) {
@@ -101,6 +101,7 @@ public class DateTimePickDialogUtil implements OnDateChangedListener, OnTimeChan
                                     Intent intent = new Intent("datetime");
                                     intent.putExtra("flag", 0);
                                     activity.sendBroadcast(intent);
+                                    LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
                                 } else {
                                     Toast.makeText(activity, "这段时间内没有轨迹", Toast.LENGTH_SHORT).show();
                                 }
