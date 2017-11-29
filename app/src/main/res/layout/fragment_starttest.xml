@@ -51,7 +51,10 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
-                android:layout_margin="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
                 android:padding="10dp"
                 android:background="@drawable/shape_bg_gray">
 
@@ -136,10 +139,10 @@
 
             <com.XMBT.bluetooth.le.view.LineChart.LineView2
                 android:id="@+id/myline"
-                android:layout_marginTop="30dp"
                 android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

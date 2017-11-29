@@ -77,16 +77,12 @@
                 android:src="@drawable/status3" />
 
 
-            <com.XMBT.bluetooth.le.view.LineChart.LineView
-                android:id="@+id/myline"
-                android:layout_margin="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_margin="20dp"
+                android:padding="5dp"
+                android:background="@drawable/stroke_white"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -98,15 +94,15 @@
                     android:padding="5dp">
 
                     <TextView
-                        android:text="试用天数"
+                        tools:text="5天"
+                        android:id="@+id/tv_useDay"
                         android:textSize="14sp"
                         android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                     <TextView
-                        tools:text="5天"
-                        android:id="@+id/tv_useDay"
+                        android:text="试用天数"
                         android:textSize="14sp"
                         android:textColor="@color/white"
                         android:layout_width="wrap_content"
@@ -121,13 +117,6 @@
                     android:gravity="center"
                     android:layout_height="wrap_content"
                     android:padding="5dp">
-
-                    <TextView
-                        android:text="停用天数"
-                        android:textSize="14sp"
-                        android:textColor="@color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/tv_stopDay"
@@ -137,6 +126,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
+                    <TextView
+                        android:text="停用天数"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -148,15 +144,15 @@
                     android:padding="5dp">
 
                     <TextView
-                        android:text="启动次数"
+                        android:id="@+id/tv_startCounts"
+                        tools:text="5天"
                         android:textSize="14sp"
                         android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                     <TextView
-                        android:id="@+id/tv_startCounts"
-                        tools:text="5天"
+                        android:text="启动次数"
                         android:textSize="14sp"
                         android:textColor="@color/white"
                         android:layout_width="wrap_content"
@@ -165,6 +161,15 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <com.XMBT.bluetooth.le.view.LineChart.LineView
+                android:id="@+id/myline"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>

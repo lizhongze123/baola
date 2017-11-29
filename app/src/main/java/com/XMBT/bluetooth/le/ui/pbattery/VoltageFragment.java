@@ -9,27 +9,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.XMBT.bluetooth.le.R;
 import com.XMBT.bluetooth.le.base.BaseFragment;
-import com.XMBT.bluetooth.le.bean.RecordBean;
 import com.XMBT.bluetooth.le.bean.iBeaconClass;
 import com.XMBT.bluetooth.le.ble.BleManager;
 import com.XMBT.bluetooth.le.ble.BluetoothLeClass;
 import com.XMBT.bluetooth.le.consts.BatteryCache;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.consts.SampleGattAttributes;
-import com.XMBT.bluetooth.le.db.DBManger;
-import com.XMBT.bluetooth.le.utils.DateFormatUtils;
-import com.XMBT.bluetooth.le.utils.HexUtil;
 import com.XMBT.bluetooth.le.utils.LogUtils;
-import com.XMBT.bluetooth.le.utils.ToastUtils;
 import com.XMBT.bluetooth.le.view.LineChart.ItemBean;
 import com.XMBT.bluetooth.le.view.LineChart.LineView;
 import com.XMBT.bluetooth.le.view.ListDialog;
@@ -148,14 +142,14 @@ public class VoltageFragment extends BaseFragment {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
-            if (action.equals(GlobalConsts.ACTION_NOTIFI)) {  //收到notify
+            if (action.equals(GlobalConsts.ACTION_NOTIFI)) {
                 strTemp = intent.getStringExtra(EXTRA_DATA);
                 //去除：
                 if (!TextUtils.isEmpty(strTemp)) {
                     strTemp = strTemp.replaceAll(":", "");
                 }
 
-                if (!strTemp.equals("0000000000")) {  //过滤掉00:00:00:00:00
+                if (!strTemp.equals("0000000000")) {
 
                     if (strTemp.length() == 10) {
                         String substr = strTemp.substring(0, 6);
@@ -182,12 +176,12 @@ public class VoltageFragment extends BaseFragment {
                             tvStatus.setText("电压正常");
                         } else if(substr.equals(SampleGattAttributes.PERCENT)){
                             //百分比
-                            int progress = Integer.parseInt(substr2.substring(0,2), 16); //702
+                            int progress = Integer.parseInt(substr2.substring(0,2), 16);
                             loadingView.setProgress(progress);
                             percentLine(progress);
                         } else if(substr.equals(SampleGattAttributes.P_BATTERY_VOLTAGE)){
                             //实时电压
-                            int voltage10 = Integer.parseInt(substr2, 16); //702
+                            int voltage10 = Integer.parseInt(substr2, 16);
                             LogUtils.d("收到的数据为--" + strTemp + "电压值为--" + voltage10);
                             loadingView.setPercentText(voltage10 * 1.0 / 100 + " V");
                         }
@@ -253,7 +247,6 @@ public class VoltageFragment extends BaseFragment {
         myIntentFilter.addAction(GlobalConsts.ACTION_CONNECT_CHANGE);
         myIntentFilter.addAction(GlobalConsts.ACTION_NOTIFI);
         myIntentFilter.addAction(GlobalConsts.ACTION_SCAN_NEW_DEVICE);
-//        getActivity().registerReceiver(mBroadcastReceiver, myIntentFilter);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, myIntentFilter);
 
     }
@@ -294,7 +287,6 @@ public class VoltageFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        getActivity().unregisterReceiver(mBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
     }
 
