@@ -34,6 +34,7 @@
             android:hint="请输入账号"
             android:inputType="phone"
             android:paddingLeft="10dp"
+            android:text="18988536586"
             android:textSize="14sp" />
 
         <View
@@ -47,6 +48,7 @@
             android:layout_height="45dp"
             android:background="@null"
             android:hint="请输入密码"
+            android:text="yejinhui620057"
             android:inputType="textPassword"
             android:paddingLeft="10dp"
             android:textSize="14sp" />

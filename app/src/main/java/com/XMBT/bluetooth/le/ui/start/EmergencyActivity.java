@@ -56,7 +56,6 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     private TextView tvVoltage, tvStatus, tvTemperature;
     private TextView tvFloodlight, tvWarninglight, tvUsb;
     private LinearLayout llFloodlight, llWarninglight, llUsb;
-    private ImageView ivQuestion;
 
     private float temf, volf;
     private ChargingProgess chargingprigressView;
@@ -240,10 +239,12 @@ public class EmergencyActivity extends BaseActivity implements XBanner.XBannerAd
     private void writePwd(String instructions, String value){
         showLoadingDialog(null);
         String str = Integer.toHexString(Integer.valueOf(value));
+        StringBuilder sb = new StringBuilder();
+        sb.append(str);
         while (str.length() < 4){
-            str = "0" + str;
+            sb.append("0");
         }
-        String pwdInstructions = instructions + str;
+        String pwdInstructions = instructions + sb.toString();
         LogUtils.d("发送的密码为--" + pwdInstructions);
         byte[] dataToWrite1 = HexUtil.hexStringToBytes(pwdInstructions);
         bleManager.WriteCharX(bleManager.gattCharacteristic_write, dataToWrite1);

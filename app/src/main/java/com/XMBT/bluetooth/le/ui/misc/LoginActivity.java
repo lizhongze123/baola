@@ -12,7 +12,6 @@ import com.XMBT.bluetooth.le.bean.User;
 import com.XMBT.bluetooth.le.consts.GlobalConsts;
 import com.XMBT.bluetooth.le.event.NotifyEvent;
 import com.XMBT.bluetooth.le.sp.UserSp;
-import com.XMBT.bluetooth.le.ui.gbattery.DeviceActivity;
 import com.XMBT.bluetooth.le.utils.Configure;
 import com.XMBT.bluetooth.le.utils.EvenManager;
 import com.XMBT.bluetooth.le.utils.LogUtils;
